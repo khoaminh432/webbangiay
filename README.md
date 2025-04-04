@@ -22,3 +22,16 @@ database/db.php/database_sever
 # └── index.php
 require_once __DIR__ . '/../folder1/file1.php'
 (khai báo khi sử dụng 2 hoặc nhiều forder khác nhau)
+4.thứ tự insert data
+# Bảng users (Người dùng)
+# Bảng admin (Quản trị viên)
+# Bảng type_product (Loại sản phẩm)
+# Bảng payment_method (Phương thức thanh toán)
+# Bảng information_receive (Thông tin nhận hàng)
+# Bảng supplier (Nhà cung cấp)
+# Bảng voucher (Mã giảm giá)
+# Bảng products (Sản phẩm)
+# Bảng product_images (Hình ảnh sản phẩm)
+# Bảng bill (Hóa đơn)
+# Bảng bill_detail (Chi tiết hóa đơn)
+# Bảng bill_products (Sản phẩm trong hóa đơn)
