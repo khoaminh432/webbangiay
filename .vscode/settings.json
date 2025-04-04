@@ -1,0 +1,19 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 100,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "group": "web_bangiay_nc",
+            "name": "window",
+            "username": "root",
+            "database": "bangiay",
+            "password": "123456"
+        }
+    ]
+}
