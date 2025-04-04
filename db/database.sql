@@ -1,0 +1,191 @@
+-- Users table
+DROP TABLE IF EXISTS users;
+CREATE TABLE users
+(
+  id INT NOT NULL AUTO_INCREMENT,
+  email VARCHAR(100) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  username VARCHAR(50) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE (email),
+  UNIQUE (username)
+);
+
+-- Admin table
+DROP TABLE IF EXISTS admin;
+CREATE TABLE admin
+(
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  position INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE (email)
+);
+
+-- Product types table
+DROP TABLE IF EXISTS type_product;
+CREATE TABLE type_product
+(
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  id_admin INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_admin) REFERENCES admin(id) ON DELETE CASCADE
+);
+
+-- Payment methods table
+DROP TABLE IF EXISTS payment_method;
+CREATE TABLE payment_method
+(
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE (name)
+);
+
+-- Shipping information table
+DROP TABLE IF EXISTS information_receive;
+CREATE TABLE information_receive
+(
+  id INT NOT NULL AUTO_INCREMENT,
+  address TEXT NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  phone VARCHAR(20) NOT NULL,
+  id_user INT NOT NULL,
+  is_default BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Suppliers table
+DROP TABLE IF EXISTS supplier;
+CREATE TABLE supplier
+(
+  id INT NOT NULL AUTO_INCREMENT,
+  address TEXT NOT NULL,
+  phone VARCHAR(20) NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  id_admin INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_admin) REFERENCES admin(id) ON DELETE CASCADE
+);
+
+-- Vouchers table
+DROP TABLE IF EXISTS voucher;
+CREATE TABLE voucher
+(
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  deduction DECIMAL(10,2) NOT NULL,
+  description TEXT,
+  date_start DATE NOT NULL,
+  date_end DATE,
+  id_admin INT,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_admin) REFERENCES admin(id) ON DELETE SET NULL
+);
+
+-- Bills table
+DROP TABLE IF EXISTS bill;
+CREATE TABLE bill
+(
+  id INT NOT NULL AUTO_INCREMENT,
+  status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  bill_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  id_user INT NOT NULL,
+  id_payment_method INT NOT NULL,
+  total_amount DECIMAL(12,2) NOT NULL,
+  shipping_address TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (id_payment_method) REFERENCES payment_method(id)
+);
+
+-- Bill details table
+DROP TABLE IF EXISTS bill_detail;
+CREATE TABLE bill_detail
+(
+  id INT NOT NULL AUTO_INCREMENT,
+  bill_id INT NOT NULL,
+  price_product DECIMAL(10,2) NOT NULL,
+  shipping_fee DECIMAL(10,2) NOT NULL,
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  FOREIGN KEY (bill_id) REFERENCES bill(id) ON DELETE CASCADE
+);
+
+-- Products table
+DROP TABLE IF EXISTS products;
+CREATE TABLE products
+(
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  quantity INT NOT NULL DEFAULT 0,
+  description TEXT,
+  price DECIMAL(10,2) NOT NULL,
+  weight DECIMAL(10,2) NOT NULL COMMENT 'in grams',
+  id_voucher INT,
+  id_type_product INT NOT NULL,
+  id_admin INT NOT NULL,
+  id_supplier INT NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_voucher) REFERENCES voucher(id) ON DELETE SET NULL,
+  FOREIGN KEY (id_type_product) REFERENCES type_product(id) ON DELETE CASCADE,
+  FOREIGN KEY (id_admin) REFERENCES admin(id) ON DELETE CASCADE,
+  FOREIGN KEY (id_supplier) REFERENCES supplier(id) ON DELETE CASCADE
+);
+
+-- Product images table
+DROP TABLE IF EXISTS product_images;
+CREATE TABLE product_images
+(
+  id INT NOT NULL AUTO_INCREMENT,
+  image_url VARCHAR(255) NOT NULL,
+  id_product INT NOT NULL,
+  is_primary BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_product) REFERENCES products(id) ON DELETE CASCADE
+);
+
+-- Bill products junction table
+DROP TABLE IF EXISTS bill_products;
+CREATE TABLE bill_products
+(
+  id INT NOT NULL AUTO_INCREMENT,
+  id_bill INT NOT NULL,
+  id_product INT NOT NULL,
+  quantity INT NOT NULL DEFAULT 1,
+  unit_price DECIMAL(10,2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_bill) REFERENCES bill(id) ON DELETE CASCADE,
+  FOREIGN KEY (id_product) REFERENCES products(id) ON DELETE CASCADE,
+  UNIQUE (id_bill, id_product)
+);

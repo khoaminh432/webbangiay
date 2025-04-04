@@ -26,13 +26,17 @@
         }
         }
         public function view_table($string_query){
-            $this->stmt = $this->conn->prepare($string_query);
-            $this->stmt->execute();    
-            return $this->stmt->fetchAll();
+            try{
+                $this->stmt = $this->conn->prepare($string_query);
+                $this->stmt->execute();    
+                return $this->stmt->fetchAll();
+            } catch(PDOException $e) {
+                echo "Lỗi: " . $e->getMessage();
+            }
         }   
         # $sql = INSERT INTO users (username, email, password) VALUES (:username, :email, :password)
         # $param = ['username' => 'john_doe','email' => 'john@example.com','password' => password_hash('secure123', PASSWORD_DEFAULT)];
-    
+        
         public function insert_table($string_query,$param){
             try {
             $sql = $string_query;
@@ -45,8 +49,41 @@
         }
         }
         public function close(){
-            $this->conn = null;
+            if($this->conn){
+            
+            $this->conn = null;}
             #self::$instance = null
         }
+    
+        public function create_tables(array $table_queries) {
+            try {
+                $this->conn->beginTransaction();
+                
+                foreach ($table_queries as $query) {
+                    $this->conn->exec($query);
+                }
+                
+                $this->conn->commit();
+                return true;
+            } catch(PDOException $e) {
+                $this->conn->rollBack();
+                error_log("Table Creation Error: " . $e->getMessage());
+                throw new Exception("Table creation failed: " . $e->getMessage());
+            }
+        }
+        public function update_table($sql, $params = []) {
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute($params);
+        }
+    
+        public function delete_table($sql, $params = []) {
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute($params);
+        }
+    
+        public function lastInsertId() {
+            return $this->conn->lastInsertId();
+        }
     } 
+
 ?>

@@ -11,3 +11,14 @@ database/db.php/database_sever
 # $tables = $database->view_table("select * from product")
 #    foreach($tables as $table){
 #        echo $table["id"]."-".$table["name"]."-".$table["gia"]."-".$table["loai"]."\n";   }
+3.sửa lỗi no such dir
+# webbangiay/
+# ├── FOLDER1/
+# │   └── file1.php (chứa tất cả các class DTO)
+# ├── FOLDER2/
+# │   └── file1.php (chứa class database_sever)
+# ├── dao/
+# │   └── file1.php
+# └── index.php
+require_once __DIR__ . '/../folder1/file1.php'
+(khai báo khi sử dụng 2 hoặc nhiều forder khác nhau)
