@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../DTO/dto.php';
+require_once __DIR__ . '/../DTO/BillProductDTO.php';
 require_once __DIR__ . '/../database/database_sever.php';
 
 class BillProductDao {

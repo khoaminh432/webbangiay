@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../DTO/dto.php';
+require_once __DIR__ . '/../DTO/BillDTO.php';
 require_once __DIR__ . '/../database/database_sever.php';
 
 class BillDao {
@@ -8,7 +8,16 @@ class BillDao {
     public function __construct() {
         $this->db = new database_sever();
     }
-
+    public function view_all() {
+        $sql = "SELECT * FROM bill";
+        $results = $this->db->view_table($sql);
+        
+        $users = [];
+        foreach ($results as $row) {
+            $users[] = new BillDTO($row);
+        }
+        return $users;
+    }
     public function get_by_user($userId) {
         $sql = "SELECT * FROM bill WHERE id_user = :id_user ORDER BY bill_date DESC";
         $params = ['id_user' => $userId];

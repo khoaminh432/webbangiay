@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../DTO/dto.php';
+require_once __DIR__ . '/../DTO/ProductDTO.php';
 require_once __DIR__ . '/../database/database_sever.php';
 
 class ProductDao {
@@ -10,7 +10,7 @@ class ProductDao {
     }
 
     public function view_all() {
-        $sql = "SELECT * FROM products WHERE is_active = TRUE";
+        $sql = "SELECT * FROM products";
         $results = $this->db->view_table($sql);
         
         $products = [];
