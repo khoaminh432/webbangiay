@@ -19,14 +19,14 @@ webbangiay/
 ├── dao/
 │   └── file1.php
 └── index.php
-require_once __DIR__ . '/../folder1/file1.php'
+require_once __DIR__ . '/../folder1/file1.php';
 (khai báo khi sử dụng 2 hoặc nhiều forder khác nhau)
 # 4.thứ tự insert data
 - Bảng users (Người dùng)
 - Bảng admin (Quản trị viên)
 - Bảng type_product (Loại sản phẩm)
 - Bảng payment_method (Phương thức thanh toán)
--fBảng information_receive (Thông tin nhận hàng)
+- Bảng information_receive (Thông tin nhận hàng)
 - Bảng supplier (Nhà cung cấp)
 - Bảng voucher (Mã giảm giá)
 - Bảng products (Sản phẩm)
@@ -34,3 +34,14 @@ require_once __DIR__ . '/../folder1/file1.php'
 - Bảng bill (Hóa đơn)
 - Bảng bill_detail (Chi tiết hóa đơn)
 - Bảng bill_products (Sản phẩm trong hóa đơn)
+# 5.thư viện hiện thông báo
+- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> chi tiết hỏi AI
+# 6. cách lấy icon
+- dán đường link này vào cần icon
+- (<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>)
+link lấy icon (https://ionic.io/ionicons)
+
+# 7. cách sử dụng file Dao,DTO
+- Dao nếu muôn lấy mảng đối tượng từ database ta chỉ cần tạo một đối tượng Dao sau đó truy cập vào các hàm của đối tượng này.
+- DTO mỗi một phần tử của mảng Dao là một đối tượng của DTO
