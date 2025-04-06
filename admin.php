@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin management</title>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link rel="stylesheet" href="css/admin_style/style.css">
+</head>
+<body>
+    <div class="Admin-container row">
+        <div class="left-menu column">
+        <h1>Admin Panel</h1>
+        <div class="Dashboard"><ion-icon name="clipboard-outline"></ion-icon> Bảng điều khiển</div>
+        <div class="Infor_Admin"><ion-icon name="person-outline"></ion-icon> Thông tin Admin</div>
+        <div class="Setting"><ion-icon name="settings-outline"></ion-icon> Cài đặt</div>
+        <div class="Logout"><ion-icon name="log-out-outline"></ion-icon> Đăng xuất</div>
+    </div>
+        <div class="right-menu column">
+            <?php include("admin/dashboard.php");?>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+.product-management{
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.product-management table tbody td>button:hover{
+    background-color: aqua;
+    cursor:pointer;
+}
+.product-management table tbody td>button{
+    border-radius: 20%;
+    padding: 5px;
+    font-size: 1.2em;
+}
+.product-management table tbody td>button:first-child{
+    background-color: rgb(160, 199, 155);
+}
+.product-management table tbody td>button:first-child:hover{
+    background-color: green;
+}
+.product-management table tbody td>button:last-child{
+    background-color:rgb(255, 185, 185);
+}
+.product-management table tbody td>button:last-child:hover{
+    background-color: red;
+}

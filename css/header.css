@@ -1,0 +1,24 @@
+header{
+    display: flex;
+    justify-content: center;
+    border: 3px black solid;
+}
+header> div{
+    border: 3px red solid;
+    
+}
+header> div:first-child{
+    border: 3px green solid;
+    float: left;
+    width: 20%;
+}
+header>div:last-child{
+    float: right;
+    width: 20%;
+}
+header .search-suggest{
+    width: 60%;
+}
+header .search-content input{
+    font-size: 1.5em;
+}

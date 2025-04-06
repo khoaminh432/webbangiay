@@ -109,5 +109,6 @@ class UserDao {
         $result = $this->db->view_table($sql, $params);
         return $result[0]['COUNT(*)'] > 0;
     }
+    
 }
 ?>

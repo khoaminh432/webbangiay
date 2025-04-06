@@ -1,0 +1,76 @@
+.row{
+    display: flex;
+    flex-direction: row;
+}
+.column{
+    display: flex;
+    flex-direction: column;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.Admin-container{
+    background-color: rgb(90, 84, 84);
+}
+.left-menu{
+    min-height: 100%;
+    background-color: #2b2c31;
+    width: 15%;
+    color: white;
+}
+.left-menu h1{
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    font-size: 1.7em;
+    padding-top: 20px;
+}
+.left-menu div{
+    font-size: 1.1em;
+    margin-top:  20px;
+    display: block;
+    padding-left: 20px;
+}
+.left-menu div:hover{
+    cursor: pointer;
+    border-bottom: 3px rgb(163, 145, 145) solid;
+    
+}
+.top-menu{
+    color: rgb(237, 229, 229);
+    width: 100%;
+    min-height: 75px;
+    
+    
+    background-color: rgb(51, 47, 47);
+}
+.top-menu .title-dashboard{
+    border-bottom: 3px rgb(129, 159, 129) solid;
+    display: flex;
+    
+    justify-content: center;
+    align-items: center;
+}
+.top-menu .title-dashboard>h1{
+    padding: 20px;
+}
+.top-menu .button-view{
+    font-size: 1.2em;
+    padding-top: 10px;
+    padding-left: 20px;
+    gap: 15px;
+}
+
+.top-menu .button-view div:hover{
+    cursor: pointer;
+    border-bottom: 3px yellow solid;
+}
+
+.right-menu{
+    
+    width: 100%;
+}

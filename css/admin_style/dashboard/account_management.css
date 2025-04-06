@@ -1,0 +1,71 @@
+
+.account-management{
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.account-management table tbody td>button:hover{
+    background-color: aqua;
+    cursor:pointer;
+}
+.account-management table tbody td>button{
+    border-radius: 20%;
+    padding: 5px;
+    font-size: 1.2em;
+}
+.product-management table tbody td>button:first-child{
+    background-color: rgb(160, 199, 155);
+}
+.account-management table tbody td>button:first-child:hover{
+    background-color: green;
+}
+.account-management table tbody td>button:last-child{
+    background-color:rgb(255, 185, 185);
+}
+.account-management table tbody td>button:last-child:hover{
+    background-color: red;
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
+}
+.column{
+    display: flex;
+    flex-direction: column;
+}
+  
+
+  .status-unlock {
+    color: #4CAF50;
+    font-weight: bold;
+    background-color: rgba(76, 175, 80, 0.1);
+    padding: 3px 8px;
+    border-radius: 20%;
+    
+    text-align: center;
+}
+.status-user:hover{
+    cursor: pointer;
+}
+.status-lock, 
+.status-locked {
+    text-align: center;
+    color: #f44336;
+    font-weight: bold;
+    background-color: rgba(244, 67, 54, 0.1);
+    padding: 3px 8px;
+    border-radius: 20%;
+    
+}
+
+/* Nếu có các trạng thái khác */
+.status-pending {
+    color: #FFC107;
+    font-weight: bold;
+    background-color: rgba(255, 193, 7, 0.1);
+    padding: 3px 8px;
+    border-radius: 12px;
+    
+}

@@ -4,7 +4,7 @@
         private $db_name;
         private $username = 'root';
         private $password = '';
-        private $conn = null;
+        public $conn = null;
         public $stmt=null;
 
         public function __construct($db_name="bangiay"){

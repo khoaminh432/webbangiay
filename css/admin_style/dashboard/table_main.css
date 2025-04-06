@@ -1,0 +1,124 @@
+table {
+    width: 95%;
+    color: white;
+    border-collapse: collapse; /* Gộp viền */
+    margin: 20px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 20px 10px rgba(131, 43, 43, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: rgb(39, 39, 39);
+  }
+  
+  th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+    border-right: 3px #e0e0e0 solid;
+  }
+  
+  th {
+    text-align: center;
+    background-color: #6e8efb;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+  }
+  
+  tr:hover {
+    background-color: #b7c2ef;
+  }
+  /* Căn giữa cho cột ID */
+td:first-child {
+  text-align: center;
+  width: 50px;
+}
+
+/* Căn giữa cho cột trạng thái và quyền */
+td:nth-child(4), td:nth-child(5) {
+  text-align: center;
+}
+
+/* Căn giữa cho cột hoạt động */
+td:last-child {
+  text-align: center;
+}
+
+/* Nút trong cột hoạt động */
+.button-update {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 8px;
+}
+.action-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 0.85em;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .action-btn[data-action="update"] {
+    background-color: #4CAF50;
+  }
+  
+  .action-btn[data-action="delete"] {
+    background-color: #f44336;
+  }
+  
+  .action-btn ion-icon {
+    font-size: 1.1em;
+  }
+  
+  @media (max-width: 768px) {
+    table {
+      border: 0;
+    }
+    
+    table thead {
+      display: none;
+    }
+    
+    table tr {
+      display: block;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #ddd;
+    }
+    
+    table td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: right;
+      padding-left: 50%;
+      position: relative;
+      border-bottom: 1px dotted #ccc;
+    }
+    
+    table td::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 15px;
+      width: calc(50% - 15px);
+      padding-right: 15px;
+      font-weight: bold;
+      text-align: left;
+      background-color: #4CAF50;
+    }
+    
+    .button-update {
+      justify-content: flex-end;
+    }
+  }
