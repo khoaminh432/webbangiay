@@ -1,4 +1,13 @@
+/* Căn giữa cho cột trạng thái và quyền */
+td:nth-child(4), td:nth-child(5) {
+  text-align: center; 
+}
 
+/* Căn giữa cho cột hoạt động */
+td:last-child {
+  text-align: center;
+  color: black;
+}
 .account-management{
     
     display: flex;

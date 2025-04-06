@@ -25,8 +25,15 @@
 </td>
         <td>1</td>
         <td class='row button-update'>
-            <button class='action-btn' data-action='update' data-id='<?= $user->id ?>'>sửa</button>
-            <button class='action-btn' data-action='delete' data-id='<?= $user->id ?>'>xóa</button>
+        <button class='action-btn view-btn' data-action='view' data-id='<?= $bill->id ?>'>
+                            <ion-icon name="eye-outline"></ion-icon>
+                        </button>
+                        <button class='action-btn edit-btn' data-action='update' data-id='<?= $bill->id ?>'>
+                            <ion-icon name="create-outline"></ion-icon>
+                        </button>
+                        <button class='action-btn delete-btn' data-action='delete' data-id='<?= $bill->id ?>'>
+                            <ion-icon name="trash-outline"></ion-icon>
+                        </button>
         </td>
         </tr>
         

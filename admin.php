@@ -14,6 +14,7 @@
         <h1>Admin Panel</h1>
         <div class="Dashboard"><ion-icon name="clipboard-outline"></ion-icon> Bảng điều khiển</div>
         <div class="Infor_Admin"><ion-icon name="person-outline"></ion-icon> Thông tin Admin</div>
+        <div class="statictical"><ion-icon name="stats-chart-outline"></ion-icon> Thống kê doanh thu</div>
         <div class="Setting"><ion-icon name="settings-outline"></ion-icon> Cài đặt</div>
         <div class="Logout"><ion-icon name="log-out-outline"></ion-icon> Đăng xuất</div>
     </div>

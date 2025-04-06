@@ -1,0 +1,36 @@
+/* Căn giữa cho cột trạng thái và quyền */
+td:nth-child(3),td:nth-child(5), td:nth-child(6),td:nth-child(7) {
+    text-align: center; 
+  }
+  
+  /* Căn giữa cho cột hoạt động */
+  td:last-child {
+    text-align: center;
+  }
+.voucher-management{
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.voucher-management table tbody td>button:hover{
+    background-color: aqua;
+    cursor:pointer;
+}
+.voucher-management table tbody td>button{
+    border-radius: 20%;
+    padding: 5px;
+    font-size: 1.2em;
+}
+.voucher-management table tbody td>button:first-child{
+    background-color: rgb(160, 199, 155);
+}
+.voucher-management table tbody td>button:first-child:hover{
+    background-color: green;
+}
+.voucher-management table tbody td>button:last-child{
+    background-color:rgb(255, 185, 185);
+}
+.voucher-management table tbody td>button:last-child:hover{
+    background-color: red;
+}

@@ -25,10 +25,10 @@
             throw new Exception("Database connection failed");
         }
         }
-        public function view_table($string_query){
+        public function view_table($string_query,$param=[]){
             try{
                 $this->stmt = $this->conn->prepare($string_query);
-                $this->stmt->execute();    
+                $this->stmt->execute($param);    
                 return $this->stmt->fetchAll();
             } catch(PDOException $e) {
                 echo "Lỗi: " . $e->getMessage();

@@ -4,16 +4,16 @@
 <div class="dashboard-bar">
     <div class="header-container">
         <div class="title">
-            <h1>Quản lí sản phẩm</h1>
+            <h1>Quản lí phương thức thanh toán</h1>
         </div>
         <div class="search-bar">
             <div class="filter-bar"><ion-icon name="filter-circle"></ion-icon></div>
-            <input type="text" placeholder="Tìm kiếm sản phẩm...">
+            <input type="text" placeholder="Tìm kiếm phương thức...">
             <button class="search-btn">
             <ion-icon name="search-outline"></ion-icon> <!-- Icon tìm kiếm từ Font Awesome -->
             </button>
         </div>
     </div>
     
-    <?php include("table/product_management.php");?>
+    <?php include("table/paymentmethod_management.php");?>
 </div>

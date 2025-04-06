@@ -9,14 +9,18 @@ table {
     overflow: hidden;
     background-color: rgb(39, 39, 39);
   }
-  
+  td:last-child {
+    text-align: center;
+}
+td:last-child>button {
+    
+    color: black;
+  }
   th, td {
     padding: 12px 15px;
     text-align: left;
-    border-bottom: 1px solid #e0e0e0;
     border-right: 3px #e0e0e0 solid;
   }
-  
   th {
     text-align: center;
     background-color: #6e8efb;
@@ -36,15 +40,7 @@ td:first-child {
   width: 50px;
 }
 
-/* Căn giữa cho cột trạng thái và quyền */
-td:nth-child(4), td:nth-child(5) {
-  text-align: center;
-}
 
-/* Căn giữa cho cột hoạt động */
-td:last-child {
-  text-align: center;
-}
 
 /* Nút trong cột hoạt động */
 .button-update {
@@ -71,7 +67,7 @@ td:last-child {
   }
   
   .action-btn[data-action="update"] {
-    background-color: #4CAF50;
+    background-color: #7cc960;
   }
   
   .action-btn[data-action="delete"] {
@@ -104,7 +100,7 @@ td:last-child {
       text-align: right;
       padding-left: 50%;
       position: relative;
-      border-bottom: 1px dotted #ccc;
+      
     }
     
     table td::before {
@@ -122,3 +118,4 @@ td:last-child {
       justify-content: flex-end;
     }
   }
+  
