@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . "/../../../dao/ProductDao.php";
-require_once __DIR__ . "/../../../DTO/ProductDTO.php";
-$products = $table_products->view_all();
+$products = $table_productss->view_all();
 define('ROOT_DIR', dirname(__DIR__));
 
 // Xử lý thêm sản phẩm
@@ -18,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
     $addproduct = new ProductDTO($data);
 
     
-    if ($table_product->insert($addproduct)) {
+    if ($table_products->insert($addproduct)) {
         header("Location: ".$_SERVER['PHP_SELF']);
         exit();
     }
@@ -37,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
         'description' => $_POST['description']
     ];
     
-    if ($table_product->update($id, $data)) {
+    if ($table_products->update($id, $data)) {
         header("Location: ".$_SERVER['PHP_SELF']);
         exit();
     }
@@ -47,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
 if (isset($_GET['action']) ){
     if ($_GET['action'] == 'delete' && isset($_GET['id'])) {
         $id = $_GET['id'];
-        if ($table_product->delete($id)) {
+        if ($table_products->delete($id)) {
             header("Location: ".$_SERVER['PHP_SELF']);
             exit();
         }
@@ -59,7 +58,7 @@ $edit_product = null;
 if (isset($_GET['action']) ){
     if ($_GET['action'] == 'edit' && isset($_GET['id'])) {
         $id = $_GET['id'];
-        $edit_product = $table_product->get_by_id($id);
+        $edit_product = $table_products->get_by_id($id);
     }
 }
 ?>
@@ -139,7 +138,7 @@ if (isset($_GET['action']) ){
 
     // Tạo đối tượng ProductDTO
     $productDTO = new ProductDTO($productData);
-    $table_product->insert($productDTO);
+    $table_products->insert($productDTO);
     
 }
     ?>

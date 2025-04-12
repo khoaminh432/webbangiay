@@ -45,3 +45,46 @@ link lấy icon (https://ionic.io/ionicons)
 # 7. cách sử dụng file Dao,DTO
 - Dao nếu muôn lấy mảng đối tượng từ database ta chỉ cần tạo một đối tượng Dao sau đó truy cập vào các hàm của đối tượng này.
 - DTO mỗi một phần tử của mảng Dao là một đối tượng của DTO
+- vd khi muốn lấy người dùng:
+- (<?php
+    require_once __DIR__ . "/../../../dao/UserDao.php";
+    
+    $users = $table_users->view_all();//xem tất cả người dùng
+    $table_users->insert(UserDTO);// chèn một người dùng vào hệ thống
+    $table_users->update(UserDTO);// chỉnh sửa thông tin người dùng đó
+    $table_users->delete($iduser); //xóa thông tin người dùng đó
+    ?>)
+- lấy hóa đơn(<?php
+require_once __DIR__ . "/../../../dao/BillDao.php";
+$bills = $table_bills->view_all();
+?>)
+
+- lấy phương thức thanh toán(<?php
+require_once __DIR__ . "/../../../dao/PaymentMethodDao.php";
+$paymentMethods = $table_paymentmethode->view_all();
+?>)
+
+- lấy sản phẩm(<?php
+require_once __DIR__ . "/../../../dao/ProductDao.php";
+$products = $table_productss->view_all();?>)
+
+- lấy loại sản phẩm(<?php
+require_once __DIR__ . "/../../../dao/TypeProductDao.php";
+$typeProducts = $table_typeproduct->view_all();?>)
+
+- lấy voucher (<?php
+require_once __DIR__ . "/../../../dao/VoucherDao.php";
+$vouchers = $table_vouchers->view_all();?>)
+
+- lấy nhà cung cấp(<?php 
+require_once __DIR__ . "/../../../dao/SupplierDao.php"
+$supplier = $table_supplier->view_all();?>)
+
+- thông tin nhận hàng(<?php
+    require_once __DIR__ . "/../../../dao/InformationReceiveDao.php";
+    $InformationReceive = $table_informationreceive->view_all();
+?>)
+- lấy bill-product(<?php 
+    require_once __DIR__ . "/../../../dao/BillProductDao.php";
+    $billproducts = $table_billproducts->view_all();
+?>)
