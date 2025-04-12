@@ -1,6 +1,5 @@
 <?php
     require_once __DIR__ . "/../webbangiay/dao/UserDao.php";
-    
     $tables = new UserDao();
     $users = $tables->view_all();
     ?>

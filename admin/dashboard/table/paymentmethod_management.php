@@ -5,7 +5,6 @@ $paymentMethods = $paymentMethodDao->view_all();
 define('ROOT_DIR', dirname(__DIR__));
 ?>
 <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
-<link rel="stylesheet" href="css/admin_style/dashboard/payment_method_management.css">
 
 <div class="payment-method-management">
     <table>

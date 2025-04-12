@@ -42,7 +42,7 @@
     padding-bottom: 10px;
     flex-wrap: wrap;
     width: 50% ;
-    
+
 }
 
 .nav-button {
@@ -88,31 +88,8 @@
 }
 
 .main-content {
-    background: white;
+    background: rgb(255, 255, 255);
     border-radius: 12px;
-    padding: 25px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
     min-height: 400px;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    .dashboard-nav {
-        gap: 10px;
-    }
-    
-    .nav-button {
-        min-width: 120px;
-        padding: 15px 10px;
-    }
-    
-    .title-dashboard {
-        font-size: 1.8rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .nav-button {
-        min-width: calc(50% - 10px);
-    }
 }

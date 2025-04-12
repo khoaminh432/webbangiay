@@ -1,0 +1,58 @@
+.add-form {
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+.add-form .form-group {
+    margin-bottom: 15px;
+}
+.add-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.add-form input[type="text"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.add-form textarea {
+    height: 100px;
+    resize: vertical;
+}
+.add-form .form-row {
+    display: flex;
+    gap: 15px;
+}
+.add-form .form-row .form-group {
+    flex: 1;
+}
+.add-form .status-options {
+    display: flex;
+    gap: 15px;
+}
+.add-form .status-options label {
+    font-weight: normal;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.add-form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.add-form button:hover {
+    background-color: #45a049;
+}

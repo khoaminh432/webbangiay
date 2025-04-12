@@ -6,6 +6,7 @@
     color: #ecf0f1;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     border-top: 3px rgb(129, 159, 129) solid;
+    
 }
 
 .header-container {
@@ -111,9 +112,9 @@
 
 .add-user-btn {
     background: #3498db;
-    color: white;
+    color: rgb(255, 255, 255);
     border: none;
-    padding: 10px 15px;
+    padding: 10px;
     border-radius: 30px;
     cursor: pointer;
     display: flex;

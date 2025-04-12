@@ -82,6 +82,7 @@ table {
   
   th, td {
     padding: 15px;
+    font-size: 1.5em;
   }
   thead tr> th{
     background-color: rgb(43, 41, 41);
@@ -137,5 +138,6 @@ button:hover{
   }
   
   .search-bar-mid-right-menu button:hover {
-    background: #5a7de3;
+    
+    background: #000209;
   }

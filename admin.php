@@ -22,5 +22,7 @@
             <?php include("admin/dashboard.php");?>
         </div>
     </div>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script src="js/admin/dashboard_getviewtables.js"></script>
 </body>
 </html>

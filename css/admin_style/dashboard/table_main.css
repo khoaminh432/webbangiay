@@ -36,7 +36,7 @@ td:last-child>button {
   }
   /* Căn giữa cho cột ID */
 td:first-child {
-  text-align: center;
+  text-align:center;
   width: 50px;
 }
 

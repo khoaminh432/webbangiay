@@ -1,7 +1,5 @@
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
 <link rel="stylesheet" href="css/admin_style/dashboard_object.css">
-<link rel="stylesheet" href="css/admin_style/dashboard/voucher_management.css">
 
 <div class="dashboard-bar">
     <div class="header-container">
@@ -26,6 +24,6 @@
             </button>
         </div>
     </div>
-    
+    <?php include("form/voucheradd_form.php");?>
     <?php include("table/voucher_management.php");?>
 </div>

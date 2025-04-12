@@ -41,3 +41,19 @@
         <?php endforeach; ?></tbody>
     </table>
 </div>
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Lấy dữ liệu từ form
+    $userData = [
+        'username' => $_POST['username'] ?? '',
+        'email' => $_POST['email'] ?? '',
+        'password' => $_POST['password'] ?? '',
+        'status' => isset($_POST['status']) ? (int)$_POST['status'] : 1,
+        // created_at và updated_at có thể được thêm tự động ở đây
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
+    $user = new UserDTO($userData);
+    $table_users->insert($user);
+}
+?>
