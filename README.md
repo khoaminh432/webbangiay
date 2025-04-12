@@ -83,7 +83,7 @@ $vouchers = $table_vouchers->view_all();?>)'
 
 - lấy nhà cung cấp 
 + '(<?php 
-require_once __DIR__ . "/../../../dao/SupplierDao.php"
+require_once __DIR__ . "/../../../dao/SupplierDao.php";
 $supplier = $table_supplier->view_all();?>)'
 
 - thông tin nhận hàng 
