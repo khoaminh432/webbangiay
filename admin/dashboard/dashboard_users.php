@@ -16,12 +16,12 @@
                     <ion-icon name="search-outline"></ion-icon>
                 </button>
             </div>
-            <button class="add-user-btn">
+            <button class="add-object-btn add-user-btn">
                 <ion-icon name="add-circle-outline"></ion-icon>
                 Thêm người dùng
-                
             </button>
         </div>
     </div>
+    <?php include("form/useradd_form.php")?>
     <?php include("table/account_management.php");?>
 </div>

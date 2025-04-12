@@ -3,17 +3,13 @@ require_once __DIR__ . "/../../../dao/BillDao.php";
 require_once __DIR__ . "/../../../dao/UserDao.php";
 require_once __DIR__ . "/../../../dao/PaymentMethodDao.php";
 
-$billDao = new BillDao();
-$userDao = new UserDao();
-$paymentMethodDao = new PaymentMethodDao();
-
-$bills = $billDao->view_all();
+$bills = $table_bills->view_all();
 ?>
 
 <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
 <link rel="stylesheet" href="css/admin_style/dashboard/bill_management.css">
 
-<div class="bill-management">
+<div class="bill-management object-management active">
     <table>
         <thead>
             <tr>
@@ -29,8 +25,8 @@ $bills = $billDao->view_all();
         </thead>
         <tbody>
             <?php foreach ($bills as $bill): 
-                $user = $userDao->get_by_id($bill->id_user);
-                $paymentMethod = $paymentMethodDao->get_by_id($bill->id_payment_method);
+                $user = $table_users->get_by_id($bill->id_user);
+                $paymentMethod = $table_paymentmethode->get_by_id($bill->id_payment_method);
             ?>
                 <tr data-id="<?= $bill->id ?>">
                     <td><?= $bill->id ?></td>

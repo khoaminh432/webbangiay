@@ -73,3 +73,4 @@ class PaymentMethodDao {
     }
 }
 ?>
+<?php $table_paymentmethode = new PaymentMethodDao();?>

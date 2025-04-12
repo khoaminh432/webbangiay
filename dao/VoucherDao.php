@@ -109,3 +109,4 @@ class VoucherDao {
     }
 }
 ?>
+<?php $table_vouchers = new VoucherDao();?>

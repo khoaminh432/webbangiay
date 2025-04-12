@@ -106,31 +106,16 @@
 }
 
 .search-btn:hover {
-    color: #3498db;
+    color: #db6334;
     transform: scale(1.1);
 }
 
-.add-user-btn {
-    background: #3498db;
-    color: rgb(255, 255, 255);
-    border: none;
-    padding: 10px;
-    border-radius: 30px;
+.search-container .add-object-btn{
+    padding: 8px;
+    font-size: 1.1em;
+    border-radius: 10px;
+}
+.search-container .add-object-btn:hover{
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    align-self: flex-end;
-}
-
-.add-user-btn:hover {
-    background: #2980b9;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.add-user-btn ion-icon {
-    font-size: 1.2em;
+    background-color: #95a5a6;
 }

@@ -1,0 +1,17 @@
+/* Form thêm voucher mặc định ẩn */
+.formadd-object-container {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Khi form hiển thị */
+.formadd-object-container.active {
+    display: flex;
+    opacity: 1;
+}
+
+/* Ẩn bảng quản lý khi form hiển thị */
+.object-management.hidden {
+    display: none;
+}

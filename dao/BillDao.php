@@ -87,3 +87,4 @@ class BillDao {
     }
 }
 ?>
+<?php $table_bills = new BillDao();?>

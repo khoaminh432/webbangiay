@@ -15,7 +15,7 @@
                     <ion-icon name="search-outline"></ion-icon>
                 </button>
             </div>
-            <button class="add-product-btn">
+            <button class="add-object-btn add-product-btn">
                 <ion-icon name="add-circle-outline"></ion-icon>
                 Thêm Loại Sản Phẩm
                 

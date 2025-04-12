@@ -87,3 +87,4 @@ class InformationReceiveDao {
     }
 }
 ?>
+<?php $table_informationreceive = new InformationReceiveDao();?>

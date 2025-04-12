@@ -3,9 +3,9 @@
 /* Base styles */
 .add-form {
     max-width:90%;
-    margin: 0 auto;
+    margin: 10px;
     padding: 30px;
-    color: white;
+    color: rgb(255, 255, 255);
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -107,7 +107,7 @@
     outline: none;
     cursor: pointer;
     position: relative;
-    transition: all 0.2s;
+    transition: all 0.5s;
 }
 
 .status-options input[type="radio"]:checked {

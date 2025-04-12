@@ -1,8 +1,7 @@
 <?php
 require_once __DIR__ . "/../../../dao/ProductDao.php";
 require_once __DIR__ . "/../../../DTO/ProductDTO.php";
-$table_product = new ProductDao();
-$products = $table_product->view_all();
+$products = $table_products->view_all();
 define('ROOT_DIR', dirname(__DIR__));
 
 // Xử lý thêm sản phẩm
@@ -69,7 +68,7 @@ if (isset($_GET['action']) ){
 <link rel="stylesheet" href="css/admin_style/dashboard/product_management.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<div class="product-management">
+<div class=" product-management object-management active">
     <!-- Bảng danh sách sản phẩm -->
     
     <table>

@@ -130,3 +130,4 @@ class ProductDao {
     }
 }
 ?>
+<?php $table_products = new ProductDao();?>

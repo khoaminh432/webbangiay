@@ -1,4 +1,5 @@
-<link rel="stylesheet" href="../../../css/admin_style/form/form_style.css">
+<link rel="stylesheet" href="css/admin_style/form/form_style.css">
+<div class="formadd-object-container column hidden">
 <h1>Add New User</h1>
     <form class="add-form" action="../table/account_management.php" method="POST">
         <div class="form-group">
@@ -30,3 +31,4 @@
         
         <button type="submit">Add User</button>
     </form>
+</div>

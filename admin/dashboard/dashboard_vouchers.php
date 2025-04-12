@@ -18,7 +18,7 @@
                     <ion-icon name="search-outline"></ion-icon>
                 </button>
             </div>
-            <button class="add-voucher-btn">
+            <button class="add-object-btn add-voucher-btn">
                 <ion-icon name="add-circle-outline"></ion-icon>
                 Thêm Voucher
             </button>

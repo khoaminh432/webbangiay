@@ -129,3 +129,5 @@ class AdminDao {
     }
 }
 ?>
+<?php $table_admins = new AdminDao();
+?>

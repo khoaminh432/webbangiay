@@ -1,13 +1,12 @@
 <?php
 require_once __DIR__ . "/../../../dao/VoucherDao.php";
-$voucherDao = new VoucherDao();
-$vouchers = $voucherDao->view_all();
+$vouchers = $table_vouchers->view_all();
 define('ROOT_DIR', dirname(__DIR__));
 ?>
 <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
 <link rel="stylesheet" href="css/admin_style/dashboard/voucher_management.css">
 
-<div class="voucher-management">
+<div class=" voucher-management object-management active">
     <table>
         <thead>
             <tr>

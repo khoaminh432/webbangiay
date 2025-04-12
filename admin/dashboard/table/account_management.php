@@ -1,11 +1,11 @@
 <?php
     require_once __DIR__ . "/../../../dao/UserDao.php";
-    $table_users = new UserDao();
+    
     $users = $table_users->view_all();
     ?>
     <link rel="stylesheet" href="css/admin_style/dashboard/account_management.css">
-    <link rel="stylesheet" href="css/admin_style/dashboard//table_main.css">
-    <div class="account-management">
+    <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
+    <div class=" account-management object-management active">
     <table>
         <thead><tr>
         <th>ID</th>

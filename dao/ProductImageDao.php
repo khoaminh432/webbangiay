@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../DTO/ProductImage.php';
 require_once __DIR__ . '/../database/database_sever.php';
 
-class ProductDao {
+class ProductImageDao {
     private $db;
     
     public function __construct() {
@@ -10,51 +10,45 @@ class ProductDao {
     }
 
     public function view_all() {
-        $sql = "SELECT * FROM products WHERE is_active = TRUE";
+        $sql = "SELECT * FROM product_images WHERE is_active = TRUE";
         $results = $this->db->view_table($sql);
         
         $products = [];
         foreach ($results as $row) {
-            $products[] = new ProductDTO($row);
+            $products[] = new ProductImageDTO($row);
         }
         return $products;
     }
 
     public function get_by_type($typeId) {
-        $sql = "SELECT * FROM products WHERE id_type_product = :type_id AND is_active = TRUE";
+        $sql = "SELECT * FROM product_images WHERE id_type_product = :type_id AND is_active = TRUE";
         $params = ['type_id' => $typeId];
         $results = $this->db->view_table($sql, $params);
         
         $products = [];
         foreach ($results as $row) {
-            $products[] = new ProductDTO($row);
+            $products[] = new ProductImageDTO($row);
         }
         return $products;
     }
 
     public function get_by_id($id) {
-        $sql = "SELECT * FROM products WHERE id = :id";
+        $sql = "SELECT * FROM product_images WHERE id = :id";
         $params = ['id' => $id];
         $result = $this->db->view_table($sql, $params);
         
-        return !empty($result) ? new ProductDTO($result[0]) : null;
+        return !empty($result) ? new ProductImageDTO($result[0]) : null;
     }
 
-    public function insert(ProductDTO $product) {
-        $sql = "INSERT INTO products (name, quantity, description, price, weight, id_voucher, id_type_product, id_admin, id_supplier, is_active) 
+    public function insert(ProductImageDTO $productImage) {
+        $sql = "INSERT INTO products (image_url,id_product,is_primary,created_at) 
                 VALUES (:name, :quantity, :description, :price, :weight, :id_voucher, :id_type_product, :id_admin, :id_supplier, :is_active)";
         
         $params = [
-            'name' => $product->name,
-            'quantity' => $product->quantity,
-            'description' => $product->description,
-            'price' => $product->price,
-            'weight' => $product->weight,
-            'id_voucher' => $product->id_voucher,
-            'id_type_product' => $product->id_type_product,
-            'id_admin' => $product->id_admin,
-            'id_supplier' => $product->id_supplier,
-            'is_active' => $product->is_active
+            'image_url' => $productImage->image_url,
+            'id_product' => $productImage->id_product,
+            'is_primary' => $productImage->is_primary,
+            'created_at' => $productImage->created_at,
         ];
         
         try {
@@ -66,32 +60,21 @@ class ProductDao {
         }
     }
 
-    public function update(ProductDTO $product) {
-        $sql = "UPDATE products SET 
-                name = :name,
-                quantity = :quantity,
-                description = :description,
-                price = :price,
-                weight = :weight,
-                id_voucher = :id_voucher,
-                id_type_product = :id_type_product,
-                id_admin = :id_admin,
-                id_supplier = :id_supplier,
-                is_active = :is_active
+    public function update(ProductImageDTO $product) {
+        $sql = "UPDATE product_images SET 
+                image_url = :image_url,
+                id_product = :id_product,
+                is_primary = :is_primary,
+                
                 WHERE id = :id";
         
         $params = [
             'id' => $product->id,
-            'name' => $product->name,
-            'quantity' => $product->quantity,
-            'description' => $product->description,
-            'price' => $product->price,
-            'weight' => $product->weight,
-            'id_voucher' => $product->id_voucher,
-            'id_type_product' => $product->id_type_product,
-            'id_admin' => $product->id_admin,
-            'id_supplier' => $product->id_supplier,
-            'is_active' => $product->is_active
+            'image_url' => $product->image_url,
+            'id_product' => $product->id_product,
+            'is_primary' => $product->is_primary,
+            'created_at' => $product->created_at,
+            
         ];
         
         try {
@@ -118,7 +101,7 @@ class ProductDao {
     }
 
     public function delete($id) {
-        $sql = "UPDATE products SET is_active = FALSE WHERE id = :id";
+        $sql = "UPDATE product_images SET is_primary = FALSE WHERE id = :id";
         $params = ['id' => $id];
         
         try {
@@ -130,3 +113,4 @@ class ProductDao {
     }
 }
 ?>
+<?php $table_productImage = new ProductImagedao();?>

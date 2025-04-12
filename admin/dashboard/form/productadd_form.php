@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="css/admin_style/form/addformproduct_sytle.css">
+<div class="formadd-object-container column hidden ">
 <h1>Add New Product</h1>
     <form class="add-form" action="admin/dashboard/table/product_management.php" method="POST" onsubmit="return validateProductForm()">
         <div class="form-group">
@@ -28,8 +29,8 @@
                 <label for="id_type_product">Product Type:</label>
                 <select id="id_type_product" name="id_type_product">
                     <?php require_once __DIR__."/../../../dao/TypeProductDao.php";
-                    $temp_teble_typeproducts = new TypeProductDao();
-                    $temp_typeproducts = $temp_teble_typeproducts->view_all();
+                    
+                    $temp_typeproducts = $table_typeproduct->view_all();
                     ?>
                     <option value="">-- Select Type --</option>
                     <?php foreach($temp_typeproducts as $typeproduct):?>
@@ -85,7 +86,7 @@
         
         <button type="submit">Add Product</button>
     </form>
-
+</div>
     <script>
         function validateProductForm() {
             // Lấy giá trị từ form

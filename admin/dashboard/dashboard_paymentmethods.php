@@ -11,12 +11,12 @@
             <input type="text" placeholder="Tìm kiếm phương thức...">
             <button class="search-btn">
             <ion-icon name="search-outline"></ion-icon> <!-- Icon tìm kiếm từ Font Awesome -->
-            </button>
-            <button class="add-voucher-btn">
+            </button></div>
+            <button class="add-object-btn add-voucher-btn">
                 <ion-icon name="add-circle-outline"></ion-icon>
                 Thêm phương thức thanh toán
             </button>
-        </div>
+        
         </div>
         
     </div>

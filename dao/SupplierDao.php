@@ -99,3 +99,4 @@ class SupplierDao {
     }
 }
 ?>
+<?php $table_supplier = new SupplierDao();?>

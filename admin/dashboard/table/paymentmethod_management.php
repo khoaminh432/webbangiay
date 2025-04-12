@@ -1,12 +1,11 @@
 <?php
 require_once __DIR__ . "/../../../dao/PaymentMethodDao.php";
-$paymentMethodDao = new PaymentMethodDao();
-$paymentMethods = $paymentMethodDao->view_all();
+$paymentMethods = $table_paymentmethode->view_all();
 define('ROOT_DIR', dirname(__DIR__));
 ?>
 <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
 
-<div class="payment-method-management">
+<div class=" payment-method-management object-management active">
     <table>
         <thead>
             <tr>

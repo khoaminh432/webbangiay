@@ -1,37 +1,12 @@
 <?php
 require_once __DIR__ . "/../../../dao/TypeProductDao.php";
-$typeProductDao = new TypeProductDao();
-$typeProducts = $typeProductDao->view_all();
+$typeProducts = $table_typeproduct->view_all();
 define('ROOT_DIR', dirname(__DIR__));
 ?>
 
-<?php //thêm thông tin từ form
-
-// Xử lý khi form submit
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $typeProductData = [
-        'name' => $_POST['name'] ?? '',
-        'id_admin' => 1 // Giả sử admin ID là 1 (trong thực tế lấy từ session)
-    ];
-    
-    $typeProduct = new TypeProductDTO($typeProductData);
-    // TODO: Thêm code lưu vào CSDL ở đây
-    $typeProductDao->insert($typeProduct);
-    // Chuyển hướng sau khi thêm thành công
-    header('Location: typeproduct_management.php?success=1');
-    exit();
-}
-?>
 <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
 
-<div class="type-product-management">
-    <div class="table-header">
-        <h2>Quản lý Loại Sản Phẩm</h2>
-        <button class="add-new-btn" onclick="openAddTypeProductModal()">
-            <ion-icon name="add-outline"></ion-icon> Thêm mới
-        </button>
-    </div>
-    
+<div class=" type-product-management object-management active">
     <table>
         <thead>
             <tr>
@@ -84,26 +59,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div id="typeProductModal" class="modal">
     <!-- Nội dung modal sẽ được thêm bằng JS -->
 </div>
-
-<script>
-// Script xử lý tương tự như payment method
-function openAddTypeProductModal() {
-    // Gọi AJAX để lấy form thêm loại sản phẩm
-    fetch('admin/get_type_product_form.php')
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('typeProductModal').innerHTML = html;
-            openModal('typeProductModal');
-        });
-}
-
-function openEditTypeProductModal(id) {
-    // Gọi AJAX để lấy form sửa với dữ liệu hiện có
-    fetch(`admin/get_type_product_form.php?id=${id}`)
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('typeProductModal').innerHTML = html;
-            openModal('typeProductModal');
-        });
-}
-</script>

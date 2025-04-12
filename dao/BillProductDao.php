@@ -54,3 +54,4 @@ class BillProductDao {
     }
 }
 ?>
+<?php $table_billproducts = new BillProductDao();?>

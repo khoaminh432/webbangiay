@@ -112,3 +112,4 @@ class UserDao {
     
 }
 ?>
+<?php $table_users = new UserDao();?>

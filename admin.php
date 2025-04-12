@@ -8,6 +8,7 @@
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <link rel="stylesheet" href="css/admin_style/style.css">
 </head>
+<link rel="stylesheet" href="css/admin_style/form/hide_show_form.css">
 <body>
     <div class="Admin-container row">
         <div class="left-menu column">
@@ -24,5 +25,6 @@
     </div>
     <script src="js/jquery-3.7.1.min.js"></script>
     <script src="js/admin/dashboard_getviewtables.js"></script>
+    <script src="js/admin/hideshow_form.js"></script>
 </body>
 </html>

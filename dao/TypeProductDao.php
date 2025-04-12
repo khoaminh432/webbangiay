@@ -73,3 +73,4 @@ class TypeProductDao {
     }
 }
 ?>
+<?php $table_typeproduct = new TypeProductDao();?>
