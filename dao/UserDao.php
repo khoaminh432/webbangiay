@@ -109,6 +109,17 @@ class UserDao {
         $result = $this->db->view_table($sql, $params);
         return $result[0]['COUNT(*)'] > 0;
     }
+    //huy
+    public function get_by_email($email) {
+        $sql = "SELECT * FROM users WHERE email = :email LIMIT 1";
+        $params = ['email' => $email];
+        $result = $this->db->view_table($sql, $params);
+        
+        if (!empty($result)) {
+            return new UserDTO($result[0]);
+        }
+        return null;
+    }
     
 }
 ?>
