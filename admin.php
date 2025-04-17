@@ -1,6 +1,12 @@
+<?php
+header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
+header("Pragma: no-cache"); // HTTP 1.0
+header("Expires: 0"); // Proxies
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin management</title>
@@ -8,7 +14,8 @@
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <link rel="stylesheet" href="css/admin_style/style.css">
 </head>
-<link rel="stylesheet" href="css/admin_style/form/hide_show_form.css">
+
+
 <body>
     <div class="Admin-container row">
         <div class="left-menu column">
@@ -19,6 +26,7 @@
         <div class="Setting"><ion-icon name="settings-outline"></ion-icon> Cài đặt</div>
         <div class="Logout"><ion-icon name="log-out-outline"></ion-icon> Đăng xuất</div>
     </div>
+    
         <div class="right-menu column">
             <?php include("admin/dashboard.php");?>
         </div>

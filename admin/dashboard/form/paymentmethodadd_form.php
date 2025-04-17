@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="css/admin_style/form/addformpaymentmethod_style.css">
 <div class="formadd-object-container column hidden ">
 <h1>Add New Payment Method</h1>
+<div class="close-form-btn"><ion-icon name="close-circle-outline"></ion-icon></div>
 <form class="add-form" action="admin/dashboard/table/payment_method_management.php" method="POST" onsubmit="return validatePaymentMethodForm()">
     <div class="form-group">
         <label for="name">Payment Method Name*:</label>

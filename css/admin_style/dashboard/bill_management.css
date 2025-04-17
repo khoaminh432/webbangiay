@@ -25,15 +25,6 @@
   .bill-management table tbody td>button:last-child:hover{
       background-color: red;
   }
-  
-  .row{
-      display: flex;
-      flex-direction: row;
-  }
-  .column{
-      display: flex;
-      flex-direction: column;
-  }
     
   
     .status-unlock {

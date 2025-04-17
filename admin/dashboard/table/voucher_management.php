@@ -4,10 +4,9 @@ $vouchers = $table_vouchers->view_all();
 define('ROOT_DIR', dirname(__DIR__));
 ?>
 <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
-<link rel="stylesheet" href="css/admin_style/dashboard/voucher_management.css">
 
 <div class=" voucher-management object-management active">
-    <table>
+    <table class="data-table">
         <thead>
             <tr>
                 <th>ID</th>
@@ -37,13 +36,13 @@ define('ROOT_DIR', dirname(__DIR__));
                         </span>
                     </td>
                     <td class='row button-update'>
-                    <button class='action-btn view-btn' data-action='view' data-id='<?= $bill->id ?>'>
+                    <button class='action-btn view-btn' data-action='view' data-id='<?= $voucher->id ?>'>
                             <ion-icon name="eye-outline"></ion-icon>
                         </button>
-                        <button class='action-btn edit-btn' data-action='update' data-id='<?= $bill->id ?>'>
+                        <button class='action-btn edit-btn' data-action='update' data-id='<?= $voucher->id ?>'>
                             <ion-icon name="create-outline"></ion-icon>
                         </button>
-                        <button class='action-btn delete-btn' data-action='delete' data-id='<?= $bill->id ?>'>
+                        <button class='action-btn delete-btn' data-action='delete' data-id='<?= $voucher->id ?>'>
                             <ion-icon name="trash-outline"></ion-icon>
                         </button>
                     </td>

@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="css/admin_style/form/addformvoucher_style.css">
-<div class="formadd-object-container column hidden">
+<div class="formadd-object-container column hidden" >
 <h1>Add New Voucher</h1>
+<div class="close-form-btn"><ion-icon name="close-circle-outline"></ion-icon></div>
 <form class="add-form" action="admin/dashboard/table/voucher_management.php" method="POST" onsubmit="return validateVoucherForm()">
     <div class="form-group">
         <label for="name">Voucher Name*:</label>

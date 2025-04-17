@@ -1,7 +1,7 @@
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <link rel="stylesheet" href="css/admin_style/dashboard.css">
-
+<link rel="stylesheet" href="css/admin_style/form/hide_show_form.css">
 <div class="top-menu column">
     <div class="title-dashboard"><h1>Chào mừng bạn đến với trang Dashboard</h1></div>
     <div class="dashboard-nav row">
@@ -34,7 +34,7 @@
 <div class="main-content">
             <div id="content-area" >
                 <!-- Nội dung sẽ được tải động ở đây -->
-                <?php require_once __DIR__ . "/dashboard/dashboard_users.php";?>
+                <?php require_once __DIR__ . "/dashboard/dashboard_products.php";?>
             </div>
 
         </div>

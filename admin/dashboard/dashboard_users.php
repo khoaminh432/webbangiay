@@ -22,6 +22,8 @@
             </button>
         </div>
     </div>
-    <?php include("form/useradd_form.php")?>
-    <?php include("table/account_management.php");?>
+    <?php require_once __DIR__."/form/view/userview_form.php";?>
+    <?php require_once __DIR__."/form/useradd_form.php";?>
+    
+    <?php require_once __DIR__."/table/user_management.php";?>
 </div>

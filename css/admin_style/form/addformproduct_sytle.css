@@ -22,6 +22,7 @@ select {
     border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;
+    transition: border-color 0.5s;
 }
 .add-form textarea {
     height: 100px;

@@ -7,10 +7,8 @@ $bills = $table_bills->view_all();
 ?>
 
 <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
-<link rel="stylesheet" href="css/admin_style/dashboard/bill_management.css">
-
 <div class="bill-management object-management active">
-    <table>
+    <table class="data-table">
         <thead>
             <tr>
                 <th>ID</th>

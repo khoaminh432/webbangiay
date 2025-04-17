@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="css/admin_style/form/addformpaymentmethod_style.css">
 <div class="formadd-object-container column hidden">
 <h1>Thêm Loại Sản Phẩm Mới</h1>
+<div class="close-form-btn"><ion-icon name="close-circle-outline"></ion-icon></div>
 <form class="add-form" action="admin/dashboard/table/typeproduct_management.php" method="POST">
     <div class="form-group">
         <label for="name">Tên loại sản phẩm:</label>

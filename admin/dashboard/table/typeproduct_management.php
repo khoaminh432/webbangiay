@@ -7,7 +7,7 @@ define('ROOT_DIR', dirname(__DIR__));
 <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
 
 <div class=" type-product-management object-management active">
-    <table>
+    <table class="data-table">
         <thead>
             <tr>
                 <th>ID</th>
@@ -38,7 +38,7 @@ define('ROOT_DIR', dirname(__DIR__));
                     </td>
                     <td><?= date('d/m/Y', strtotime($type->created_at)) ?></td>
                     <td><?= $type->updated_at ? date('d/m/Y', strtotime($type->updated_at)) : 'Chưa cập nhật' ?></td>
-                    <td class='action-buttons'>
+                    <td class=' row button-update'>
                         <button class='action-btn view-btn' data-action='view' data-id='<?= $type->id ?>'>
                             <ion-icon name="eye-outline"></ion-icon>
                         </button>

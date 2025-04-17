@@ -5,7 +5,7 @@ $paymentMethods = $table_paymentmethode->view_all();
 <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
 
 <div class=" payment-method-management object-management active">
-    <table>
+    <table class="data-table">
         <thead>
             <tr>
                 <th>ID</th>
@@ -32,7 +32,7 @@ $paymentMethods = $table_paymentmethode->view_all();
                     </td>
                     <td><?= date('d/m/Y', strtotime($method->created_at)) ?></td>
                     <td><?= $method->updated_at ? date('d/m/Y', strtotime($method->updated_at)) : 'Chưa cập nhật' ?></td>
-                    <td class='action-buttons'>
+                    <td class='row button-update'>
                         <button class='action-btn view-btn' data-action='view' data-id='<?= $method->id ?>'>
                             <ion-icon name="eye-outline"></ion-icon>
                         </button>

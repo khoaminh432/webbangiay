@@ -40,8 +40,8 @@
     gap: 40px;
     padding-top: 10px;
     padding-bottom: 10px;
-    flex-wrap: wrap;
-    width: 50% ;
+    flex-wrap: nowrap;
+    width: 80%;
 
 }
 

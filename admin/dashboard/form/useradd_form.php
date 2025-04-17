@@ -1,7 +1,8 @@
-<link rel="stylesheet" href="css/admin_style/form/form_style.css">
+<link rel="stylesheet" href="css/admin_style/form/addformuser_style.css">
 <div class="formadd-object-container column hidden">
 <h1>Add New User</h1>
-    <form class="add-form" action="../table/account_management.php" method="POST">
+<div class="close-form-btn"><ion-icon name="close-circle-outline"></ion-icon></div>
+    <form class="add-form" action="table/account_management.php" method="POST"  >
         <div class="form-group">
             <label for="username">Username:</label>
             <input type="text" id="addusername" name="username" required>

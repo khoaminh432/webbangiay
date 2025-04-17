@@ -1,9 +1,11 @@
+
 .add-form {
     max-width: 90%;
     margin: 10px;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    
 }
 .add-form .form-group {
     margin-bottom: 15px;
@@ -21,6 +23,7 @@ input[type="password"] {
     border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;
+    transition: border-color 0.5s;
 }
 .add-form .status-options {
     display: flex;

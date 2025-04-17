@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="css/admin_style/form/addformproduct_sytle.css">
 <div class="formadd-object-container column hidden ">
 <h1>Add New Product</h1>
+<div class="close-form-btn"><ion-icon name="close-circle-outline"></ion-icon></div>
     <form class="add-form" action="admin/dashboard/table/product_management.php" method="POST" onsubmit="return validateProductForm()">
         <div class="form-group">
             <label for="name">Product Name*:</label>
