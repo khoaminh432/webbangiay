@@ -192,27 +192,28 @@ CREATE TABLE bill_products
   UNIQUE (id_bill, id_product)
 );
 INSERT INTO users (email, password, status, username) VALUES
-('customer1@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', "UNLOCK", 'user_john'),
-('customer2@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'UNLOCK', 'user_mary'),
-('customer3@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'UNLOCK', 'user_david'),
-('customer4@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'UNLOCK', 'user_lisa'),
-('customer5@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'LOCK', 'inactive_user'),
-('vip_customer@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'LOCK', 'vip_member'),
-('new_user@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'LOCK', 'newbie123'),
-('sneaker_lover@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'UNLOCK', 'sneakerhead'),
-('fashion_guy@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'UNLOCK', 'fashionista'),
-('admin_test@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'UNLOCK', 'test_admin');
+('customer1@gmail.com', '123', "UNLOCK", 'user_john'),
+('customer2@gmail.com', '123', 'UNLOCK', 'user_mary'),
+('customer3@gmail.com', 'password123', 'UNLOCK', 'user_david'),
+('customer4@gmail.com', 'password123', 'UNLOCK', 'user_lisa'),
+('customer5@gmail.com', 'password123', 'LOCK', 'inactive_user'),
+('vip_customer@gmail.com', 'password123', 'LOCK', 'vip_member'),
+('new_user@gmail.com', 'password123', 'LOCK', 'newbie123'),
+('sneaker_lover@gmail.com', 'password123', 'UNLOCK', 'sneakerhead'),
+('fashion_guy@gmail.com', 'password123', 'UNLOCK', 'fashionista'),
+('admin_test@gmail.com', 'password123', 'UNLOCK', 'test_admin');
+
 INSERT INTO admin (name, email, password, position) VALUES
-('Nguyễn Văn A', 'admin1@bangiay.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Quản lý cửa hàng'),
-('Trần Thị B', 'admin2@bangiay.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Quản lý kho'),
-('Lê Văn C', 'admin3@bangiay.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Quản lý bán hàng'),
-('Phạm Thị D', 'admin4@bangiay.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Quản lý marketing'),
-('Hoàng Văn E', 'admin5@bangiay.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Quản trị hệ thống'),
-('Super Admin', 'superadmin@bangiay.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Super Administrator'),
-('CS Manager', 'csmanager@bangiay.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Quản lý CSKH'),
-('Inventory Admin', 'inventory@bangiay.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Quản lý tồn kho'),
-('Marketing Admin', 'marketing@bangiay.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Quản lý tiếp thị'),
-('IT Support', 'itsupport@bangiay.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Hỗ trợ kỹ thuật');
+('Nguyễn Văn A', 'admin1@bangiay.com', 'admin123', 'Quản lý cửa hàng'),
+('Trần Thị B', 'admin2@bangiay.com', 'admin123', 'Quản lý kho'),
+('Lê Văn C', 'admin3@bangiay.com', 'admin123', 'Quản lý bán hàng'),
+('Phạm Thị D', 'admin4@bangiay.com', 'admin123', 'Quản lý marketing'),
+('Hoàng Văn E', 'admin5@bangiay.com', 'admin123', 'Quản trị hệ thống'),
+('Super Admin', 'superadmin@bangiay.com', 'admin123', 'Super Administrator'),
+('CS Manager', 'csmanager@bangiay.com', 'admin123', 'Quản lý CSKH'),
+('Inventory Admin', 'inventory@bangiay.com', 'admin123', 'Quản lý tồn kho'),
+('Marketing Admin', 'marketing@bangiay.com', 'admin123', 'Quản lý tiếp thị'),
+('IT Support', 'itsupport@bangiay.com', 'admin123', 'Hỗ trợ kỹ thuật');
 INSERT INTO type_product (name, id_admin) VALUES
 ('Giày thể thao', 1),
 ('Giày chạy bộ', 1),
