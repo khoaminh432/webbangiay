@@ -22,6 +22,9 @@
         </div>
         
     </div>
+    <div class="form-view-modal">
+
+    </div>
     <?php include("form/paymentmethodadd_form.php");?>
     <?php include("table/paymentmethod_management.php");?>
     

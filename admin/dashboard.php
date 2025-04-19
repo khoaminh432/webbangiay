@@ -2,6 +2,7 @@
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <link rel="stylesheet" href="css/admin_style/dashboard.css">
 <link rel="stylesheet" href="css/admin_style/form/hide_show_form.css">
+<link rel="stylesheet" href="css/admin_style/form/view/style.css">
 <div class="top-menu column">
     <div class="title-dashboard"><h1>Chào mừng bạn đến với trang Dashboard</h1></div>
     <div class="dashboard-nav row">
@@ -39,3 +40,4 @@
 
         </div>
 
+<script src="js/admin/CRUD_form.js"></script>

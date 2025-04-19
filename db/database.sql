@@ -1,5 +1,4 @@
 -- Users table
-CREATE DATABASE IF NOT EXISTS bangiay;
 USE bangiay;
 DROP TABLE IF EXISTS users;
 CREATE TABLE users

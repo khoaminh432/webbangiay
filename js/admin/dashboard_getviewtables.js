@@ -27,6 +27,7 @@ $(document).ready(function() {
             dataType: 'html',
             success: function(data) {
                 contentCache[mode] = data;
+                
                 updateContent(mode, data, pushState);
             },
             error: function(xhr) {
@@ -43,7 +44,6 @@ $(document).ready(function() {
     // Cập nhật nội dung và trạng thái
     function updateContent(mode, content, pushState = false) {
         $('#content-area').html(content);
-        
         // Active menu (cải tiến hiệu suất)
         $('.ajax-load').removeClass('active')
                       .filter(`[data-mode="${mode}"]`).addClass('active');

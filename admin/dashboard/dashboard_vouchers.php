@@ -24,6 +24,9 @@
             </button>
         </div>
     </div>
+    <div class="form-view-modal">
+        <?php require_once __DIR__."/form/view/productview_form.php";?>
+    </div>
     <?php include("form/voucheradd_form.php");?>
     <?php include("table/voucher_management.php");?>
 </div>

@@ -1,11 +1,10 @@
 <?php
 require_once __DIR__ . "/../../../../dao/UserDao.php";
-$user = $table_users->get_by_id(2);
+$user = $table_users->get_by_id($object_id);
 ?>
 <link rel="stylesheet" href="css/admin_style/form/view/viewformuser.css">
-
-<div class="user-view-modal">
-    <div class="user-view-card">
+<div class="user-view-model">
+<div class="user-view-card">
         <div class="card-header">
             <h2 class="card-title">User Profile</h2>
             <button class="close-btn" onclick="closeUserView()">
@@ -72,10 +71,9 @@ $user = $table_users->get_by_id(2);
                 </div>
             </div>
         </div>
-
-        
     </div>
 </div>
+    
 
 
 
