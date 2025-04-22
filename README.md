@@ -96,3 +96,25 @@ $supplier = $table_supplier->view_all();?>)'
     require_once __DIR__ . "/../../../dao/BillProductDao.php";
     $billproducts = $table_billproducts->view_all();
 ?>)'
+# 8.cập nhật file root php khi sử dụng khác thư mục
+<?php
+// Tự động xác định thư mục gốc 
+$root_dir = "webbangiay";
+$lastElement = "";
+$currentDir = __DIR__;
+while(true){
+    $pathArray = explode(DIRECTORY_SEPARATOR, $currentDir);
+    $pathArray = array_filter($pathArray); // Loại bỏ phần tử rỗng
+    $lastElement = array_slice($pathArray, -1)[0];
+    if ($lastElement==$root_dir)
+        break;
+    $currentDir = dirname($currentDir);
+}
+define('ROOT_DIR', $currentDir);
+?>
+khi dùng mình chỉ cần 
+ví dụ: ta đang ở trong admin/dashboard.php
+mà muốn lấy file (dao/AdminDao.php)
+include (ROOT_DIR."dao/AdminDao.php");
+hoặc
+require_once ROOT_DIR."dao/AdminDao.php";
