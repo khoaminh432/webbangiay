@@ -27,5 +27,8 @@
     </div>
     <?php include("form/paymentmethodadd_form.php");?>
     <?php include("table/paymentmethod_management.php");?>
+    <div class="form-view-modal" id="objectViewModal">
+        
+    </div>
     
 </div>

@@ -13,6 +13,7 @@ header("Expires: 0"); // Proxies
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <link rel="stylesheet" href="css/admin_style/style.css">
+    <script src="js/jquery-3.7.1.min.js"></script>
 </head>
 
 
@@ -31,7 +32,7 @@ header("Expires: 0"); // Proxies
             <?php include("admin/dashboard.php");?>
         </div>
     </div>
-    <script src="js/jquery-3.7.1.min.js"></script>
+    
     <script src="js/admin/dashboard_getviewtables.js"></script>
     <script src="js/admin/hideshow_form.js"></script>
 </body>

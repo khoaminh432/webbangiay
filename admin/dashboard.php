@@ -1,5 +1,4 @@
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
 <link rel="stylesheet" href="css/admin_style/dashboard.css">
 <link rel="stylesheet" href="css/admin_style/form/hide_show_form.css">
 <link rel="stylesheet" href="css/admin_style/form/view/style.css">
@@ -39,5 +38,4 @@
             </div>
 
         </div>
-
-<script src="js/admin/CRUD_form.js"></script>
+        

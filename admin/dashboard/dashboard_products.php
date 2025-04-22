@@ -25,9 +25,9 @@
         </div>
         
     </div>
-    <div class="form-view-modal">
-
-    </div>
     <?php require_once __DIR__."/form/productadd_form.php";?>
     <?php require_once __DIR__."/table/product_management.php";?>
+    <div class="form-view-modal" id="objectViewModal">
+        
+    </div>
 </div>

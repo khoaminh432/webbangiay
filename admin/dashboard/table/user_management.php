@@ -24,13 +24,13 @@
 </td>
         <td>1</td>
         <td class='row button-update'>
-        <button class='action-btn view-btn' data-action='view' data-id='<?= $user->id ?>'>
+        <button class='action-btn view-btn' data-action='view-user' data-id='<?= $user->id ?>'>
                             <ion-icon name="eye-outline"></ion-icon>
                         </button>
-                        <button class='action-btn edit-btn' data-action='update' data-id='<?= $user->id ?>'>
+                        <button class='action-btn edit-btn' data-action='update-user' data-id='<?= $user->id ?>'>
                             <ion-icon name="create-outline"></ion-icon>
                         </button>
-                        <button class='action-btn delete-btn' data-action='delete' data-id='<?= $user->id ?>'>
+                        <button class='action-btn delete-btn' data-action='delete-user' data-id='<?= $user->id ?>'>
                             <ion-icon name="trash-outline"></ion-icon>
                         </button>
         </td>
@@ -40,3 +40,5 @@
         <?php endforeach; ?></tbody>
     </table>
 </div>
+        
+<script src="js/admin/CRUD_form.js"></script>
