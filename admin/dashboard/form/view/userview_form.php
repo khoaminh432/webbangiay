@@ -1,13 +1,20 @@
 <?php
 require_once __DIR__ . "/../../../../dao/UserDao.php";
-$user = $table_users->get_by_id($object_id);
+// Kiểm tra xem ID có tồn tại không
+if (!isset($_GET['id'])) {
+    die("<p class='error'>Thiếu ID người dùng!</p>");
+}
+
+$userId = (int)$_GET['id']; // Ép kiểu để tránh SQL injection
+$user = $table_users->get_by_id($userId);
+
 ?>
 <link rel="stylesheet" href="css/admin_style/form/view/viewformuser.css">
 <div class="user-view-model">
 <div class="user-view-card">
         <div class="card-header">
             <h2 class="card-title">User Profile</h2>
-            <button class="close-btn" onclick="closeUserView()">
+            <button class="close-btn" onclick="closeObjectView()">
                 <ion-icon name="close-outline"></ion-icon>
             </button>
         </div>
@@ -73,76 +80,4 @@ $user = $table_users->get_by_id($object_id);
         </div>
     </div>
 </div>
-    
-
-
-
-<script>
-function closeUserView() {
-    document.querySelector('.user-view-modal').style.animation = 'fadeIn 0.3s ease reverse forwards';
-    setTimeout(() => {
-        // Remove modal or navigate back
-        window.history.back();
-    }, 300);
-}
-
-function editUser(userId) {
-    // Smooth transition before redirect
-    document.querySelector('.user-view-modal').style.opacity = '0';
-    setTimeout(() => {
-        window.location.href = `edit_user.php?id=${userId}`;
-    }, 300);
-}
-
-function disableUser(userId) {
-    if (confirm('Are you sure you want to disable this account? The user will no longer be able to log in.')) {
-        fetch(`disable_user.php?id=${userId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showNotification('Account disabled successfully', 'success');
-                    setTimeout(() => location.reload(), 1500);
-                } else {
-                    showNotification('Error: ' + data.message, 'error');
-                }
-            });
-    }
-}
-
-function enableUser(userId) {
-    if (confirm('Are you sure you want to enable this account?')) {
-        fetch(`enable_user.php?id=${userId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showNotification('Account enabled successfully', 'success');
-                    setTimeout(() => location.reload(), 1500);
-                } else {
-                    showNotification('Error: ' + data.message, 'error');
-                }
-            });
-    }
-}
-
-function messageUser(email) {
-    window.location.href = `mailto:${email}`;
-}
-
-function showNotification(message, type) {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 10);
-    
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
-}
-</script>
+<script src="js/admin/closeview_form.js"></script>

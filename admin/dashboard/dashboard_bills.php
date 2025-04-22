@@ -18,8 +18,9 @@
             
         </div>
     </div>
-    <div class="form-view-modal">
-
-    </div>
+    
     <?php include("table/bill_management.php");?>
+    <div class="form-view-modal" id="objectViewModal">
+        
+    </div>
 </div>

@@ -33,13 +33,13 @@ $paymentMethods = $table_paymentmethode->view_all();
                     <td><?= date('d/m/Y', strtotime($method->created_at)) ?></td>
                     <td><?= $method->updated_at ? date('d/m/Y', strtotime($method->updated_at)) : 'Chưa cập nhật' ?></td>
                     <td class='row button-update'>
-                        <button class='action-btn view-btn' data-action='view' data-id='<?= $method->id ?>'>
+                        <button class='action-btn view-btn' data-action='view-paymentmethod' data-id='<?= $method->id ?>'>
                             <ion-icon name="eye-outline"></ion-icon>
                         </button>
-                        <button class='action-btn edit-btn' data-action='update' data-id='<?= $method->id ?>'>
+                        <button class='action-btn edit-btn' data-action='update-paymentmethod' data-id='<?= $method->id ?>'>
                             <ion-icon name="create-outline"></ion-icon>
                         </button>
-                        <button class='action-btn delete-btn' data-action='delete' data-id='<?= $method->id ?>'>
+                        <button class='action-btn delete-btn' data-action='delete-paymentmethod' data-id='<?= $method->id ?>'>
                             <ion-icon name="trash-outline"></ion-icon>
                         </button>
                     </td>
@@ -48,3 +48,4 @@ $paymentMethods = $table_paymentmethode->view_all();
         </tbody>
     </table>
 </div>
+<script src="js/admin/CRUD_form.js"></script>

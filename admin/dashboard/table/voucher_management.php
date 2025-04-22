@@ -36,13 +36,13 @@ define('ROOT_DIR', dirname(__DIR__));
                         </span>
                     </td>
                     <td class='row button-update'>
-                    <button class='action-btn view-btn' data-action='view' data-id='<?= $voucher->id ?>'>
+                    <button class='action-btn view-btn' data-action='view-voucher' data-id='<?= $voucher->id ?>'>
                             <ion-icon name="eye-outline"></ion-icon>
                         </button>
-                        <button class='action-btn edit-btn' data-action='update' data-id='<?= $voucher->id ?>'>
+                        <button class='action-btn edit-btn' data-action='update-voucher' data-id='<?= $voucher->id ?>'>
                             <ion-icon name="create-outline"></ion-icon>
                         </button>
-                        <button class='action-btn delete-btn' data-action='delete' data-id='<?= $voucher->id ?>'>
+                        <button class='action-btn delete-btn' data-action='delete-voucher' data-id='<?= $voucher->id ?>'>
                             <ion-icon name="trash-outline"></ion-icon>
                         </button>
                     </td>
@@ -51,3 +51,4 @@ define('ROOT_DIR', dirname(__DIR__));
         </tbody>
     </table>
 </div>
+<script src="js/admin/CRUD_form.js"></script>

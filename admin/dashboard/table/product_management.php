@@ -103,41 +103,19 @@ if (isset($_GET['action']) ){
                     </td>
                     <td><?= htmlspecialchars(substr($product->description ?? 'Không có mô tả', 0, 50)) . (strlen($product->description ?? '') > 50 ? '...' : '') ?></td>
                     <td class='row button-update'>
-                        <a href='?page=product_management&action=edit&id=<?= $product->id ?>' class='action-btn edit-btn'>
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href='?page=product_management&action=delete&id=<?= $product->id ?>' 
-                           class='action-btn delete-btn' 
-                           onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </td>   
+                        <button class='action-btn view-btn' data-action='view-product' data-id='<?= $product->id ?>'>
+                            <ion-icon name="eye-outline"></ion-icon>
+                        </button>
+                        <button class='action-btn edit-btn' data-action='update-product' data-id='<?= $product->id ?>'>
+                            <ion-icon name="create-outline"></ion-icon>
+                        </button>
+                        <button class='action-btn delete-btn' data-action='delete-product' data-id='<?= $product->id ?>'>
+                            <ion-icon name="trash-outline"></ion-icon>
+                        </button>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
 </div>
-
-<?php if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Lấy và xử lý dữ liệu từ form
-    $productData = [
-        'name' => $_POST['name'] ?? '',
-        'quantity' => isset($_POST['quantity']) ? (int)$_POST['quantity'] : 0,
-        'description' => $_POST['description'] ?? null,
-        'price' => isset($_POST['price']) ? (float)$_POST['price'] : 0.0,
-        'weight' => isset($_POST['weight']) ? (float)$_POST['weight'] : 0.0,
-        'id_voucher' => !empty($_POST['id_voucher']) ? (int)$_POST['id_voucher'] : null,
-        'id_type_product' => !empty($_POST['id_type_product']) ? (int)$_POST['id_type_product'] : null,
-        'id_admin' => isset($_POST['id_admin']) ? (int)$_POST['id_admin'] : null,
-        'id_supplier' => !empty($_POST['id_supplier']) ? (int)$_POST['id_supplier'] : null,
-        'is_active' => isset($_POST['is_active']) ? (bool)$_POST['is_active'] : true,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
-    ];
-
-    // Tạo đối tượng ProductDTO
-    $productDTO = new ProductDTO($productData);
-    $table_products->insert($productDTO);
-    
-}
-    ?>
+<script src="js/admin/CRUD_form.js"></script>

@@ -39,13 +39,13 @@ define('ROOT_DIR', dirname(__DIR__));
                     <td><?= date('d/m/Y', strtotime($type->created_at)) ?></td>
                     <td><?= $type->updated_at ? date('d/m/Y', strtotime($type->updated_at)) : 'Chưa cập nhật' ?></td>
                     <td class=' row button-update'>
-                        <button class='action-btn view-btn' data-action='view' data-id='<?= $type->id ?>'>
+                        <button class='action-btn view-btn' data-action='view-typeproduct' data-id='<?= $type->id ?>'>
                             <ion-icon name="eye-outline"></ion-icon>
                         </button>
-                        <button class='action-btn edit-btn' data-action='update' data-id='<?= $type->id ?>'>
+                        <button class='action-btn edit-btn' data-action='update-typeproduct' data-id='<?= $type->id ?>'>
                             <ion-icon name="create-outline"></ion-icon>
                         </button>
-                        <button class='action-btn delete-btn' data-action='delete' data-id='<?= $type->id ?>'>
+                        <button class='action-btn delete-btn' data-action='delete-typeproduct' data-id='<?= $type->id ?>'>
                             <ion-icon name="trash-outline"></ion-icon>
                         </button>
                     </td>
@@ -54,8 +54,4 @@ define('ROOT_DIR', dirname(__DIR__));
         </tbody>
     </table>
 </div>
-
-<!-- Modal Thêm/Sửa -->
-<div id="typeProductModal" class="modal">
-    <!-- Nội dung modal sẽ được thêm bằng JS -->
-</div>
+<script src="js/admin/CRUD_form.js"></script>

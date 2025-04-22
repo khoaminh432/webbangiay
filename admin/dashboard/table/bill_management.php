@@ -40,13 +40,13 @@ $bills = $table_bills->view_all();
                         <?= $bill->status ?>
                     </td>
                     <td class='row button-update'>
-                        <button class='action-btn view-btn' data-action='view' data-id='<?= $bill->id ?>'>
+                        <button class='action-btn view-btn' data-action='view-bill' data-id='<?= $bill->id ?>'>
                             <ion-icon name="eye-outline"></ion-icon>
                         </button>
-                        <button class='action-btn edit-btn' data-action='update' data-id='<?= $bill->id ?>'>
+                        <button class='action-btn edit-btn' data-action='update-bill' data-id='<?= $bill->id ?>'>
                             <ion-icon name="create-outline"></ion-icon>
                         </button>
-                        <button class='action-btn delete-btn' data-action='delete' data-id='<?= $bill->id ?>'>
+                        <button class='action-btn delete-btn' data-action='delete-bill' data-id='<?= $bill->id ?>'>
                             <ion-icon name="trash-outline"></ion-icon>
                         </button>
                     </td>
@@ -55,3 +55,4 @@ $bills = $table_bills->view_all();
         </tbody>
     </table>
 </div>
+<script src="js/admin/CRUD_form.js"></script>

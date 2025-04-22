@@ -1,4 +1,9 @@
 <?php require_once __DIR__."/../../../../dao/ProductDao.php";
+if (!isset($_GET['id'])) {
+    die("<p class='error'>Thiếu ID sản phẩm!</p>");
+}
+
+$object_id = (int)$_GET['id']; // Ép kiểu để tránh SQL injection
 $product= $table_products->get_by_id($object_id);
 ?>
 <link rel="stylesheet" href="css/admin_style/form/view/viewformproduct.css">
@@ -6,7 +11,7 @@ $product= $table_products->get_by_id($object_id);
 <div class="product-view-card">
         <div class="card-header">
             <h2 class="card-title">Product Details</h2>
-            <button class="close-btn" onclick="closeProductView()">
+            <button class="close-btn" onclick="closeObjectView()">
                 <ion-icon name="close-outline"></ion-icon>
             </button>
         </div>
@@ -113,75 +118,4 @@ $product= $table_products->get_by_id($object_id);
        
     </div>
 </div>
-    
-
-<script>
-function closeProductView() {
-    document.querySelector('.product-view-modal').style.animation = 'fadeIn 0.3s ease reverse forwards';
-    setTimeout(() => {
-        window.history.back();
-    }, 300);
-}
-
-function editProduct(productId) {
-    document.querySelector('.product-view-modal').style.opacity = '0';
-    setTimeout(() => {
-        window.location.href = `edit_product.php?id=${productId}`;
-    }, 300);
-}
-
-function deactivateProduct(productId) {
-    if (confirm('Are you sure you want to deactivate this product? It will no longer be visible to customers.')) {
-        fetch(`deactivate_product.php?id=${productId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showNotification('Product deactivated successfully', 'success');
-                    setTimeout(() => location.reload(), 1500);
-                } else {
-                    showNotification('Error: ' + data.message, 'error');
-                }
-            });
-    }
-}
-
-function activateProduct(productId) {
-    if (confirm('Are you sure you want to activate this product? It will become visible to customers.')) {
-        fetch(`activate_product.php?id=${productId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showNotification('Product activated successfully', 'success');
-                    setTimeout(() => location.reload(), 1500);
-                } else {
-                    showNotification('Error: ' + data.message, 'error');
-                }
-            });
-    }
-}
-
-function manageInventory(productId) {
-    document.querySelector('.product-view-modal').style.opacity = '0';
-    setTimeout(() => {
-        window.location.href = `manage_inventory.php?id=${productId}`;
-    }, 300);
-}
-
-function showNotification(message, type) {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 10);
-    
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
-}
-</script>
+<script src="js/admin/closeview_form.js"></script>
