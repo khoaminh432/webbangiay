@@ -1,6 +1,29 @@
 
-<link rel="stylesheet" href="css/admin_style/dashboard.css">
+<?php
+// Tự động xác định thư mục gốc (giả sử có thư mục 'vendor' hoặc 'public' làm mốc)
+if(!defined("ROOT_DIR"))
+{$root_dir = "webbangiay";
+$lastElement = "";
+$currentDir = __DIR__;
+while(true){
+$pathArray = explode(DIRECTORY_SEPARATOR, $currentDir);
+$pathArray = array_filter($pathArray); // Loại bỏ phần tử rỗng
+$lastElement = array_slice($pathArray, -1)[0];
+if ($lastElement==$root_dir)
+    break;
+$currentDir = dirname($currentDir);
+}
+define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
+
+?>
+<?php
+// Giả sử web root là thư mục 'public' trong 'webbangiay'
+$web_root_relative_path = str_replace($_SERVER['DOCUMENT_ROOT'], '', ROOT_DIR . '/css/admin_style/dashboard.css');
+
+?>
+<link rel="stylesheet" href="<?= $web_root_relative_path ?>">
 <link rel="stylesheet" href="css/admin_style/form/hide_show_form.css">
+
 <link rel="stylesheet" href="css/admin_style/form/view/style.css">
 <div class="top-menu column">
     <div class="title-dashboard"><h1>Chào mừng bạn đến với trang Dashboard</h1></div>
