@@ -2,6 +2,8 @@
 require_once __DIR__ . '/../DTO/ProductDTO.php';
 require_once __DIR__ . '/../database/database_sever.php';
 
+
+
 class ProductDao {
     private $db;
     
@@ -19,7 +21,12 @@ class ProductDao {
         }
         return $products;
     }
-
+    public function get_supplier_by_id(){
+        require_once __DIR__."/SupplierDao.php";
+    }
+    public function get_typeproduct_by_id(){
+        require_once __DIR__ ."/TypeProductDao.php";
+    }
     public function get_by_type($typeId) {
         $sql = "SELECT * FROM products WHERE id_type_product = :type_id AND is_active = TRUE";
         $params = ['type_id' => $typeId];
@@ -128,6 +135,8 @@ class ProductDao {
             return false;
         }
     }
+    
 }
+
 ?>
 <?php $table_products = new ProductDao();?>
