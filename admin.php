@@ -3,6 +3,25 @@ header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
 header("Pragma: no-cache"); // HTTP 1.0
 header("Expires: 0"); // Proxies
 ?>
+<link rel="stylesheet" href="css/style.css?v=<?= filemtime('css/style.css') ?>">
+<script src="js/script.js?v=<?= filemtime('js/script.js') ?>"></script>
+<?php
+// Tự động xác định thư mục gốc (giả sử có thư mục 'vendor' hoặc 'public' làm mốc)
+if(!defined("ROOT_DIR"))
+{$root_dir = "webbangiay";
+$lastElement = "";
+$currentDir = __DIR__;
+while(true){
+$pathArray = explode(DIRECTORY_SEPARATOR, $currentDir);
+$pathArray = array_filter($pathArray); // Loại bỏ phần tử rỗng
+$lastElement = array_slice($pathArray, -1)[0];
+if ($lastElement==$root_dir)
+    break;
+$currentDir = dirname($currentDir);
+}
+define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

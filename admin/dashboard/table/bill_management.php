@@ -43,9 +43,7 @@ $bills = $table_bills->view_all();
                         <button class='action-btn view-btn' data-action='view-bill' data-id='<?= $bill->id ?>'>
                             <ion-icon name="eye-outline"></ion-icon>
                         </button>
-                        <button class='action-btn edit-btn' data-action='update-bill' data-id='<?= $bill->id ?>'>
-                            <ion-icon name="create-outline"></ion-icon>
-                        </button>
+                        
                         <button class='action-btn delete-btn' data-action='delete-bill' data-id='<?= $bill->id ?>'>
                             <ion-icon name="trash-outline"></ion-icon>
                         </button>

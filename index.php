@@ -6,6 +6,7 @@
     <title>Document</title>
 </head>
 <body>
+    
     <?php  require_once __DIR__."/layout/header.php"?>
     
 </body>
