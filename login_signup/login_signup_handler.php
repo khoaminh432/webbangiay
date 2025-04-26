@@ -38,7 +38,7 @@ if ($action === 'register') {
         'username' => $username,
         'email' => $email,
         'password' => $password,
-        'status' => 1 
+        'status' => 'UNLOCK' 
     ]);
 
     $insertId = $userDao->insert($newUser);
