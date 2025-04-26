@@ -55,7 +55,7 @@
                     <input type="password" required name="confirm_password">
                     <label>Confirm password</label>
                 </div>  
-                <button type="submit" class="btn">Login</button>
+                <button type="submit" class="btn">Sign up</button>
                 <div class="login-register">
                     <p>Already have an account? <a href="#" class="login-link"> Login</a>
                     </p>

@@ -40,7 +40,7 @@ class UserDao {
         
         $params = [
             'email' => $user->email,
-            'password' => password_hash($user->password, PASSWORD_DEFAULT),
+            'password' => $user->password,
             'status' => $user->status,
             'username' => $user->username
         ];
@@ -72,7 +72,7 @@ class UserDao {
         // Nếu có password mới thì cập nhật
         if (!empty($user->password)) {
             $sql = str_replace("SET", "SET password = :password,", $sql);
-            $params['password'] = password_hash($user->password, PASSWORD_DEFAULT);
+            $params['password'] =$user->password;
         }
         
         try {
