@@ -1,4 +1,6 @@
 <!-- Footer -->
+<!-- Update link css footer.php -->
+<link rel="stylesheet" href="../css/footer.css">
     <footer class="footer">
         <div class="footer-section">
             <h3>ABOUT ZAPPOS</h3>
