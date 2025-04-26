@@ -43,8 +43,7 @@ define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
                             <option value="User-LOCK" <?= $user->status == "LOCK" ? 'selected' : '' ?>>LOCK</option>                
             </select>
         </td>
-    <span><?= $user->status ?></span>
-</td>
+        
         <td>1</td>
         <td class='row button-update'>
         <button class='action-btn view-btn' data-action='view-user' data-id='<?= $user->id ?>'>
