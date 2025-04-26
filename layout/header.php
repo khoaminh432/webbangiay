@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="../css/header.css">
+<!--
 <header>
     <div class="logo-container">
         image
@@ -11,3 +12,15 @@
     </div>
     <div class="user-container">nút bấm</div>
 </header>
+-->
+
+  <!-- Header -->
+    <header class="header">
+        <div class="search-bar">
+            <input type="text" placeholder="Search for shoes, clothes, etc." />
+            <button>Search</button>
+        </div>
+        <div class="cart">
+            <span>🛒</span>
+        </div>
+    </header>
