@@ -1,0 +1,257 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.search-bar {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.search-bar input {
+    width: 50%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 20px 0 0 20px;
+    outline: none;
+}
+
+.search-bar button {
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    border-left: none;
+    border-radius: 0 20px 20px 0;
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+.cart {
+    font-size: 24px;
+}
+
+/* Navigation */
+.nav {
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 10px 0;
+}
+
+.nav ul li {
+    margin: 0 15px;
+}
+
+.nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.nav ul li a:hover {
+    color: #007bff;
+}
+
+/* Body */
+.body {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Banner Section */
+.banner {
+    background: url('banner-bg.jpg') no-repeat center/cover;
+    height: 400px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 20px;
+    color: #333;
+}
+
+.banner-content {
+    background-color: rgba(255, 165, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.banner-content h1 {
+    font-size: 2.5em;
+}
+
+.banner-content p {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.banner-content button {
+    padding: 10px 20px;
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Trending Now Section */
+.trending {
+    margin: 40px 0;
+}
+
+.trending h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+.trending-items {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.item {
+    width: 15%;
+    text-align: center;
+}
+
+.item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.item p {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Featured Brands Section */
+.featured-brands {
+    background-color: #fffbe6;
+    padding: 20px;
+    margin: 40px 0;
+}
+
+.featured-brands h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+.brand-items {
+    display: flex;
+    justify-content: space-between;
+}
+
+.brand {
+    width: 30%;
+    text-align: center;
+}
+
+.brand img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.brand p {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* New Arrivals Section */
+.new-arrivals {
+    margin: 40px 0;
+}
+
+.new-arrivals h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+.arrival-items {
+    display: flex;
+    justify-content: space-between;
+}
+
+.arrival {
+    width: 30%;
+text-align: center;
+}
+
+.arrival img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.arrival p {
+    margin-top: 10px;
+}
+
+/* Footer */
+.footer {
+    background-color: #f5f5f5;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.footer-section {
+    width: 20%;
+}
+
+.footer-section h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 5px;
+}
+
+.footer-section ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.footer-section ul li a:hover {
+    color: #007bff;
+}
+
+.footer-copy {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+}
