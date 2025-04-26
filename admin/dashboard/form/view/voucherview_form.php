@@ -10,7 +10,7 @@ if (!isset($_GET['id'])) {
 $voucherId = (int)$_GET['id']; // Ép kiểu để tránh SQL injection
 $voucher = $table_vouchers->get_by_id($voucherId); // Giả sử có phương thức này
 ?>
-<link rel="stylesheet" href="css/admin_style/form/view/viewformvoucher.css">
+<link rel="stylesheet" href="css/admin_style/form/view/viewformvouchers.css">
 <div class="voucher-view-model">
     <div class="voucher-view-card">
         <div class="card-header">

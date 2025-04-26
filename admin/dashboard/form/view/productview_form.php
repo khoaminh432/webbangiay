@@ -5,9 +5,9 @@ if (!isset($_GET['id'])) {
 }
 
 $object_id = (int)$_GET['id']; // Ép kiểu để tránh SQL injection
-$product= $table_products->get_by_id($object_id);
+$product= $table_products->get_by_id($object_id,true);
 ?>
-<link rel="stylesheet" href="css/admin_style/form/view/viewformproduct.css">
+<link rel="stylesheet" href="css/admin_style/form/view/viewformproducts.css">
 <div class="product-view-model">
 <div class="product-view-card">
         <div class="card-header">

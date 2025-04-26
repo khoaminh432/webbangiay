@@ -15,7 +15,7 @@ $user = $table_users->get_by_id($bill->id_user);
 $paymentMethod = $table_paymentmethode->get_by_id($bill->id_payment_method);
 $orderItems = $table_billproducts->get_by_bill($billId);
 ?>
-<link rel="stylesheet" href="css/admin_style/form/view/viewformbills.css">
+<link rel="stylesheet" href="css/admin_style/form/view/viewformbill.css">
 <div class="compact-bill-view">
     <div class="compact-header">
         <h3>Hóa đơn #<?= $bill->id ?></h3>
@@ -70,7 +70,7 @@ $orderItems = $table_billproducts->get_by_bill($billId);
             <h4>Sản phẩm (<?= count($orderItems) ?>)</h4>
             <div class="items-list">
                 <?php foreach ($orderItems as $item): 
-                    $product = $table_products->get_by_id($item->id_product);
+                    $product = $table_products->get_by_id($id=$item->id_product,true);
                 ?>
                 <div class="row" style="gap: 10px;">
                     <div>ID: <?= $item->id_product;?></div>

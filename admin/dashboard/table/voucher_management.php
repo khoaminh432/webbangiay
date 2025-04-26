@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../../../dao/VoucherDao.php";
-$vouchers = $table_vouchers->view_all();
+require_once __DIR__ . "/../../../dao/AdminDao.php";
+$vouchers = $table_vouchers->view_all(true);
 
 ?>
 <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
@@ -29,12 +30,15 @@ $vouchers = $table_vouchers->view_all();
                     <td><?= htmlspecialchars($voucher->description ?? 'Không có mô tả') ?></td>
                     <td><?= date('d/m/Y', strtotime($voucher->date_start)) ?></td>
                     <td><?= $voucher->date_end ? date('d/m/Y', strtotime($voucher->date_end)) : 'Không giới hạn' ?></td>
-                    <td><?= htmlspecialchars($voucher->id_admin) ?></td>
-                    <td>
-                        <span class="status-badge <?= $voucher->is_active ? 'active' : 'inactive' ?>">
-                            <?= $voucher->is_active ? 'Hoạt động' : 'Ngừng áp dụng' ?>
-                        </span>
+                    <td><?= htmlspecialchars($voucher->id_admin) ?> (<?= htmlspecialchars($table_admins->get_by_id($voucher->id_admin)->name) ?>)</td>
+                    
+                    <td class="status-voucher status-<?= strtolower($voucher->is_active) ?> ">
+                        <select  name="objectId" class="styled-select status-select" data-object-id="<?=$voucher->id?>">
+                            <option value="Voucher-true" <?= $voucher->is_active == true ? 'selected' : '' ?>>Hoạt Động</option>
+                            <option value="Voucher-false" <?= $voucher->is_active == false ? 'selected' : '' ?>>Ngừng Hoạt Động</option>                
+                        </select>
                     </td>
+                    
                     <td class='row button-update'>
                     <button class='action-btn view-btn' data-action='view-voucher' data-id='<?= $voucher->id ?>'>
                             <ion-icon name="eye-outline"></ion-icon>
@@ -52,3 +56,4 @@ $vouchers = $table_vouchers->view_all();
     </table>
 </div>
 <script src="js/admin/CRUD_form.js"></script>
+<script src="js/admin/checkstatus_object.js"></script>

@@ -37,7 +37,12 @@ define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
         <td><?= $user->id ?></td>
         <td><?= $user->username ?></td>
         <td><?= $user->email ?></td>
-        <td class="status-user status-<?= strtolower($user->status) ?>">
+        <td class="status-bill status-<?= strtolower($user->status) ?> ">
+                        <select  name="objectId" class="styled-select status-select" data-object-id="<?=$user->id?>">
+                            <option value="User-UNLOCK" <?= $user->status == "UNLOCK" ? 'selected' : '' ?>>UNLOCK</option>
+                            <option value="User-LOCK" <?= $user->status == "LOCK" ? 'selected' : '' ?>>LOCK</option>                
+            </select>
+        </td>
     <span><?= $user->status ?></span>
 </td>
         <td>1</td>
@@ -60,3 +65,4 @@ define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
 </div>
         
 <script src="js/admin/CRUD_form.js"></script>
+<script src="js/admin/checkstatus_object.js"></script>

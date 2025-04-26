@@ -216,7 +216,7 @@ input:checked + .slider:before {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
-    color: #2c3e50;
+    
     font-size: 0.95rem;
 }
 
