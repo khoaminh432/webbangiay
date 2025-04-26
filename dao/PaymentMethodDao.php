@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../DTO/PaymentMethod.php';
+require_once __DIR__ . '/../DTO/PaymentMethodDTO.php';
 require_once __DIR__ . '/../database/database_sever.php';
 
 class PaymentMethodDao {
@@ -59,7 +59,20 @@ class PaymentMethodDao {
             return false;
         }
     }
-
+    public function update_active(int $id_method,$is_active) {
+        $sql = "UPDATE payment_method SET is_active = :is_active WHERE id = :id";
+        $params = [
+            'id' => $id_method,
+            'is_active' => $is_active
+        ];
+        
+        try {
+            return $this->db->update_table($sql, $params);
+        } catch (PDOException $e) {
+            error_log("PaymentMethodDao Update Error: " . $e->getMessage());
+            return false;
+        }
+    }
     public function delete($id) {
         $sql = "DELETE FROM payment_method WHERE id = :id";
         $params = ['id' => $id];

@@ -95,6 +95,24 @@ class VoucherDao {
             return false;
         }
     }
+    public function update_active(int $idvoucher,$is_active) {
+        $sql = "UPDATE voucher SET 
+                
+                is_active = :is_active
+                WHERE id = :id";
+        
+        $params = [
+            'id' => $idvoucher,
+            'is_active' => $is_active
+        ];
+        
+        try {
+            return $this->db->update_table($sql, $params);
+        } catch (PDOException $e) {
+            error_log("VoucherDao Update Error: " . $e->getMessage());
+            return false;
+        }
+    }
 
     public function delete($id) {
         $sql = "DELETE FROM voucher WHERE id = :id";

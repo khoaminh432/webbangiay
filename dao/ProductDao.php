@@ -170,6 +170,21 @@ class ProductDao {
             return false;
         }
     }
+    // Cập nhật số lượng sản phẩm
+    public function update_active($productId, $is_active) {
+        $sql = "UPDATE products SET is_active = :is_active WHERE id = :id";
+        $params = [
+            'id' => $productId,
+            'is_active' => $is_active
+        ];
+        
+        try {
+            return $this->db->update_table($sql, $params);
+        } catch (PDOException $e) {
+            error_log("ProductDao Update Quantity Error: " . $e->getMessage());
+            return false;
+        }
+    }
 
     // Xóa mềm sản phẩm (chuyển is_active = FALSE)
     public function delete($id) {

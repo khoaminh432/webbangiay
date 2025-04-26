@@ -82,7 +82,22 @@ class UserDao {
             return false;
         }
     }
-
+    public function update_status(int $iduser,$status) {
+        $sql = "UPDATE users SET 
+                status = :status
+                WHERE id = :id";
+        
+        $params = [
+            'id' => $iduser,
+            'status' => $status,
+        ];
+        try {
+            return $this->db->update_table($sql, $params);
+        } catch (PDOException $e) {
+            error_log("UserDao Update Error: " . $e->getMessage());
+            return false;
+        }
+    }
     // Xóa người dùng
     public function delete($id) {
         $sql = "DELETE FROM users WHERE id = :id";
