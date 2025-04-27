@@ -37,17 +37,17 @@
         # $sql = INSERT INTO users (username, email, password) VALUES (:username, :email, :password)
         # $param = ['username' => 'john_doe','email' => 'john@example.com','password' => password_hash('secure123', PASSWORD_DEFAULT)];
         
-        public function insert_table($string_query,$param){
+        public function insert_table($string_query, $param) {
             try {
-            $sql = $string_query;
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute($param);
-            
-            echo "Thêm dữ liệu thành công, ID: " . $this->conn->lastInsertId();
-        } catch(PDOException $e) {
-            echo "Lỗi: " . $e->getMessage();
+                $stmt = $this->conn->prepare($string_query);
+                $stmt->execute($param);
+                return $this->conn->lastInsertId(); 
+            } catch(PDOException $e) {
+                error_log("Lỗi khi thêm: " . $e->getMessage()); 
+                return false;
+            }
         }
-        }
+        
         public function close(){
             if($this->conn){
             

@@ -9,7 +9,7 @@ $userId = (int)$_GET['id']; // Ép kiểu để tránh SQL injection
 $user = $table_users->get_by_id($userId);
 
 ?>
-<link rel="stylesheet" href="css/admin_style/form/view/viewformuser.css">
+<link rel="stylesheet" href="css/admin_style/form/view/viewformusers.css">
 <div class="user-view-model">
 <div class="user-view-card">
         <div class="card-header">

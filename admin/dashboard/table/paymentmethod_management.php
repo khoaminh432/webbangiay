@@ -25,10 +25,11 @@ $paymentMethods = $table_paymentmethode->view_all();
                             <?= htmlspecialchars($method->name) ?>
                         </div>
                     </td>
-                    <td>
-                        <span class="status-badge <?= $method->is_active ? 'active' : 'inactive' ?>">
-                            <?= $method->is_active ? 'Hoạt động' : 'Tạm ngừng' ?>
-                        </span>
+                    <td class="status-method status-<?= strtolower($method->is_active) ?> ">
+                        <select  name="objectId" class="styled-select status-select" data-object-id="<?=$method->id?>">
+                            <option value="Method-true" <?= $method->is_active == true ? 'selected' : '' ?>>Hoạt Động</option>
+                            <option value="Method-false" <?= $method->is_active == false ? 'selected' : '' ?>>Ngừng Hoạt Động</option>                
+                        </select>
                     </td>
                     <td><?= date('d/m/Y', strtotime($method->created_at)) ?></td>
                     <td><?= $method->updated_at ? date('d/m/Y', strtotime($method->updated_at)) : 'Chưa cập nhật' ?></td>
@@ -49,3 +50,4 @@ $paymentMethods = $table_paymentmethode->view_all();
     </table>
 </div>
 <script src="js/admin/CRUD_form.js"></script>
+<script src="js/admin/checkstatus_object.js"></script>

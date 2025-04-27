@@ -37,6 +37,7 @@ CREATE TABLE type_product
   id INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(100) NOT NULL,
   id_admin INT NOT NULL,
+  is_active INT NOT NULL DEFAULT 1,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
@@ -153,6 +154,7 @@ CREATE TABLE products
   id_admin INT NOT NULL,
   id_supplier INT NOT NULL,
   is_active BOOLEAN DEFAULT TRUE,
+  image_url VARCHAR(255) DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
@@ -328,3 +330,13 @@ INSERT INTO bill_products (id_bill, id_product, quantity, unit_price) VALUES
 (10, 10, 1, 250000),
 (1, 10, 1, 250000), -- Đơn hàng 1 mua thêm bộ vệ sinh
 (2, 9, 2, 450000); -- Đơn hàng 2 mua thêm 2 đôi dép
+UPDATE products SET image_url = 'img/1/nike_air_max_1.jpg' WHERE id = 1;
+UPDATE products SET image_url = 'img/2/adidas_ultraboost_1.jpg' WHERE id = 2;
+UPDATE products SET image_url = 'img/3/puma_future_1.jpg' WHERE id = 3;
+UPDATE products SET image_url = 'img/4/jordan_bball_1.jpg' WHERE id = 4;
+UPDATE products SET image_url = 'img/5/ua_gym_1.jpg' WHERE id = 5;
+UPDATE products SET image_url = 'img/6/columbia_hiking_1.jpg' WHERE id = 6;
+UPDATE products SET image_url = 'img/7/bitis_offic_1.jpg' WHERE id = 7;
+UPDATE products SET image_url = 'img/8/gucci_fashion_1.jpg' WHERE id = 8;
+UPDATE products SET image_url = 'img/9/adidas_sandal_1.jpg' WHERE id = 9;
+UPDATE products SET image_url = 'img/10/shoe_clean_kit_1.jpg' WHERE id = 10;

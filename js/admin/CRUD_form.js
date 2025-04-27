@@ -6,15 +6,19 @@ $(document).ready(function() {
         console.log(action,userId)
         const check_test = action.split("-")
         switch (check_test[0]) {
+            
             case 'view':
-                viewObject(userId,check_test[1]);
+                viewObject(userId,check_test[1])
                 break;
             case 'update':
-                
+                editObject(userId,check_test[1])
+                console.log("update");
                 break;
             case 'delete':
                 
                 break;
+            default:
+                console.log("chưa chọn")
         }
     });
 
@@ -34,6 +38,20 @@ $(document).ready(function() {
             }
         });
     }
-
+    function editObject(userId,check_test){
+        $.ajax({
+            url: `admin/dashboard/form/edit/${check_test}edit_form.php`,
+            type: 'GET',
+            data: { id: userId },
+            success: function(response) {
+                // Mở modal và hiển thị dữ liệu
+                
+                $('#objectViewModal').html(response).fadeIn();
+            },
+            error: function(xhr) {
+                alert('Lỗi khi tải dữ liệu!');
+            }
+        });
+    }
     
 });

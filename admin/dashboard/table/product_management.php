@@ -1,66 +1,8 @@
 <?php
 require_once __DIR__ . "/../../../dao/ProductDao.php";
-$products = $table_products->view_all();
+$table_products= new ProductDao();
+$products = $table_products->view_all(true);
 define('ROOT_DIR', dirname(__DIR__));
-
-// Xử lý thêm sản phẩm
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
-    $data = [
-        'name' => $_POST['name'],
-        'price' => $_POST['price'],
-        'quantity' => $_POST['quantity'],
-        'weight' => $_POST['weight'],
-        'id_type_product' => $_POST['id_type_product'],
-        'is_active' => isset($_POST['is_active']) ? 1 : 0,
-        'description' => $_POST['description']
-    ];
-    $addproduct = new ProductDTO($data);
-
-    
-    if ($table_products->insert($addproduct)) {
-        header("Location: ".$_SERVER['PHP_SELF']);
-        exit();
-    }
-}
-
-// Xử lý cập nhật sản phẩm
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
-    $id = $_POST['id'];
-    $data = [
-        'name' => $_POST['name'],
-        'price' => $_POST['price'],
-        'quantity' => $_POST['quantity'],
-        'weight' => $_POST['weight'],
-        'id_type_product' => $_POST['id_type_product'],
-        'is_active' => isset($_POST['is_active']) ? 1 : 0,
-        'description' => $_POST['description']
-    ];
-    
-    if ($table_products->update($id, $data)) {
-        header("Location: ".$_SERVER['PHP_SELF']);
-        exit();
-    }
-}
-
-// Xử lý xóa sản phẩm
-if (isset($_GET['action']) ){
-    if ($_GET['action'] == 'delete' && isset($_GET['id'])) {
-        $id = $_GET['id'];
-        if ($table_products->delete($id)) {
-            header("Location: ".$_SERVER['PHP_SELF']);
-            exit();
-        }
-    }
-}
-
-// Lấy thông tin sản phẩm để chỉnh sửa
-$edit_product = null;
-if (isset($_GET['action']) ){
-    if ($_GET['action'] == 'edit' && isset($_GET['id'])) {
-        $id = $_GET['id'];
-        $edit_product = $table_products->get_by_id($id);
-    }
-}
 ?>
 
 <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
@@ -96,10 +38,11 @@ if (isset($_GET['action']) ){
                     <td><?= $product->quantity ?></td>
                     <td><?= $product->weight ?>g</td>
                     <td><?= $product->id_type_product ?></td>
-                    <td>
-                        <span class="status-badge <?= $product->is_active ? 'active' : 'inactive' ?>">
-                            <?= $product->is_active ? 'Hoạt động' : 'Ngừng bán' ?>
-                        </span>
+                    <td class="status-product status-<?= strtolower($product->is_active) ?> ">
+                        <select  name="objectId" class="styled-select status-select" data-object-id="<?=$product->id?>">
+                            <option value="Product-true" <?= $product->is_active == true ? 'selected' : '' ?>>Hoạt Động</option>
+                            <option value="Product-false" <?= $product->is_active == false ? 'selected' : '' ?>>Ngừng Bán</option>                
+                        </select>
                     </td>
                     <td><?= htmlspecialchars(substr($product->description ?? 'Không có mô tả', 0, 50)) . (strlen($product->description ?? '') > 50 ? '...' : '') ?></td>
                     <td class='row button-update'>
@@ -119,3 +62,4 @@ if (isset($_GET['action']) ){
     </table>
 </div>
 <script src="js/admin/CRUD_form.js"></script>
+<script src="js/admin/checkstatus_object.js"></script>

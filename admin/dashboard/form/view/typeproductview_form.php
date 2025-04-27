@@ -55,11 +55,11 @@ $typeProduct = $table_typeproduct->get_by_id($typeId);
                         <div class="detail-grid">
                             <div class="detail-item">
                                 <span class="detail-label">Số sản phẩm</span>
-                                <span class="detail-value">25 sản phẩm</span>
+                                <span class="detail-value"><?=htmlspecialchars($table_typeproduct->count_product($typeId))?> sản phẩm</span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Doanh thu</span>
-                                <span class="detail-value">15.000.000đ</span>
+                                <span class="detail-value"><?=htmlspecialchars($table_typeproduct->calculate_revenue($typeId))?>đ</span>
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
 x
+<!--
 <header>
     <div class="logo-container">
         image
@@ -10,5 +11,16 @@ x
         <div class="suggest-content">gợi ý</div>
     </div>
     <div class="user-container">nút bấm</div>
-    <div class="cart"><ion-icon name="cart-outline"></ion-icon></div>
 </header>
+-->
+
+  <!-- Header -->
+    <header class="header">
+        <div class="search-bar">
+            <input type="text" placeholder="Search for shoes, clothes, etc." />
+            <button>Search</button>
+        </div>
+        <div class="cart">
+            <span>🛒</span>
+        </div>
+    </header>

@@ -11,12 +11,14 @@ document.addEventListener('DOMContentLoaded', function() {
     loginLink.addEventListener('click', (e) => {
         e.preventDefault();
         wrapper.classList.add('active');
+        loginForm.reset();
         console.log('Đã chuyển sang form đăng ký');
     });
 
     registerLink.addEventListener('click', (e) => {
         e.preventDefault();
         wrapper.classList.remove('active');
+        registerForm.reset();
         console.log('Đã chuyển sang form đăng nhập');
     });
 

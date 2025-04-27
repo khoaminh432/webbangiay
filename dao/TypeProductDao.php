@@ -20,6 +20,47 @@ class TypeProductDao {
         return $types;
     }
 
+    /**
+     * Đếm số lượng sản phẩm thuộc loại sản phẩm
+     */
+    public function count_product($id) {
+        $sql = "SELECT COUNT(*) as product_count FROM products WHERE id_type_product = :id";
+        $params = ['id' => $id];
+        $result = $this->db->view_table($sql, $params);
+        
+        return !empty($result) ? $result[0]['product_count'] : 0;
+    }
+
+    /**
+     * Tính tổng doanh thu của loại sản phẩm
+     */
+    public function calculate_revenue($id) {
+        $sql = "SELECT SUM(bp.quantity * bp.unit_price) as total_revenue 
+                FROM bill_products bp
+                JOIN products p ON bp.id_product = p.id
+                WHERE p.id_type_product = :id";
+        $params = ['id' => $id];
+        $result = $this->db->view_table($sql, $params);
+        
+        return !empty($result) ? $result[0]['total_revenue'] : 0;
+    }
+
+    /**
+     * Lấy thống kê chi tiết: số lượng sản phẩm và doanh thu
+     */
+    public function get_stats($id) {
+        $sql = "SELECT 
+                    COUNT(p.id) as product_count,
+                    SUM(od.quantity * od.price) as total_revenue
+                FROM products p
+                LEFT JOIN order_details od ON p.id = od.product_id
+                WHERE p.type_id = :id";
+        $params = ['id' => $id];
+        $result = $this->db->view_table($sql, $params);
+        
+        return !empty($result) ? $result[0] : ['product_count' => 0, 'total_revenue' => 0];
+    }
+
     public function get_by_id($id) {
         $sql = "SELECT * FROM type_product WHERE id = :id";
         $params = ['id' => $id];

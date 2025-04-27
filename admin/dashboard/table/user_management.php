@@ -1,19 +1,21 @@
+
 <?php
 // Tự động xác định thư mục gốc (giả sử có thư mục 'vendor' hoặc 'public' làm mốc)
-$root_dir = "webbangiay";
+if(!defined("ROOT_DIR"))
+{$root_dir = "webbangiay";
 $lastElement = "";
 $currentDir = __DIR__;
 while(true){
-    $pathArray = explode(DIRECTORY_SEPARATOR, $currentDir);
-    $pathArray = array_filter($pathArray); // Loại bỏ phần tử rỗng
-    $lastElement = array_slice($pathArray, -1)[0];
-    if ($lastElement==$root_dir)
-        break;
-    $currentDir = dirname($currentDir);
+$pathArray = explode(DIRECTORY_SEPARATOR, $currentDir);
+$pathArray = array_filter($pathArray); // Loại bỏ phần tử rỗng
+$lastElement = array_slice($pathArray, -1)[0];
+if ($lastElement==$root_dir)
+    break;
+$currentDir = dirname($currentDir);
 }
-define('ROOT_DIR', $currentDir);
-?>
+define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
 
+?>
 <?php
     require_once ROOT_DIR."/dao/UserDao.php";
     
@@ -35,9 +37,13 @@ define('ROOT_DIR', $currentDir);
         <td><?= $user->id ?></td>
         <td><?= $user->username ?></td>
         <td><?= $user->email ?></td>
-        <td class="status-user status-<?= strtolower($user->status) ?>">
-    <span><?= $user->status ?></span>
-</td>
+        <td class="status-bill status-<?= strtolower($user->status) ?> ">
+                        <select  name="objectId" class="styled-select status-select" data-object-id="<?=$user->id?>">
+                            <option value="User-UNLOCK" <?= $user->status == "UNLOCK" ? 'selected' : '' ?>>UNLOCK</option>
+                            <option value="User-LOCK" <?= $user->status == "LOCK" ? 'selected' : '' ?>>LOCK</option>                
+            </select>
+        </td>
+        
         <td>1</td>
         <td class='row button-update'>
         <button class='action-btn view-btn' data-action='view-user' data-id='<?= $user->id ?>'>
@@ -58,3 +64,4 @@ define('ROOT_DIR', $currentDir);
 </div>
         
 <script src="js/admin/CRUD_form.js"></script>
+<script src="js/admin/checkstatus_object.js"></script>

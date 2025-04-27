@@ -1,12 +1,13 @@
 <?php require_once __DIR__."/../../../../dao/ProductDao.php";
+require_once __DIR__."/../../../../dao/SupplierDao.php";
 if (!isset($_GET['id'])) {
     die("<p class='error'>Thiếu ID sản phẩm!</p>");
 }
 
 $object_id = (int)$_GET['id']; // Ép kiểu để tránh SQL injection
-$product= $table_products->get_by_id($object_id);
+$product= $table_products->get_by_id($object_id,true);
 ?>
-<link rel="stylesheet" href="css/admin_style/form/view/viewformproduct.css">
+<link rel="stylesheet" href="css/admin_style/form/view/viewformproducts.css">
 <div class="product-view-model">
 <div class="product-view-card">
         <div class="card-header">
@@ -21,7 +22,8 @@ $product= $table_products->get_by_id($object_id);
                 
             <div class="product-image-container">
                     <div class="image-wrapper">
-                        <img src="https://via.placeholder.com/400x300?text=<?= urlencode($product->name) ?>" 
+                        <?php echo urlencode($product->name)?>
+                        <img src="https://via.placeholder.com/200x300?text=<?= urlencode($product->name) ?>" 
                              alt="<?= htmlspecialchars($product->name) ?>" class="product-image">
                         <div class="status-badge status-<?= $product->is_active ? 'active' : 'inactive' ?>">
                             <?= $product->is_active ? 'Active' : 'Inactive' ?>
@@ -78,7 +80,7 @@ $product= $table_products->get_by_id($object_id);
                             <div class="detail-item">
                                 <span class="detail-label">Supplier</span>
                                 <span class="detail-value">
-                                    <?= $product->id_supplier ? 'Supplier #' . htmlspecialchars($product->id_supplier) : 'None' ?>
+                                    <?= $product->id_supplier ? 'Supplier #' . htmlspecialchars($product->id_supplier) : 'None' ."" ?>
                                 </span>
                             </div>
                         </div>

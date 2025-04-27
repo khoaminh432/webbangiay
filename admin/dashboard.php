@@ -14,7 +14,6 @@ if ($lastElement==$root_dir)
 $currentDir = dirname($currentDir);
 }
 define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
-
 ?>
 <?php
 // Giả sử web root là thư mục 'public' trong 'webbangiay'

@@ -36,16 +36,19 @@ $bills = $table_bills->view_all();
                     <td><?= htmlspecialchars($paymentMethod->name ?? 'N/A') ?></td>
                     <td><?= number_format($bill->total_amount, 0, ',', '.') ?>đ</td>
                     <td><?= htmlspecialchars($bill->shipping_address) ?></td>
-                    <td class="status-bill status-<?= strtolower($bill->status) ?>">
-                        <?= $bill->status ?>
+                    <td class="status-bill status-<?= strtolower($bill->status) ?> ">
+                        <select  name="objectId" class="styled-select status-select" data-object-id="<?=$bill->id?>">
+                            <option value="Bill-processing" <?= $bill->status == "processing" ? 'selected' : '' ?>>processing</option>
+                            <option value="Bill-shipping" <?= $bill->status == "shipping" ? 'selected' : '' ?>>shipping</option>
+                            <option value="Bill-completed" <?= $bill->status == "completed" ? 'selected' : '' ?>>completed</option>
+                            <option value="Bill-cancelled" <?= $bill->status == "cancelled" ? 'selected' : '' ?>>cancelled</option>
+                        </select>
                     </td>
                     <td class='row button-update'>
                         <button class='action-btn view-btn' data-action='view-bill' data-id='<?= $bill->id ?>'>
                             <ion-icon name="eye-outline"></ion-icon>
                         </button>
-                        <button class='action-btn edit-btn' data-action='update-bill' data-id='<?= $bill->id ?>'>
-                            <ion-icon name="create-outline"></ion-icon>
-                        </button>
+                        
                         <button class='action-btn delete-btn' data-action='delete-bill' data-id='<?= $bill->id ?>'>
                             <ion-icon name="trash-outline"></ion-icon>
                         </button>
@@ -56,3 +59,4 @@ $bills = $table_bills->view_all();
     </table>
 </div>
 <script src="js/admin/CRUD_form.js"></script>
+<script src="js/admin/checkstatus_object.js"></script>

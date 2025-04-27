@@ -12,7 +12,7 @@ class UserDTO {
         $this->id = $data['id'] ?? null;
         $this->email = $data['email'] ?? '';
         $this->password = $data['password'] ?? '';
-        $this->status = $data['status'] ?? 1;
+        $this->status = $data['status'] ?? "UNLOCK";
         $this->username = $data['username'] ?? '';
         $this->created_at = $data['created_at'] ?? null;
         $this->updated_at = $data['updated_at'] ?? null;
