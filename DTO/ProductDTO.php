@@ -13,6 +13,7 @@ class ProductDTO {
     public $is_active;
     public $created_at;
     public $updated_at;
+    public $image_url;
 
     public function __construct($data) {
         $this->id = $data['id'] ?? null;
@@ -28,6 +29,7 @@ class ProductDTO {
         $this->is_active = $data['is_active'] ?? true;
         $this->created_at = $data['created_at'] ?? null;
         $this->updated_at = $data['updated_at'] ?? null;
+        $this->image_url = $data['image_url'] ?? null;
     }
 
     public function __toString() {

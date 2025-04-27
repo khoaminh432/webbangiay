@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="../css/header.css">
+x
 <header>
     <div class="logo-container">
         image
@@ -10,4 +10,5 @@
         <div class="suggest-content">gợi ý</div>
     </div>
     <div class="user-container">nút bấm</div>
+    <div class="cart"><ion-icon name="cart-outline"></ion-icon></div>
 </header>

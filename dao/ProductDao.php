@@ -40,6 +40,21 @@ class ProductDao {
         return !empty($result) ? new ProductDTO($result[0]) : null;
     }
 
+    public function get_by_ids($ids) {
+        if (empty($ids)) return [];
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $sql = "SELECT products.id, products.name, price, quantity, image_url  FROM products 
+                LEFT JOIN product_images ON products.id = product_images.id_product AND product_images.is_primary = 1 
+                WHERE products.id IN ($placeholders)";
+        $result = $this->db->view_table($sql, $ids);
+
+        $products = [];
+        foreach ($result as $row) {
+            $products[] = new ProductDTO($row);
+        }
+        return $products;
+    }
+    
     public function insert(ProductDTO $product) {
         $sql = "INSERT INTO products (name, quantity, description, price, weight, id_voucher, id_type_product, id_admin, id_supplier, is_active) 
                 VALUES (:name, :quantity, :description, :price, :weight, :id_voucher, :id_type_product, :id_admin, :id_supplier, :is_active)";
