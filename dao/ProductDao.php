@@ -9,12 +9,11 @@ class ProductDao {
         $this->db = new database_sever();
     }
 
-    // Lấy tất cả sản phẩm (có thể thêm điều kiện is_active)
-    public function view_all($includeInactive = false) {
-        $sql = "SELECT * FROM products";
-        if (!$includeInactive) {
-            $sql .= " WHERE is_active = TRUE";
-        }
+    public function view_all() {
+        $sql = "SELECT A.*, B.image_url FROM products as A
+        LEFT JOIN product_images as B ON A.id = B.id_product AND B.is_primary = 1
+        WHERE A.is_active = TRUE and A.quantity > 0";
+        
         $results = $this->db->view_table($sql);
         
         $products = [];
@@ -24,30 +23,8 @@ class ProductDao {
         return $products;
     }
 
-    // Lấy sản phẩm theo nhà cung cấp
-    public function get_by_supplier($supplierId, $includeInactive = false) {
-        $sql = "SELECT * FROM products WHERE id_supplier = :supplier_id";
-        if (!$includeInactive) {
-            $sql .= " AND is_active = TRUE";
-        }
-        
-        $params = ['supplier_id' => $supplierId];
-        $results = $this->db->view_table($sql, $params);
-        
-        $products = [];
-        foreach ($results as $row) {
-            $products[] = new ProductDTO($row);
-        }
-        return $products;
-    }
-
-    // Lấy sản phẩm theo loại
-    public function get_by_type($typeId, $includeInactive = false) {
-        $sql = "SELECT * FROM products WHERE id_type_product = :type_id";
-        if (!$includeInactive) {
-            $sql .= " AND is_active = TRUE";
-        }
-        
+    public function get_by_type($typeId) {
+        $sql = "SELECT * FROM products WHERE id_type_product = :type_id AND is_active = TRUE";
         $params = ['type_id' => $typeId];
         $results = $this->db->view_table($sql, $params);
         
@@ -58,20 +35,32 @@ class ProductDao {
         return $products;
     }
 
-    // Lấy sản phẩm theo ID
-    public function get_by_id($id, $includeInactive = false) {
-        $sql = "SELECT * FROM products WHERE id = :id";
-        if (!$includeInactive) {
-            $sql .= " AND is_active = TRUE";
-        }
-        
+    public function get_by_id($id) {
+        $sql = "SELECT A.*, B.image_url 
+                FROM products AS A
+                LEFT JOIN product_images AS B ON A.id = B.id_product AND B.is_primary = 1
+                WHERE A.id = :id";
         $params = ['id' => $id];
         $result = $this->db->view_table($sql, $params);
         
         return !empty($result) ? new ProductDTO($result[0]) : null;
     }
 
-    // Tìm kiếm sản phẩm
+    public function get_by_ids($ids) {
+        if (empty($ids)) return [];
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $sql = "SELECT products.id, products.name, price, quantity, image_url  FROM products 
+                LEFT JOIN product_images ON products.id = product_images.id_product AND product_images.is_primary = 1 
+                WHERE products.id IN ($placeholders)";
+        $result = $this->db->view_table($sql, $ids);
+
+        $products = [];
+        foreach ($result as $row) {
+            $products[] = new ProductDTO($row);
+        }
+        return $products;
+    }
+        // Tìm kiếm sản phẩm
     public function search($keyword, $includeInactive = false) {
         $sql = "SELECT * FROM products WHERE name LIKE :keyword OR description LIKE :keyword";
         if (!$includeInactive) {
@@ -90,6 +79,8 @@ class ProductDao {
 
     // Thêm sản phẩm mới
     public function insert(ProductDTO $product) {
+        $sql = "INSERT INTO products (name, quantity, description, price, weight, id_voucher, id_type_product, id_admin, id_supplier, is_active) 
+                VALUES (:name, :quantity, :description, :price, :weight, :id_voucher, :id_type_product, :id_admin, :id_supplier, :is_active)";
         $sql = "INSERT INTO products (name, quantity, description, price, weight, id_voucher, id_type_product, id_admin, id_supplier, is_active, image_url) 
                 VALUES (:name, :quantity, :description, :price, :weight, :id_voucher, :id_type_product, :id_admin, :id_supplier, :is_active, :image_url)";
         
@@ -103,8 +94,7 @@ class ProductDao {
             'id_type_product' => $product->id_type_product,
             'id_admin' => $product->id_admin,
             'id_supplier' => $product->id_supplier,
-            'is_active' => $product->is_active,
-            'image_url' => $product->image_url
+            'is_active' => $product->is_active
         ];
         
         try {
@@ -143,8 +133,7 @@ class ProductDao {
             'id_type_product' => $product->id_type_product,
             'id_admin' => $product->id_admin,
             'id_supplier' => $product->id_supplier,
-            'is_active' => $product->is_active,
-            'image_url' => $product->image_url
+            'is_active' => $product->is_active
         ];
         
         try {
