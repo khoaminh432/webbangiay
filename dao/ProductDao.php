@@ -10,7 +10,10 @@ class ProductDao {
     }
 
     public function view_all() {
-        $sql = "SELECT * FROM products";
+        $sql = "SELECT A.*, B.image_url FROM products as A
+        LEFT JOIN product_images as B ON A.id = B.id_product AND B.is_primary = 1
+        WHERE A.is_active = TRUE and A.quantity > 0";
+        
         $results = $this->db->view_table($sql);
         
         $products = [];
@@ -33,7 +36,10 @@ class ProductDao {
     }
 
     public function get_by_id($id) {
-        $sql = "SELECT * FROM products WHERE id = :id";
+        $sql = "SELECT A.*, B.image_url 
+                FROM products AS A
+                LEFT JOIN product_images AS B ON A.id = B.id_product AND B.is_primary = 1
+                WHERE A.id = :id";
         $params = ['id' => $id];
         $result = $this->db->view_table($sql, $params);
         
