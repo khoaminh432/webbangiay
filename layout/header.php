@@ -1,13 +1,17 @@
 <link rel="stylesheet" href="../css/header.css">
-<header>
-    <div class="logo-container">
-        image
+<header class="header">
+    <div class="search-bar">
+        <form action="/webbangiay/pages/search.php" method="GET">
+            <input type="text" name="query" placeholder="Search for shoes, clothes, etc." />
+            <button type="submit">Tìm kiếm</button>
+        </form>
     </div>
-    <div class="search-suggest">
-        <div class="search-content">
-        <input type="text" style="outline: none;">    
-        <button>kính lúp</button></div>
-        <div class="suggest-content">gợi ý</div>
-    </div>
-    <div class="user-container">nút bấm</div>
+    
+    <nav>
+        <ul>
+            <li><a href="/webbangiay/index.php?page=home">Trang chủ</a></li>
+            <li><a href="/webbangiay/index.php?page=products">Sản phẩm</a></li>
+            <li><a href="/webbangiay/index.php?page=cart" class="cart"><ion-icon name="cart-outline"></ion-icon>Giỏ hàng</a></li>
+        </ul>
+    </nav>
 </header>
