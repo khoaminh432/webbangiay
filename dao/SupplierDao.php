@@ -97,6 +97,21 @@ class SupplierDao {
             return false;
         }
     }
+    public function getID() {
+        $sql = "SELECT id FROM supplier ORDER BY id ASC";
+        $result = $this->db->view_table($sql);
+    
+        $expectedID = 1;
+        foreach ($result as $row) {
+            if ((int)$row['id'] != $expectedID) {
+                return $expectedID;
+            }
+            $expectedID++;
+        }
+    
+        // Nếu không thiếu ID nào, trả về ID tiếp theo
+        return $expectedID;
+    }
 }
 ?>
 <?php $table_supplier = new SupplierDao();?>

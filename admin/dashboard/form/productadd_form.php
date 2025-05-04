@@ -2,10 +2,11 @@
 <div class="formadd-object-container column hidden ">
 <h1>Add New Product</h1>
 <div class="close-form-btn"><ion-icon name="close-circle-outline"></ion-icon></div>
-    <form class="add-form" action="admin/dashboard/table/product_management.php" method="POST" onsubmit="return validateProductForm()">
-        <div class="form-group">
+    <form class="add-form"  >
+    <input type="text" name="object-add-title" value="product" style="display:none;">    
+    <div class="form-group">
             <label for="name">Product Name*:</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" >
         </div>
         
         <div class="form-row">
@@ -50,9 +51,13 @@
             <div class="form-group">
                 <label for="id_voucher">Voucher:</label>
                 <select id="id_voucher" name="id_voucher">
-                    <option value="">-- No Voucher --</option>
-                    <option value="1">Voucher 1</option>
-                    <option value="2">Voucher 2</option>
+                <?php require_once __DIR__."/../../../dao/VoucherDao.php";
+                  $temp_vouchers = $table_vouchers->view_all();  
+                ?>
+                <option value="">-- No Voucher --</option>
+                    <?php foreach($temp_vouchers as $voucher):?>
+                    <option value=<?= $voucher->id;?>><?=$voucher->name;?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
             
@@ -88,30 +93,5 @@
         <button type="submit">Add Product</button>
     </form>
 </div>
-    <script>
-        function validateProductForm() {
-            // Lấy giá trị từ form
-            const name = document.getElementById('name').value.trim();
-            const price = parseFloat(document.getElementById('price').value);
-            const quantity = parseInt(document.getElementById('quantity').value);
-            
-            // Kiểm tra các trường bắt buộc
-            if (!name) {
-                alert('Please enter product name');
-                return false;
-            }
-            
-            if (isNaN(price) || price <= 0) {
-                alert('Please enter a valid price (greater than 0)');
-                return false;
-            }
-            
-            if (isNaN(quantity) || quantity < 0) {
-                alert('Please enter a valid quantity (non-negative number)');
-                return false;
-            }
-            
-            // Hiển thị thông báo xác nhận
-            return confirm(`Are you sure you want to add this product?\n\nName: ${name}\nPrice: $${price.toFixed(2)}\nQuantity: ${quantity}`);
-        }
-    </script>
+    
+<script src="js/admin/Create_form.js"></script>

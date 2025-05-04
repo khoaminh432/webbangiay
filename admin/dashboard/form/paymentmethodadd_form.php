@@ -3,7 +3,8 @@
 <h1>Add New Payment Method</h1>
 <div class="close-form-btn"><ion-icon name="close-circle-outline"></ion-icon></div>
 <form class="add-form" action="admin/dashboard/table/payment_method_management.php" method="POST" onsubmit="return validatePaymentMethodForm()">
-    <div class="form-group">
+<input type="text" name="object-add-title" value="paymentmethod" style="display:none;">    
+<div class="form-group">
         <label for="name">Payment Method Name*:</label>
         <input type="text" id="name" name="name" required>
     </div>

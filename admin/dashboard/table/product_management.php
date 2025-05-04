@@ -27,7 +27,7 @@ define('ROOT_DIR', dirname(__DIR__));
         </thead>
         <tbody>
             <?php foreach ($products as $product): ?>
-                <tr>
+                <tr data-id="<?= $product->id ?>">
                     <td><?= $product->id ?></td>
                     <td>
                         <div class="product-name">

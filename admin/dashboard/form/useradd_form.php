@@ -2,7 +2,8 @@
 <div class="formadd-object-container column hidden">
 <h1>Add New User</h1>
 <div class="close-form-btn"><ion-icon name="close-circle-outline"></ion-icon></div>
-    <form class="add-form" action="table/account_management.php" method="POST"  >
+    <form class="add-form" >
+        <input type="text" name="object-add-title" value="user" style="display:none;">
         <div class="form-group">
             <label for="username">Username:</label>
             <input type="text" id="addusername" name="username" required>
@@ -33,3 +34,4 @@
         <button type="submit">Add User</button>
     </form>
 </div>
+<script src="js/admin/Create_form.js"></script>

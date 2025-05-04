@@ -36,7 +36,7 @@ $product= $table_products->get_by_id($object_id,true);
                 </div>
 
                 <div class="product-details column">
-                <h3 class="product-name"><?= htmlspecialchars($product->name) ?></h3>
+                <h3 class="product-nameview"><?= htmlspecialchars($product->name) ?></h3>
                     <div class="row">
                     <div class="detail-section">
                         <h4 class="section-title">Basic Information</h4>

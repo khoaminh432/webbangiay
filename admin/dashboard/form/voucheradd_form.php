@@ -3,7 +3,8 @@
 <h1>Add New Voucher</h1>
 <div class="close-form-btn"><ion-icon name="close-circle-outline"></ion-icon></div>
 <form class="add-form" action="admin/dashboard/table/voucher_management.php" method="POST" onsubmit="return validateVoucherForm()">
-    <div class="form-group">
+<input type="text" name="object-add-title" value="voucher" style="display:none;">    
+<div class="form-group">
         <label for="name">Voucher Name*:</label>
         <input type="text" id="name" name="name" required>
     </div>

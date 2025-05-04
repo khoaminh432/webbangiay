@@ -29,6 +29,21 @@ class BillDao {
         }
         return $bills;
     }
+    public function getID() {
+        $sql = "SELECT id FROM bill ORDER BY id ASC";
+        $result = $this->db->view_table($sql);
+    
+        $expectedID = 1;
+        foreach ($result as $row) {
+            if ((int)$row['id'] != $expectedID) {
+                return $expectedID;
+            }
+            $expectedID++;
+        }
+    
+        // Nếu không thiếu ID nào, trả về ID tiếp theo
+        return $expectedID;
+    }
 
     public function get_by_id($id) {
         $sql = "SELECT * FROM bill WHERE id = :id";
@@ -39,10 +54,11 @@ class BillDao {
     }
 
     public function insert(BillDTO $bill) {
-        $sql = "INSERT INTO bill (status, id_user, id_payment_method, total_amount, shipping_address) 
-                VALUES (:status, :id_user, :id_payment_method, :total_amount, :shipping_address)";
+        $sql = "INSERT INTO bill (id,status, id_user, id_payment_method, total_amount, shipping_address) 
+                VALUES (:id,:status, :id_user, :id_payment_method, :total_amount, :shipping_address)";
         
         $params = [
+            "id" =>$this->getID(),
             'status' => $bill->status,
             'id_user' => $bill->id_user,
             'id_payment_method' => $bill->id_payment_method,
@@ -84,6 +100,28 @@ class BillDao {
             error_log("BillDao Delete Error: " . $e->getMessage());
             return false;
         }
+    }
+    public function get_by_voucher($id_voucher){
+        $sql = "SELECT * FROM bill WHERE id_user = :id_user ORDER BY bill_date DESC";
+        $params = ['id_voucher' => $id_voucher];
+        $results = $this->db->view_table($sql, $params);
+        
+        $bills = [];
+        foreach ($results as $row) {
+            $bills[] = new BillDTO($row);
+        }
+        return $bills;
+    }
+    public function get_by_method($id_method){
+        $sql = "SELECT * FROM bill WHERE id_payment_method = :id_payment_method ORDER BY bill_date DESC";
+        $params = ['id_payment_method' => $id_method];
+        $results = $this->db->view_table($sql, $params);
+        
+        $bills = [];
+        foreach ($results as $row) {
+            $bills[] = new BillDTO($row);
+        }
+        return $bills;
     }
 }
 ?>

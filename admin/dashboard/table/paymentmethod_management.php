@@ -18,7 +18,7 @@ $paymentMethods = $table_paymentmethode->view_all();
         </thead>
         <tbody>
             <?php foreach ($paymentMethods as $method): ?>
-                <tr>
+                <tr data-id="<?= $method->id ?>">
                     <td><?= $method->id ?></td>
                     <td>
                         <div class="method-name">

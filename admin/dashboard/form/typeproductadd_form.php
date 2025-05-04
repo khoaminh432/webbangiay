@@ -3,7 +3,8 @@
 <h1>Thêm Loại Sản Phẩm Mới</h1>
 <div class="close-form-btn"><ion-icon name="close-circle-outline"></ion-icon></div>
 <form class="add-form" action="admin/dashboard/table/typeproduct_management.php" method="POST">
-    <div class="form-group">
+<input type="text" name="object-add-title" value="typeproduct" style="display:none;">    
+<div class="form-group">
         <label for="name">Tên loại sản phẩm:</label>
         <input type="text" id="name" name="name" required>
     </div>

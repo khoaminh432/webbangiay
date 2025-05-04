@@ -27,10 +27,25 @@ class PaymentMethodDao {
         
         return !empty($result) ? new PaymentMethodDTO($result[0]) : null;
     }
-
+    public function getID() {
+        $sql = "SELECT id FROM payment_method ORDER BY id ASC";
+        $result = $this->db->view_table($sql);
+    
+        $expectedID = 1;
+        foreach ($result as $row) {
+            if ((int)$row['id'] != $expectedID) {
+                return $expectedID;
+            }
+            $expectedID++;
+        }
+    
+        // Nếu không thiếu ID nào, trả về ID tiếp theo
+        return $expectedID;
+    }
     public function insert(PaymentMethodDTO $method) {
-        $sql = "INSERT INTO payment_method (name, is_active) VALUES (:name, :is_active)";
+        $sql = "INSERT INTO payment_method (id,name, is_active) VALUES (:id,:name, :is_active)";
         $params = [
+            "id" => $this->getID(),
             'name' => $method->name,
             'is_active' => $method->is_active
         ];
@@ -83,6 +98,11 @@ class PaymentMethodDao {
             error_log("PaymentMethodDao Delete Error: " . $e->getMessage());
             return false;
         }
+    }
+    public function check_bill($id_method){
+        require_once __DIR__."/BillDao.php";
+        $temp = $table_bills->get_by_method($id_method);
+        return empty($temp);
     }
 }
 ?>

@@ -40,9 +40,9 @@ define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
             </button>
         </div>
     </div>
+    <div class="content-object-container"><?php include("form/voucheradd_form.php");?>
+    <?php include("table/voucher_management.php");?></div>
     
-    <?php include("form/voucheradd_form.php");?>
-    <?php include("table/voucher_management.php");?>
     <div class="form-view-modal" id="objectViewModal">
         
     </div>

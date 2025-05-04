@@ -20,7 +20,21 @@ class UserDao {
         }
         return $users;
     }
-
+    public function getID() {
+        $sql = "SELECT id FROM users ORDER BY id ASC";
+        $result = $this->db->view_table($sql);
+    
+        $expectedID = 1;
+        foreach ($result as $row) {
+            if ((int)$row['id'] != $expectedID) {
+                return $expectedID;
+            }
+            $expectedID++;
+        }
+    
+        // Nếu không thiếu ID nào, trả về ID tiếp theo
+        return $expectedID;
+    }
     // Lấy người dùng theo ID
     public function get_by_id($id) {
         $sql = "SELECT * FROM users WHERE id = :id";
@@ -35,15 +49,17 @@ class UserDao {
 
     // Thêm người dùng mới
     public function insert(UserDTO $user) {
-        $sql = "INSERT INTO users (email, password, status, username) 
-                VALUES (:email, :password, :status, :username)";
+        $sql = "INSERT INTO users (id,email, password, status, username) 
+                VALUES (:id,:email, :password, :status, :username)";
         
         $params = [
+            "id" => $this->getID(),
             'email' => $user->email,
             'password' => $user->password,
             'status' => $user->status,
             'username' => $user->username
         ];
+        
         
         try {
             $this->db->insert_table($sql, $params);
@@ -110,7 +126,18 @@ class UserDao {
             return false;
         }
     }
-
+    public function username_exists($username, $exclude_id = null) {
+        $sql = "SELECT COUNT(*) FROM users WHERE username = :username";
+        $params = ['username' => $username];
+        
+        if ($exclude_id) {
+            $sql .= " AND id != :exclude_id";
+            $params['exclude_id'] = $exclude_id;
+        }
+        
+        $result = $this->db->view_table($sql, $params);
+        return $result[0]['COUNT(*)'] > 0;
+    }
     // Kiểm tra email đã tồn tại chưa
     public function email_exists($email, $exclude_id = null) {
         $sql = "SELECT COUNT(*) FROM users WHERE email = :email";
@@ -135,7 +162,13 @@ class UserDao {
         }
         return null;
     }
+    public function check_bill($id_user){
+        require_once __DIR__."/BillDao.php";
+        $temp = $table_bills->get_by_user($id_user);
+        return empty($temp);
+    }
     
+      
 }
 ?>
 <?php $table_users = new UserDao();?>

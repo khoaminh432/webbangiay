@@ -8,7 +8,21 @@ class ProductDao {
     public function __construct() {
         $this->db = new database_sever();
     }
-
+    public function getID() {
+        $sql = "SELECT id FROM products ORDER BY id ASC";
+        $result = $this->db->view_table($sql);
+    
+        $expectedID = 1;
+        foreach ($result as $row) {
+            if ((int)$row['id'] != $expectedID) {
+                return $expectedID;
+            }
+            $expectedID++;
+        }
+    
+        // Nếu không thiếu ID nào, trả về ID tiếp theo
+        return $expectedID;
+    }
     // Lấy tất cả sản phẩm (có thể thêm điều kiện is_active)
     public function view_all($includeInactive = false) {
         $sql = "SELECT * FROM products";
@@ -90,10 +104,11 @@ class ProductDao {
 
     // Thêm sản phẩm mới
     public function insert(ProductDTO $product) {
-        $sql = "INSERT INTO products (name, quantity, description, price, weight, id_voucher, id_type_product, id_admin, id_supplier, is_active, image_url) 
-                VALUES (:name, :quantity, :description, :price, :weight, :id_voucher, :id_type_product, :id_admin, :id_supplier, :is_active, :image_url)";
+        $sql = "INSERT INTO products (id,name, quantity, description, price, weight, id_voucher, id_type_product, id_admin, id_supplier, is_active, image_url) 
+                VALUES (:id, :name, :quantity, :description, :price, :weight, :id_voucher, :id_type_product, :id_admin, :id_supplier, :is_active, :image_url)";
         
         $params = [
+            "id" =>$this->getID(),
             'name' => $product->name,
             'quantity' => $product->quantity,
             'description' => $product->description,
@@ -188,11 +203,11 @@ class ProductDao {
 
     // Xóa mềm sản phẩm (chuyển is_active = FALSE)
     public function delete($id) {
-        $sql = "UPDATE products SET is_active = FALSE WHERE id = :id";
+        $sql = "DELETE FROM products WHERE id = :id";
         $params = ['id' => $id];
         
         try {
-            return $this->db->update_table($sql, $params);
+            return $this->db->delete_table($sql, $params);
         } catch (PDOException $e) {
             error_log("ProductDao Delete Error: " . $e->getMessage());
             return false;
@@ -247,6 +262,23 @@ class ProductDao {
         }
         return $products;
     }
-}
+    public function check_billproduct($id_product){
+        require_once __DIR__."/BillProductDao.php";
+        $temp = $table_billproducts->get_by_product($id_product);
+        return empty($temp);
+    }
+    public function get_by_voucher($id_voucher){
+        $sql = "SELECT * FROM products WHERE id_voucher = :id_voucher";
+        $params = ['id_voucher' => $id_voucher];
+        $results = $this->db->view_table($sql, $params);
+        
+        $products = [];
+        foreach ($results as $row) {
+            $products[] = new ProductDTO($row);
+        }
+        return $products;
+    }
+    
+}   
 ?>
 <?php $table_products=new ProductDao();?>

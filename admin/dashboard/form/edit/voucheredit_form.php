@@ -9,7 +9,7 @@ if (!isset($_GET['id'])) {
 
 $voucherId = (int)$_GET['id'];
 $voucher = $table_vouchers->get_by_id($voucherId);
-$admin = $table_admins->get_by_id($voucherId); // Assuming you have an AdminDao
+$admin = $table_admins->get_by_id($voucher->id_admin); // Assuming you have an AdminDao
 
 ?>
 <link rel="stylesheet" href="css/admin_style/form/edit/editformvoucher_style.css">

@@ -44,7 +44,21 @@ class TypeProductDao {
         
         return !empty($result) ? $result[0]['total_revenue'] : 0;
     }
-
+    public function getID() {
+        $sql = "SELECT id FROM type_product ORDER BY id ASC";
+        $result = $this->db->view_table($sql);
+    
+        $expectedID = 1;
+        foreach ($result as $row) {
+            if ((int)$row['id'] != $expectedID) {
+                return $expectedID;
+            }
+            $expectedID++;
+        }
+    
+        // Nếu không thiếu ID nào, trả về ID tiếp theo
+        return $expectedID;
+    }
     /**
      * Lấy thống kê chi tiết: số lượng sản phẩm và doanh thu
      */
@@ -70,8 +84,9 @@ class TypeProductDao {
     }
 
     public function insert(TypeProductDTO $type) {
-        $sql = "INSERT INTO type_product (name, id_admin) VALUES (:name, :id_admin)";
+        $sql = "INSERT INTO type_product (id,name, id_admin) VALUES (:id,:name, :id_admin)";
         $params = [
+            "id" =>$this->getID(),
             'name' => $type->name,
             'id_admin' => $type->id_admin
         ];
@@ -111,6 +126,11 @@ class TypeProductDao {
             error_log("TypeProductDao Delete Error: " . $e->getMessage());
             return false;
         }
+    }
+    public function check_product($id_typeproduct){
+        require_once __DIR__."/ProductDao.php";
+        $temp = $table_products->get_by_type($id_typeproduct);
+        return empty($temp);
     }
 }
 ?>
