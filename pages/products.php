@@ -1,59 +1,115 @@
 <?php
 
 require_once __DIR__ . "../../dao/ProductDao.php";
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Khởi tạo ProductDao
 $productDao = new ProductDao();
 
-// Lấy danh sách sản phẩm
-$products = $productDao->view_all();
+// Lấy danh sách sản phẩm với thông tin đầy đủ
+$products = $productDao->get_products_with_details();
 
+// Lấy category từ URL nếu có
+$category = isset($_GET['category']) ? $_GET['category'] : null;
+$search = isset($_GET['search']) ? $_GET['search'] : null;
+
+// Lọc sản phẩm theo category hoặc search nếu có
+if ($category) {
+    $products = array_filter($products, function ($product) use ($category) {
+        return $product->type_product_id == $category;
+    });
+} elseif ($search) {
+    $search = strtolower($search);
+    $products = array_filter($products, function ($product) use ($search) {
+        return strpos(strtolower($product->name), $search) !== false ||
+            strpos(strtolower($product->description), $search) !== false;
+    });
+}
 ?>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+
 <div class="product-page">
-    <h1>Danh sách sản phẩm</h1>
-    <div class="product-container">
-        <?php if (!empty($products)): ?>
-            <?php foreach ($products as $product): ?>
-                <div class="product-card">
-                    <img src='/webbangiay/img/product/<?php echo htmlspecialchars($product->id . "/" . $product->image_url ); ?>' alt="<?php echo htmlspecialchars($product->name); ?>" class="product-image">
-                    <h2 class="product-name"><?php echo htmlspecialchars($product->name); ?></h2>
-                    <p class="product-description"><?php echo htmlspecialchars($product->description); ?></p>
-                    <p class="product-price"><?php echo number_format($product->price, 2); ?> VNĐ</p>
-                    <p class="product-quantity">Available: <?php echo htmlspecialchars($product->quantity); ?></p>
-                    <a href="/webbangiay/pages/product_detail.php?id=<?php echo $product->id; ?>" class="detail-button">Chi tiết sản phẩm</a>
-                    <button class="add-to-cart" onclick="addToCart(<?php echo $product->id; ?>)">Thêm vào giỏ hàng</button>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>No products available.</p>
-        <?php endif; ?>
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                <?php
+                if ($category) {
+                    echo "Danh mục: " . ucfirst($category);
+                } elseif ($search) {
+                    echo "Kết quả tìm kiếm cho: " . htmlspecialchars($search);
+                } else {
+                    echo "Tất cả sản phẩm";
+                }
+                ?>
+            </h1>
+        </div>
+
+        <div class="product-grid">
+            <?php if (!empty($products)): ?>
+                <?php foreach ($products as $product): ?>
+                    <div class="product-card">
+                        <div class="product-image">
+                            <?php if (!empty($product->image_url)): ?>
+                                <img src='/webbangiay/img/product/<?php echo htmlspecialchars($product->id . "/" . $product->image_url); ?>' 
+                                     alt="<?php echo htmlspecialchars($product->name); ?>">
+                            <?php else: ?>
+                                <img src='/webbangiay/img/product/default.jpg' 
+                                     alt="<?php echo htmlspecialchars($product->name); ?>">
+                            <?php endif; ?>
+                            <div class="product-actions">
+                                <button class="quick-view" data-id="<?php echo $product->id; ?>">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <?php if (isset($_SESSION['user_id'])): ?>
+                                    <button class="add-to-cart" data-id="<?php echo $product->id; ?>">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </button>
+                                <?php else: ?>
+                                    <a href="/webbangiay/layout/login_signup.php" class="login-to-buy">
+                                        <i class="fas fa-lock"></i>
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name"><?php echo htmlspecialchars($product->name); ?></h3>
+                            <p class="product-price"><?php echo number_format($product->price, 0, ',', '.'); ?> VNĐ</p>
+                            <p class="product-type"><?php echo htmlspecialchars($product->type_name); ?></p>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p class="no-products">Không tìm thấy sản phẩm nào.</p>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 
-<script>
-    function addToCart(productId) {
-        // Gửi yêu cầu AJAX đến server
-        fetch('pages/add_to_cart.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ productId: productId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data); // Kiểm tra phản hồi từ server
-            if (data.success) {
-                alert('Thêm sản phẩm thành công!');
-            } else {
-                alert(data.message || 'Thêm sản phẩm thất bại');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Có lỗi xảy ra');
-        });
-    }
-</script>
+<!-- Quick View Modal -->
+<div id="quickViewModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="product-details">
+            <div class="product-image">
+                <img src="" alt="" id="modalProductImage">
+            </div>
+            <div class="product-info">
+                <h2 id="modalProductName"></h2>
+                <p class="product-type" id="modalProductType"></p>
+                <p class="product-supplier" id="modalProductSupplier"></p>
+                <p class="product-description" id="modalProductDescription"></p>
+                <p class="product-weight" id="modalProductWeight"></p>
+                <p class="product-price" id="modalProductPrice"></p>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <button class="add-to-cart-btn" id="modalAddToCart">Thêm vào giỏ hàng</button>
+                <?php else: ?>
+                    <a href="/webbangiay/pages/login.php" class="login-to-buy-btn">Đăng nhập để mua hàng</a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>

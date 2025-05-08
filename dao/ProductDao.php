@@ -4,23 +4,23 @@ require_once __DIR__ . '/../database/database_sever.php';
 
 class ProductDao {
     private $db;
+    private $conn;
+    private $table_name = "products";
     
     public function __construct() {
         $this->db = new database_sever();
+        $this->conn = $this->db->conn;
     }
 
     public function view_all() {
-        $sql = "SELECT A.*, B.image_url FROM products as A
-        LEFT JOIN product_images as B ON A.id = B.id_product AND B.is_primary = 1
-        WHERE A.is_active = TRUE and A.quantity > 0";
-        
-        $results = $this->db->view_table($sql);
-        
-        $products = [];
-        foreach ($results as $row) {
-            $products[] = new ProductDTO($row);
-        }
-        return $products;
+        $query = "SELECT p.*, tp.name as name_type_product,
+                    (SELECT image_url FROM product_images WHERE id_product = p.id AND is_primary = 1 LIMIT 1) as image_url
+                  FROM " . $this->table_name . " p
+                  LEFT JOIN type_product tp ON p.id_admin = tp.id_admin
+                  ORDER BY p.id DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
     public function get_by_type($typeId) {
@@ -235,6 +235,67 @@ class ProductDao {
             $products[] = new ProductDTO($row);
         }
         return $products;
+    }
+
+    public function get_product_by_id($id) {
+        $query = "SELECT p.*, tp.name as name_type_product, pi.image_url 
+                 FROM " . $this->table_name . " p
+                 LEFT JOIN type_product tp ON p.id_admin = tp.id_admin
+                 LEFT JOIN product_images pi ON p.id = pi.id_product AND pi.is_primary = 1
+                 WHERE p.id = :id";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    // public function get_products_with_details() {
+    //     $sql = "SELECT p.*, tp.name as type_name, s.name as supplier_name, 
+    //             (SELECT image_url FROM product_image WHERE id_product = p.id AND is_primary = 1 LIMIT 1) as image_url
+    //             FROM products p
+    //             LEFT JOIN type_product tp ON p.id_type_product = tp.id
+    //             LEFT JOIN supplier s ON p.id_supplier = s.id
+    //             GROUP BY p.id";
+        
+    //     $stmt = $this->conn->prepare($sql);
+    //     $stmt->execute();
+    //     return $stmt->fetchAll(PDO::FETCH_OBJ);
+    // }
+    public function get_products_with_details() {
+        $sql = "SELECT p.*, tp.name as type_name, s.name as supplier_name,
+                pi.image_url
+                FROM products p
+                LEFT JOIN type_product tp ON p.id_type_product = tp.id
+                LEFT JOIN supplier s ON p.id_supplier = s.id
+                LEFT JOIN product_images pi ON p.id = pi.id_product AND pi.is_primary = 1
+                WHERE p.is_active = 1
+                GROUP BY p.id";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function get_type_name($type_id) {
+        $sql = "SELECT name FROM type_product WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$type_id]);
+        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        return $result ? $result->name : '';
+    }
+
+    public function get_supplier_name($supplier_id) {
+        $sql = "SELECT name FROM supplier WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$supplier_id]);
+        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        return $result ? $result->name : '';
+    }
+
+    public function getConnection() {
+        return $this->conn;
     }
 }
 ?>

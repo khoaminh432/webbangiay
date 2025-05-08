@@ -1,9 +1,7 @@
 <?php
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
-
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once __DIR__ . "../../dao/ProductDao.php";
 
 // Lấy dữ liệu từ yêu cầu AJAX
@@ -20,7 +18,7 @@ if (isset($data['productId'])) {
         if (!isset($_SESSION['cart'])) {
             $_SESSION['cart'] = [];
         }
-        
+
         // Kiểm tra nếu sản phẩm đã tồn tại trong giỏ hàng
         if (isset($_SESSION['cart'][$productId])) {
             $_SESSION['cart'][$productId]['quantity'] += 1;
@@ -32,9 +30,14 @@ if (isset($data['productId'])) {
                 'quantity' => 1,
                 'image_url' => $product->image_url ?? 'default.jpg'
             ];
-        } 
-        // Phản hồi thành công
-        echo json_encode(['success' => true]);
+        }
+        // Sau khi thêm sản phẩm vào giỏ hàng thành công
+        $tongSoLuong = 0;
+        foreach ($_SESSION['cart'] as $item) {
+            $tongSoLuong += $item['quantity'];
+        }
+        echo json_encode(['success' => true, 'cart_count' => $tongSoLuong]);
+        exit;
     } else {
         // Phản hồi thất bại nếu không tìm thấy sản phẩm
         echo json_encode(['success' => false, 'message' => 'Product not found.']);
@@ -43,3 +46,12 @@ if (isset($data['productId'])) {
     // Phản hồi thất bại nếu không có productId
     echo json_encode(['success' => false, 'message' => 'Invalid request.']);
 }
+?>
+<script>
+    function updateCartCount(count) {
+        const cartCount = document.querySelector('.cart-count');
+        if (cartCount) {
+            cartCount.textContent = count;
+        }
+    }
+</script>

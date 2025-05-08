@@ -84,6 +84,9 @@
         public function lastInsertId() {
             return $this->conn->lastInsertId();
         }
+        public function getConnection() {
+            return $this->conn;
+        }
     } 
 
 ?>
