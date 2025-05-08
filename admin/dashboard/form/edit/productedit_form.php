@@ -14,6 +14,30 @@ $categories = $table_typeproduct->view_all(); // Example - implement as needed
 $suppliers = $table_supplier->view_all();   // Example - implement as needed
 $vouchers = $table_vouchers->view_all();      // Example - implement as needed
 ?>
+<style>
+#showSizeColorBtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 200px;
+}
+#showSizeColorBtn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+#showSizeColorBtn:active {
+    background-color: #3e8e41;
+    transform: scale(0.98);
+}
+</style>
+
 <link rel="stylesheet" href="css/admin_style/form/edit/editformproduct_style.css">
 <div class="product-edit-model">
     <form id="productEditForm" class="product-edit-card" method="POST" action="update_product.php" enctype="multipart/form-data">

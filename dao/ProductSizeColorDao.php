@@ -8,7 +8,19 @@ class ProductSizeColorDao {
     public function __construct() {
         $this->db = new database_sever();
     }
-
+    public function getID() {
+        $sql = "SELECT id FROM product_size_color ORDER BY id ASC";
+        $result = $this->db->view_table($sql);
+    
+        $expectedID = 1;
+        foreach ($result as $row) {
+            if ((int)$row['id'] != $expectedID) {
+                return $expectedID;
+            }
+            $expectedID++;
+        }
+        return $expectedID;
+    }
     // Lấy tất cả bản ghi
     public function view_all() {
         $sql = "SELECT * FROM product_size_color";
@@ -44,10 +56,11 @@ class ProductSizeColorDao {
 
     // Thêm mới
     public function insert(ProductSizeColorDTO $psc) {
-        $sql = "INSERT INTO product_size_color (id_product, id_size, id_color, quantity, created_at, updated_at)
-                VALUES (:id_product, :id_size, :id_color, :quantity, NOW(), NOW())";
+        $sql = "INSERT INTO product_size_color (id,id_product, id_size, id_color, quantity, created_at, updated_at)
+                VALUES (:id,:id_product, :id_size, :id_color, :quantity, NOW(), NOW())";
 
         $params = [
+            "id" => $this->getID(),
             'id_product' => $psc->id_product,
             'id_size' => $psc->id_size,
             'id_color' => $psc->id_color,
@@ -142,6 +155,26 @@ class ProductSizeColorDao {
             return false;
         }
     }
+    // Lấy số lượng theo id_product, id_size, id_color
+    public function get_quantity($id_product, $id_size, $id_color) {
+        $sql = "SELECT quantity FROM product_size_color 
+                WHERE id_product = :id_product AND id_size = :id_size AND id_color = :id_color";
+
+        $params = [
+            'id_product' => $id_product,
+            'id_size' => $id_size,
+            'id_color' => $id_color
+        ];
+
+        try {
+            $result = $this->db->view_table($sql, $params);
+            return isset($result[0]['quantity']) ? (int)$result[0]['quantity'] : 0;
+        } catch (PDOException $e) {
+            error_log("PSC Get Quantity Error: " . $e->getMessage());
+            return 0;
+        }
+    }
+
 }
 ?>
 <?php $psc_table = new ProductSizeColorDao(); ?>

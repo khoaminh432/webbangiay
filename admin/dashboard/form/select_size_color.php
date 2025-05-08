@@ -162,6 +162,15 @@ $colors = $colorDao->view_all();
                                     value="<?= $size->id . '_' . $color->id ?>"
                                     <?=!$psc_table->exists($object_id,$size->id,$color->id)?"":" checked"?>
                                     >
+                                    <br>
+                                    <?php $existing_quantity = $psc_table->get_quantity($object_id,$size->id,$color->id)?>
+                                    <input 
+                                    type="number" 
+                                    name="quantities[<?= $size->id . '_' . $color->id ?>]" 
+                                    min="0" 
+                                    placeholder="SL" 
+                                    style="width: 60px; margin-top: 5px;"
+                                    value="<?= htmlspecialchars($existing_quantity) ?>">
                             </td>
                         <?php endforeach; ?>
                     </tr>
@@ -201,17 +210,19 @@ document.getElementById('sizeColorForm').addEventListener('submit', function (e)
         method: 'POST',
         body: formData
     })
-    .then(res => res.json())
+    .then(response => response.json())
     .then(data => {
         if (data.success) {
-            Swal.fire("Thành công", response.message, "success");
+            Swal.fire("Thành công", data.message, "success");
             closeForm();
         } else {
-            Swal.fire("Lỗi", response.message, "error");
+            Swal.fire("Lỗi", data.message, "error");
         }
     })
     .catch(error => {
+        console.log(error)
         alert('❌ Lỗi AJAX: ' + error);
+        
     });}
 });
 </script>
