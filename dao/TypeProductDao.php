@@ -84,11 +84,12 @@ class TypeProductDao {
     }
 
     public function insert(TypeProductDTO $type) {
-        $sql = "INSERT INTO type_product (id,name, id_admin) VALUES (:id,:name, :id_admin)";
+        $sql = "INSERT INTO type_product (id,name, id_admin,is_active) VALUES (:id,:name, :id_admin, :is_active)";
         $params = [
             "id" =>$this->getID(),
             'name' => $type->name,
-            'id_admin' => $type->id_admin
+            'id_admin' => $type->id_admin,
+            "is_active" => $type->is_active
         ];
         
         try {
@@ -132,6 +133,25 @@ class TypeProductDao {
         $temp = $table_products->get_by_type($id_typeproduct);
         return empty($temp);
     }
+    public function exists_by_dto(TypeProductDTO $type) {
+        $sql = "SELECT COUNT(*) as total 
+                FROM type_product 
+                WHERE name = :name AND id_admin = :id_admin";
+        
+        $params = [
+            'name' => $type->name,
+            'id_admin' => $type->id_admin
+        ];
+        
+        try {
+            $result = $this->db->view_table($sql, $params);
+            return isset($result[0]['total']) && $result[0]['total'] > 0;
+        } catch (PDOException $e) {
+            error_log("TypeProductDao exists_by_dto Error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
 }
 ?>
 <?php $table_typeproduct = new TypeProductDao();?>

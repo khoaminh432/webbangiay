@@ -93,5 +93,4 @@
         <button type="submit">Add Product</button>
     </form>
 </div>
-    
 <script src="js/admin/Create_form.js"></script>

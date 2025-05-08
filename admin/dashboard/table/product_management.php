@@ -37,7 +37,11 @@ define('ROOT_DIR', dirname(__DIR__));
                     <td><?= number_format($product->price, 0, ',', '.') ?>đ</td>
                     <td><?= $product->quantity ?></td>
                     <td><?= $product->weight ?>g</td>
-                    <td><?= $product->id_type_product ?></td>
+                    <td><?php require_once __DIR__."/../../../dao/TypeProductDao.php";
+                        $name_type = $table_typeproduct->get_by_id($product->id)->name;
+                    ?>
+                        <?= $product->id_type_product." ($name_type)" ?>
+                        </td>
                     <td class="status-product status-<?= strtolower($product->is_active) ?> ">
                         <select  name="objectId" class="styled-select status-select" data-object-id="<?=$product->id?>">
                             <option value="Product-true" <?= $product->is_active == true ? 'selected' : '' ?>>Hoạt Động</option>

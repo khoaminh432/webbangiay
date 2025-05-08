@@ -123,6 +123,32 @@ class BillDao {
         }
         return $bills;
     }
+    public function exists_by_dto(BillDTO $bill) {
+        $sql = "SELECT COUNT(*) as total 
+                FROM bill 
+                WHERE status = :status 
+                  AND id_user = :id_user 
+                  AND id_payment_method = :id_payment_method 
+                  AND total_amount = :total_amount 
+                  AND shipping_address = :shipping_address";
+    
+        $params = [
+            'status' => $bill->status,
+            'id_user' => $bill->id_user,
+            'id_payment_method' => $bill->id_payment_method,
+            'total_amount' => $bill->total_amount,
+            'shipping_address' => $bill->shipping_address
+        ];
+    
+        try {
+            $result = $this->db->view_table($sql, $params);
+            return isset($result[0]['total']) && $result[0]['total'] > 0;
+        } catch (PDOException $e) {
+            error_log("BillDao exists_by_dto Error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
 }
 ?>
 <?php $table_bills = new BillDao();?>

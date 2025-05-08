@@ -28,14 +28,14 @@ try {
                 $message = "Username đã tồn tại rồi";
             } else {
                 $userDTOadd = new UserDTO([
-                    "id" => $table_users->getID(),
+                    
                     'username' => $username,
                     'email' => $email,
                     'password' => $password,
                     'status' => $status
                 ]);
                 $result = $table_users->insert($userDTOadd);
-                $message = $result ? "Thêm thành công" : "Thêm thất bại";
+                $message = $result ? "Thêm người dùng thành công" : "Thêm thất bại";
             }
             break;
 
@@ -52,9 +52,7 @@ try {
             $id_supplier = $_POST['id_supplier'] ?: null;
             $is_active = $_POST['is_active'];
             $id_admin = $_POST['id_admin'];
-
             $productDTOadd = new ProductDTO([
-                "id" => $table_products->getID(),
                 'name' => $name,
                 'price' => $price,
                 'quantity' => $quantity,
@@ -67,9 +65,27 @@ try {
                 'id_admin' => $id_admin,
                 'image_url' => $_POST['image_url'] ?? null // ← BỔ SUNG
             ]);
+            if ($table_products->exists_by_dto($productDTOadd))
+                $message = "Sản phẩm này đã tồn tại rồi!";
+            else
+            {
             $result = $table_products->insert($productDTOadd);
-            $message = $result ? "Thêm thành công" : "Thêm thất bại";
+            $message = $result ? "Thêm sản phẩm thành công" : "Thêm thất bại";}
             
+            break;
+        case "typeproduct":
+            require_once __DIR__."/../../dao/TypeProductDao.php";
+            $table_typeproduct = new TypeProductDao();
+            $nametype = $_POST["name"];
+            $id_admin = $_POST["id_admin"];
+            $status = $_POST["is_active"];
+            $typeproductDTO = new TypeProductDTO([
+                "name" => $nametype,
+                "is_active" => $status,
+                "id_admin" =>$id_admin
+            ]);
+            $result = $table_typeproduct->insert($typeproductDTO);
+            $message = $result ? "Thêm loại sản phẩm thành công" : "Thêm thất bại";
             break;
         default:
             echo json_encode(["success" => false, "message" => "Object không hợp lệ"]);

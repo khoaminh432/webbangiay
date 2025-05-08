@@ -23,7 +23,19 @@ class ProductDao {
         }
         return $products;
     }
-
+    public function getID() {
+        $sql = "SELECT id FROM products ORDER BY id ASC";
+        $result = $this->db->view_table($sql);
+    
+        $expectedID = 1;
+        foreach ($result as $row) {
+            if ((int)$row['id'] != $expectedID) {
+                return $expectedID;
+            }
+            $expectedID++;
+        }
+        return $expectedID;
+    }
     public function get_by_type($typeId) {
         $sql = "SELECT * FROM products WHERE id_type_product = :type_id AND is_active = TRUE";
         $params = ['type_id' => $typeId];
@@ -35,7 +47,6 @@ class ProductDao {
         }
         return $products;
     }
-
     public function get_by_id($id) {
         $sql = "SELECT A.*, B.image_url 
                 FROM products AS A
@@ -80,8 +91,8 @@ class ProductDao {
 
     // Thêm sản phẩm mới
     public function insert(ProductDTO $product) {
-        $sql = "INSERT INTO products (name, quantity, description, price, weight, id_voucher, id_type_product, id_admin, id_supplier, is_active, image_url) 
-                VALUES (:name, :quantity, :description, :price, :weight, :id_voucher, :id_type_product, :id_admin, :id_supplier, :is_active, :image_url)";
+        $sql = "INSERT INTO products (id,name, quantity, description, price, weight, id_voucher, id_type_product, id_admin, id_supplier, is_active, image_url) 
+                VALUES (:id,:name, :quantity, :description, :price, :weight, :id_voucher, :id_type_product, :id_admin, :id_supplier, :is_active, :image_url)";
         
         $params = [
             "id" =>$this->getID(),
@@ -94,7 +105,8 @@ class ProductDao {
             'id_type_product' => $product->id_type_product,
             'id_admin' => $product->id_admin,
             'id_supplier' => $product->id_supplier,
-            'is_active' => $product->is_active
+            'is_active' => $product->is_active,
+            "image_url" =>$product->image_url
         ];
         
         try {
@@ -251,6 +263,31 @@ class ProductDao {
             $products[] = new ProductDTO($row);
         }
         return $products;
+    }
+    public function exists_by_dto(ProductDTO $product) {
+        $sql = "SELECT COUNT(*) as total 
+                FROM products 
+                WHERE name = :name 
+                  AND price = :price 
+                  AND quantity = :quantity 
+                  AND id_type_product = :id_type_product 
+                  AND id_supplier = :id_supplier";
+        
+        $params = [
+            'name' => $product->name,
+            'price' => $product->price,
+            'quantity' => $product->quantity,
+            'id_type_product' => $product->id_type_product,
+            'id_supplier' => $product->id_supplier,
+        ];
+        
+        try {
+            $result = $this->db->view_table($sql, $params);
+            return isset($result[0]['total']) && $result[0]['total'] > 0;
+        } catch (PDOException $e) {
+            error_log("ProductDao exists_by_dto Error: " . $e->getMessage());
+            return false;
+        }
     }
     
 }   

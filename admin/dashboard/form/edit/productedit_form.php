@@ -49,6 +49,9 @@ $vouchers = $table_vouchers->view_all();      // Example - implement as needed
                         </label>
                         <span class="toggle-label">Active Status</span>
                     </div>
+                    <div class="select-option">
+                    <button type="button" id="showSizeColorBtn">Chọn Size Màu</button>
+                    </div>
                 </div>
 
                 <div class="product-edit-details column">
@@ -126,6 +129,8 @@ $vouchers = $table_vouchers->view_all();      // Example - implement as needed
 
 <script src="js/admin/closeview_form.js"></script>
 <script>
+    
+    
 // Image preview functionality
 document.getElementById('productImageUpload').addEventListener('change', function(e) {
     const file = e.target.files[0];
@@ -137,4 +142,9 @@ document.getElementById('productImageUpload').addEventListener('change', functio
         reader.readAsDataURL(file);
     }
 });
+</script>
+<?php require_once __DIR__."/../select_size_color.php";?>
+<script>document.getElementById('showSizeColorBtn').addEventListener('click', function () {
+        document.getElementById('sizeColorMatrixForm').style.display = 'block';
+    });
 </script>
