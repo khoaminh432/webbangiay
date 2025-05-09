@@ -4,25 +4,25 @@ require_once __DIR__ . '/../database/database_sever.php';
 
 class ProductDao {
     private $db;
+    private $conn;
+    private $table_name = "products";
     
     public function __construct() {
         $this->db = new database_sever();
+        $this->conn = $this->db->conn;
     }
 
-    // Lấy tất cả sản phẩm (có thể thêm điều kiện is_active)
-    public function view_all($includeInactive = false) {
-        $sql = "SELECT * FROM products";
-        if (!$includeInactive) {
-            $sql .= " WHERE is_active = TRUE";
-        }
-        $results = $this->db->view_table($sql);
-        
-        $products = [];
-        foreach ($results as $row) {
-            $products[] = new ProductDTO($row);
-        }
-        return $products;
+    public function view_all() {
+        $query = "SELECT p.*, tp.name as name_type_product,
+                    (SELECT image_url FROM product_images WHERE id_product = p.id AND is_primary = 1 LIMIT 1) as image_url
+                  FROM " . $this->table_name . " p
+                  LEFT JOIN type_product tp ON p.id_admin = tp.id_admin
+                  ORDER BY p.id DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+
     public function getID() {
         $sql = "SELECT id FROM products ORDER BY id ASC";
         $result = $this->db->view_table($sql);
@@ -91,8 +91,6 @@ class ProductDao {
 
     // Thêm sản phẩm mới
     public function insert(ProductDTO $product) {
-        $sql = "INSERT INTO products (id,name, quantity, description, price, weight, id_voucher, id_type_product, id_admin, id_supplier, is_active, image_url) 
-                VALUES (:id,:name, :quantity, :description, :price, :weight, :id_voucher, :id_type_product, :id_admin, :id_supplier, :is_active, :image_url)";
         
         $params = [
             "id" =>$this->getID(),
@@ -105,8 +103,7 @@ class ProductDao {
             'id_type_product' => $product->id_type_product,
             'id_admin' => $product->id_admin,
             'id_supplier' => $product->id_supplier,
-            'is_active' => $product->is_active,
-            "image_url" =>$product->image_url
+            'is_active' => $product->is_active
         ];
         
         try {
@@ -189,11 +186,11 @@ class ProductDao {
 
     // Xóa mềm sản phẩm (chuyển is_active = FALSE)
     public function delete($id) {
-        $sql = "DELETE FROM products WHERE id = :id";
+        $sql = "UPDATE products SET is_active = FALSE WHERE id = :id";
         $params = ['id' => $id];
         
         try {
-            return $this->db->delete_table($sql, $params);
+            return $this->db->update_table($sql, $params);
         } catch (PDOException $e) {
             error_log("ProductDao Delete Error: " . $e->getMessage());
             return false;
@@ -248,48 +245,67 @@ class ProductDao {
         }
         return $products;
     }
-    public function check_billproduct($id_product){
-        require_once __DIR__."/BillProductDao.php";
-        $temp = $table_billproducts->get_by_product($id_product);
-        return empty($temp);
-    }
-    public function get_by_voucher($id_voucher){
-        $sql = "SELECT * FROM products WHERE id_voucher = :id_voucher";
-        $params = ['id_voucher' => $id_voucher];
-        $results = $this->db->view_table($sql, $params);
+
+    public function get_product_by_id($id) {
+        $query = "SELECT p.*, tp.name as name_type_product, pi.image_url 
+                 FROM " . $this->table_name . " p
+                 LEFT JOIN type_product tp ON p.id_admin = tp.id_admin
+                 LEFT JOIN product_images pi ON p.id = pi.id_product AND pi.is_primary = 1
+                 WHERE p.id = :id";
         
-        $products = [];
-        foreach ($results as $row) {
-            $products[] = new ProductDTO($row);
-        }
-        return $products;
-    }
-    public function exists_by_dto(ProductDTO $product) {
-        $sql = "SELECT COUNT(*) as total 
-                FROM products 
-                WHERE name = :name 
-                  AND price = :price 
-                  AND quantity = :quantity 
-                  AND id_type_product = :id_type_product 
-                  AND id_supplier = :id_supplier";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
         
-        $params = [
-            'name' => $product->name,
-            'price' => $product->price,
-            'quantity' => $product->quantity,
-            'id_type_product' => $product->id_type_product,
-            'id_supplier' => $product->id_supplier,
-        ];
-        
-        try {
-            $result = $this->db->view_table($sql, $params);
-            return isset($result[0]['total']) && $result[0]['total'] > 0;
-        } catch (PDOException $e) {
-            error_log("ProductDao exists_by_dto Error: " . $e->getMessage());
-            return false;
-        }
+        return $stmt->fetch(PDO::FETCH_OBJ);
     }
-    
-}   
+
+    // public function get_products_with_details() {
+    //     $sql = "SELECT p.*, tp.name as type_name, s.name as supplier_name, 
+    //             (SELECT image_url FROM product_image WHERE id_product = p.id AND is_primary = 1 LIMIT 1) as image_url
+    //             FROM products p
+    //             LEFT JOIN type_product tp ON p.id_type_product = tp.id
+    //             LEFT JOIN supplier s ON p.id_supplier = s.id
+    //             GROUP BY p.id";
+        
+    //     $stmt = $this->conn->prepare($sql);
+    //     $stmt->execute();
+    //     return $stmt->fetchAll(PDO::FETCH_OBJ);
+    // }
+    public function get_products_with_details() {
+        $sql = "SELECT p.*, tp.name as type_name, s.name as supplier_name,
+                pi.image_url
+                FROM products p
+                LEFT JOIN type_product tp ON p.id_type_product = tp.id
+                LEFT JOIN supplier s ON p.id_supplier = s.id
+                LEFT JOIN product_images pi ON p.id = pi.id_product AND pi.is_primary = 1
+                WHERE p.is_active = 1
+                GROUP BY p.id";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function get_type_name($type_id) {
+        $sql = "SELECT name FROM type_product WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$type_id]);
+        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        return $result ? $result->name : '';
+    }
+
+    public function get_supplier_name($supplier_id) {
+        $sql = "SELECT name FROM supplier WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$supplier_id]);
+        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        return $result ? $result->name : '';
+    }
+
+    public function getConnection() {
+        return $this->conn;
+    }
+}
 ?>
 <?php $table_products=new ProductDao();?>

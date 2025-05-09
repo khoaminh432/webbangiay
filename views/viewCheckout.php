@@ -1,5 +1,5 @@
 <?php
-$title = 'Home';
+$title = 'Checkout';
 $css = 'checkout.css';
 $js = 'checkout.js';
 $childView = '../pages/checkout.php';
