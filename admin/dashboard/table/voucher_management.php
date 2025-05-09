@@ -23,7 +23,7 @@ $vouchers = $table_vouchers->view_all(true);
         </thead>
         <tbody>
             <?php foreach ($vouchers as $voucher): ?>
-                <tr>
+                <tr data-id="<?=$voucher->id ?>">
                     <td><?= htmlspecialchars($voucher->id) ?></td>
                     <td><?= htmlspecialchars($voucher->name) ?></td>
                     <td><?= number_format($voucher->deduction, 2) ?>%</td>

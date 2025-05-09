@@ -1,10 +1,5 @@
-<?php
-header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
-header("Pragma: no-cache"); // HTTP 1.0
-header("Expires: 0"); // Proxies
-?>
-<link rel="stylesheet" href="css/style.css?v=<?= filemtime('css/style.css') ?>">
-<script src="js/script.js?v=<?= filemtime('js/script.js') ?>"></script>
+
+
 <?php
 // Tự động xác định thư mục gốc (giả sử có thư mục 'vendor' hoặc 'public' làm mốc)
 if(!defined("ROOT_DIR"))
@@ -33,11 +28,11 @@ define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <link rel="stylesheet" href="css/admin_style/style.css">
     <script src="js/jquery-3.7.1.min.js"></script>
+    
 </head>
-
-
 <body>
     <div class="Admin-container row">
+        
         <div class="left-menu column">
         <h1>Admin Panel</h1>
         <div class="Dashboard"><ion-icon name="clipboard-outline"></ion-icon> Bảng điều khiển</div>
@@ -51,7 +46,7 @@ define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
             <?php include("admin/dashboard.php");?>
         </div>
     </div>
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/admin/dashboard_getviewtables.js"></script>
     <script src="js/admin/hideshow_form.js"></script>
 </body>

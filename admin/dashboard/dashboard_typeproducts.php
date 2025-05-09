@@ -24,9 +24,9 @@
         </div>
         
     </div>
+    <div class="content-object-container"><?php require_once __DIR__."/form/typeproductadd_form.php";?>
+    <?php require_once __DIR__."/table/typeproduct_management.php";?></div>
     
-    <?php require_once __DIR__."/form/typeproductadd_form.php";?>
-    <?php require_once __DIR__."/table/typeproduct_management.php";?>
     <div class="form-view-modal" id="objectViewModal">
         
     </div>

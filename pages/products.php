@@ -104,6 +104,20 @@ if ($category) {
                 <p class="product-description" id="modalProductDescription"></p>
                 <p class="product-weight" id="modalProductWeight"></p>
                 <p class="product-price" id="modalProductPrice"></p>
+                <div class="product-options">
+                    <div class="size-selector">
+                        <label for="modalSizeSelect">Kích cỡ:</label>
+                        <select id="modalSizeSelect">
+                            <option value="">Chọn kích cỡ</option>
+                        </select>
+                    </div>
+                    <div class="color-selector">
+                        <label for="modalColorSelect">Màu sắc:</label>
+                        <select id="modalColorSelect">
+                            <option value="">Chọn màu sắc</option>
+                        </select>
+                    </div>
+                </div>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <button class="add-to-cart-btn" id="modalAddToCart">Thêm vào giỏ hàng</button>
                 <?php else: ?>

@@ -125,6 +125,11 @@ class VoucherDao {
             return false;
         }
     }
+    public function check_product($id_voucher){
+        require_once __DIR__."/ProductDao.php";
+        $temp = $table_products->get_by_voucher($id_voucher);
+        return empty($temp);
+    }
 }
 ?>
 <?php $table_vouchers = new VoucherDao();?>

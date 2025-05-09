@@ -36,7 +36,7 @@ $product= $table_products->get_by_id($object_id,true);
                 </div>
 
                 <div class="product-details column">
-                <h3 class="product-name"><?= htmlspecialchars($product->name) ?></h3>
+                <h3 class="product-nameview"><?= htmlspecialchars($product->name) ?></h3>
                     <div class="row">
                     <div class="detail-section">
                         <h4 class="section-title">Basic Information</h4>
@@ -68,19 +68,32 @@ $product= $table_products->get_by_id($object_id,true);
                             <div class="detail-item">
                                 <span class="detail-label">Category</span>
                                 <span class="detail-value">
-                                    <?= $product->id_type_product ? '#' . htmlspecialchars($product->id_type_product) : 'Uncategorized' ?>
+                                    <?php require_once __DIR__."/../../../../dao/TypeProductDao.php";
+                                        $name_typeproduct = $table_typeproduct->get_by_id($product->id_type_product)->name;
+                                    ?>
+                                    <?= $product->id_type_product ? '#' . htmlspecialchars($product->id_type_product) : 'Uncategorized'
+                                    ?>
+                                    <?=($name_typeproduct)?>
                                 </span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Added By</span>
                                 <span class="detail-value">
-                                    <?= $product->id_admin ? 'Admin #' . htmlspecialchars($product->id_admin) : 'System' ?>
+                                <?php require_once __DIR__."/../../../../dao/AdminDao.php";
+                                        $anme_admin = $table_admins->get_by_id($product->id_admin)->name;
+                                    ?>
+                                    <?= $product->id_admin ? '#' . htmlspecialchars($product->id_admin) : 'System' ?>
+                                    <?=($anme_admin)?>
                                 </span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Supplier</span>
                                 <span class="detail-value">
-                                    <?= $product->id_supplier ? 'Supplier #' . htmlspecialchars($product->id_supplier) : 'None' ."" ?>
+                                    <?php  require_once __DIR__."/../../../../dao/SupplierDao.php";
+                                        $name_supplier = $table_supplier->get_by_id($product->id_supplier)->name;
+                                    ?>
+                                    <?= $product->id_supplier ? '#' . htmlspecialchars($product->id_supplier) : 'None' ."" ?>
+                                    <?= ($name_supplier)?>
                                 </span>
                             </div>
                         </div>

@@ -52,6 +52,18 @@ class BillProductDao {
             return false;
         }
     }
+    public function get_by_product($id_product) {
+        $sql = "SELECT * FROM bill_products WHERE id_product = :id_product";
+        $params = ['id_product' => $id_product];
+        $results = $this->db->view_table($sql, $params);
+        
+        $items = [];
+        foreach ($results as $row) {
+            $items[] = new BillProductDTO($row);
+        }
+        return $items;
+    }
+    
 }
 ?>
 <?php $table_billproducts = new BillProductDao();?>

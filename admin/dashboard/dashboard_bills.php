@@ -19,7 +19,8 @@
         </div>
     </div>
     
-    <?php include("table/bill_management.php");?>
+    <div class="content-object-container"><?php include("table/bill_management.php");?></div>
+    
     <div class="form-view-modal" id="objectViewModal">
         
     </div>

@@ -47,13 +47,17 @@ body {
 }
 
 .search-bar input {
-    width: 100%;
+    flex: 1;
     padding: 10px 15px;
     border: 1px solid #ddd;
     border-radius: 4px 0 0 4px;
     font-size: 14px;
+    width: auto; /* Không cần 100% nữa */
 }
-
+.search-bar form {
+    display: flex;
+    width: 100%;
+}
 .search-bar button {
     padding: 10px 20px;
     background: #000;
@@ -61,6 +65,7 @@ body {
     border: none;
     border-radius: 0 4px 4px 0;
     cursor: pointer;
+    white-space: nowrap; /* Tránh bị xuống dòng */
 }
 
 .user-actions {

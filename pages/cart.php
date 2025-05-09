@@ -105,6 +105,8 @@ $total = array_reduce($cartItems, function ($carry, $item) {
                     <tr>
                         <th>Hình ảnh</th>
                         <th>Tên sản phẩm</th>
+                        <th>Kích cỡ</th>
+                        <th>Màu sắc</th>
                         <th>Số lượng</th>
                         <th>Giá</th>
                         <th>Tổng tiền</th>
@@ -112,14 +114,16 @@ $total = array_reduce($cartItems, function ($carry, $item) {
                     </tr>
                 </thead>
                 <tbody id="cart-items">
-                    <?php foreach ($cartItems as $item): ?>
-                        <tr data-id="<?php echo $item['id']; ?>">
+                    <?php foreach ($cartItems as $key => $item): ?>
+                        <tr data-id="<?php echo $key; ?>">
                             <td>
                                 <img src="/webbangiay/img/product/<?php echo htmlspecialchars($item['id'] . "/" . $item['image_url']); ?>"
                                     alt="<?php echo htmlspecialchars($item['name']); ?>"
                                     class="product-image">
                             </td>
                             <td class="product-name"><?php echo htmlspecialchars($item['name']); ?></td>
+                            <td class="product-size"><?php echo htmlspecialchars($item['size_number']); ?></td>
+                            <td class="product-color"><?php echo htmlspecialchars($item['color_name']); ?></td>
                             <td>
                                 <div class="quantity-control">
                                     <button class="quantity-btn minus">-</button>

@@ -14,6 +14,30 @@ $categories = $table_typeproduct->view_all(); // Example - implement as needed
 $suppliers = $table_supplier->view_all();   // Example - implement as needed
 $vouchers = $table_vouchers->view_all();      // Example - implement as needed
 ?>
+<style>
+#showSizeColorBtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 200px;
+}
+#showSizeColorBtn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+#showSizeColorBtn:active {
+    background-color: #3e8e41;
+    transform: scale(0.98);
+}
+</style>
+
 <link rel="stylesheet" href="css/admin_style/form/edit/editformproduct_style.css">
 <div class="product-edit-model">
     <form id="productEditForm" class="product-edit-card" method="POST" action="update_product.php" enctype="multipart/form-data">
@@ -48,6 +72,9 @@ $vouchers = $table_vouchers->view_all();      // Example - implement as needed
                             <span class="slider round"></span>
                         </label>
                         <span class="toggle-label">Active Status</span>
+                    </div>
+                    <div class="select-option">
+                    <button type="button" id="showSizeColorBtn">Chọn Size Màu</button>
                     </div>
                 </div>
 
@@ -126,6 +153,8 @@ $vouchers = $table_vouchers->view_all();      // Example - implement as needed
 
 <script src="js/admin/closeview_form.js"></script>
 <script>
+    
+    
 // Image preview functionality
 document.getElementById('productImageUpload').addEventListener('change', function(e) {
     const file = e.target.files[0];
@@ -137,4 +166,9 @@ document.getElementById('productImageUpload').addEventListener('change', functio
         reader.readAsDataURL(file);
     }
 });
+</script>
+<?php require_once __DIR__."/../select_size_color.php";?>
+<script>document.getElementById('showSizeColorBtn').addEventListener('click', function () {
+        document.getElementById('sizeColorMatrixForm').style.display = 'block';
+    });
 </script>

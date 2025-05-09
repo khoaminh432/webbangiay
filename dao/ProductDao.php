@@ -23,6 +23,19 @@ class ProductDao {
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
+    public function getID() {
+        $sql = "SELECT id FROM products ORDER BY id ASC";
+        $result = $this->db->view_table($sql);
+    
+        $expectedID = 1;
+        foreach ($result as $row) {
+            if ((int)$row['id'] != $expectedID) {
+                return $expectedID;
+            }
+            $expectedID++;
+        }
+        return $expectedID;
+    }
     public function get_by_type($typeId) {
         $sql = "SELECT * FROM products WHERE id_type_product = :type_id AND is_active = TRUE";
         $params = ['type_id' => $typeId];
@@ -34,7 +47,6 @@ class ProductDao {
         }
         return $products;
     }
-
     public function get_by_id($id) {
         $sql = "SELECT A.*, B.image_url 
                 FROM products AS A
@@ -79,12 +91,9 @@ class ProductDao {
 
     // Thêm sản phẩm mới
     public function insert(ProductDTO $product) {
-        $sql = "INSERT INTO products (name, quantity, description, price, weight, id_voucher, id_type_product, id_admin, id_supplier, is_active) 
-                VALUES (:name, :quantity, :description, :price, :weight, :id_voucher, :id_type_product, :id_admin, :id_supplier, :is_active)";
-        $sql = "INSERT INTO products (name, quantity, description, price, weight, id_voucher, id_type_product, id_admin, id_supplier, is_active, image_url) 
-                VALUES (:name, :quantity, :description, :price, :weight, :id_voucher, :id_type_product, :id_admin, :id_supplier, :is_active, :image_url)";
         
         $params = [
+            "id" =>$this->getID(),
             'name' => $product->name,
             'quantity' => $product->quantity,
             'description' => $product->description,
