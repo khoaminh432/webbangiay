@@ -31,9 +31,9 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
                     <div class="user-menu">
                         <img src="/webbangiay/img/user-icon.png" alt="User" class="user-icon">
                         <div class="dropdown-menu">
-                            <a href="/webbangiay/pages/profile.php">Tài khoản của tôi</a>
+                            <a href="/webbangiay/pages/user/profile.php">Tài khoản của tôi</a>
                             <a href="/webbangiay/pages/orders.php">Đơn hàng</a>
-                            <a href="/webbangiay/user/logout.php">Đăng xuất</a>
+                            <a href="/webbangiay/pages/user/logout.php">Đăng xuất</a>
                         </div>
                     </div>
                 <?php else: ?>

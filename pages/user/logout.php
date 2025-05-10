@@ -23,6 +23,6 @@ if (ini_get("session.use_cookies")) {
 session_destroy();
 
 // Chuyển hướng về trang login
-header("Location: login.php");
+header("Location:/webbangiay/layout/login_signup.php");
 exit();
 ?>

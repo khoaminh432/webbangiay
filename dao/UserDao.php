@@ -167,7 +167,22 @@ class UserDao {
         $temp = $table_bills->get_by_user($id_user);
         return empty($temp);
     }
+       public function update_password($user_id, $hashed_password) {
+    $sql = "UPDATE users SET password = :password WHERE id = :id";
+    $params = [
+        'id' => $user_id,
+        'password' => $hashed_password
+    ];
     
+    try {
+        $result = $this->db->update_table($sql, $params);
+        error_log("Update password result: " . var_export($result, true)); // Log kết quả
+        return $result;
+    } catch (PDOException $e) {
+        error_log("UserDao Update Password Error: " . $e->getMessage());
+        return false;
+    }
+}
       
 }
 ?>

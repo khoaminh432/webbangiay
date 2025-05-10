@@ -33,6 +33,8 @@ switch ($page) {
         $js = 'checkout.js';
         $childView = './pages/checkout.php';
         break;
+ 
+    
 }
 
 include('./layout/layout.php');
