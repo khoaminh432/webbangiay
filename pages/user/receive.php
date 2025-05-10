@@ -62,12 +62,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         $_SESSION['success_message'] = "Thao tác thành công!";
-        header("Location: /webbangiay/index.php?page=receive");
+        header("Location: /webbangiay/pages/user/receive.php");
         exit();
         
     } catch (Exception $e) {
         $_SESSION['error_message'] = "Lỗi: " . $e->getMessage();
-        header("Location: /webbangiay/index.php?page=receive");
+        header("Location: /webbangiay/pages/user/receive.php");
         exit();
     }
 }
@@ -85,6 +85,8 @@ $allAddresses = $infoDao->get_by_user($userId);
     <title>Quản Lý Địa Chỉ Nhận Hàng</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/header.css">
+    <link rel="stylesheet" href="../../css/footer.css">
     <style>
 /* CSS chỉnh sửa cho giao diện thẳng hàng và đẹp hơn */
 .address-container {
@@ -352,7 +354,7 @@ $allAddresses = $infoDao->get_by_user($userId);
     <div class="address-container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2><i class="fas fa-map-marker-alt me-2"></i>Quản lý địa chỉ nhận hàng</h2>
-            <a href="/webbangiay/index.php?page=info" class="btn btn-outline-secondary">
+            <a href="/webbangiay/pages/user/profile.php" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left me-1"></i>Quay lại
             </a>
         </div>

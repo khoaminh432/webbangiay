@@ -22,7 +22,7 @@ $current_user_id = $_SESSION['user_id'];
 
 // Check permissions
 if ($user_id != $current_user_id && !(isset($_SESSION['is_admin']) && $_SESSION['is_admin'])) {
-    header("Location: /webbangiay/index.php?page=info&error=unauthorized");
+    header("Location: /webbangiay/pages/user/profile.php?error=unauthorized");
     exit();
 }
 $validationFile = __DIR__ . '/../../helpers/validation.php';
@@ -43,21 +43,21 @@ if (isset($_POST['username']) && isset($_POST['email'])) {
 
         // Validate data
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            header("Location: /webbangiay/index.php?page=edit&user_id=$user_id&error=invalid_email");
+            header("Location: /webbangiay/pages/user/edit_user.php&user_id=$user_id&error=invalid_email");
             exit();
         }
 
         // Check if email already exists (excluding current user)
         $existingUser = $userDao->get_by_email($email);
         if ($existingUser && $existingUser->id != $user_id) {
-            header("Location: /webbangiay/index.php?page=edit&user_id=$user_id&error=email_exists");
+            header("Location: /webbangiay/pages/user/edit_user.php&user_id=$user_id&error=email_exists");
             exit();
         }
 
         // Update user information
         $user = $userDao->get_by_id($user_id);
         if (!$user) {
-            header("Location: /webbangiay/index.php?page=edit&user_id=$user_id&error=user_not_found");
+            header("Location: /webbangiay/pages/user/edit_user.php&user_id=$user_id&error=user_not_found");
             exit();
         }
 
@@ -76,7 +76,7 @@ if (isset($_POST['username']) && isset($_POST['email'])) {
         $success = $userDao->update($updatedUser);
 
         if (!$success) {
-            header("Location: /webbangiay/index.php?page=edit&user_id=$user_id&error=update_failed");
+            header("Location: /webbangiay/pages/user/edit_user.php&user_id=$user_id&error=update_failed");
             exit();
         }
 
@@ -103,16 +103,16 @@ if (isset($_POST['username']) && isset($_POST['email'])) {
         }
 
         if (!$success) {
-            header("Location: /webbangiay/index.php?page=edit&user_id=$user_id&error=update_failed");
+            header("Location: /webbangiay/pages/user/profile.php");
             exit();
         }
 
-        header("Location: /webbangiay/index.php?page=info&user_id=$user_id&success=update_success");
+        header("Location: /webbangiay/pages/user/profile.php");
         exit();
 
     } catch (Exception $e) {
         error_log("Update Error: " . $e->getMessage());
-        header("Location: /webbangiay/index.php?page=edit&user_id=$user_id&error=db_error");
+        header("Location: /webbangiay/pages/user/edit_user.php");
         exit();
     }
 }

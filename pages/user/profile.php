@@ -93,7 +93,7 @@ $js = 'user/profile.js';
                         }
                         ?>
                     </span>
-                    <a href="/webbangiay/index.php?page=receive&user_id=<?php echo $user_id; ?>" class="edit-link">
+                    <a href="/webbangiay/pages/user/receive.php" class="edit-link">
                         [Chỉnh sửa]
                     </a>
                 </div>
