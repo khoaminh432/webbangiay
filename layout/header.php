@@ -16,7 +16,7 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
         <div class="container">
             <div class="logo">
                 <a href="/webbangiay/index.php?page=home">
-                    <img src="img/zappos-logo.png" alt="Logo" class="logo-image">
+                    <img src="/webbangiay/img/zappos-logo.png" alt="Logo" class="logo-image">
                 </a>
             </div>
             <div class="search-bar">
@@ -32,7 +32,7 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
                         <img src="/webbangiay/img/user-icon.png" alt="User" class="user-icon">
                         <div class="dropdown-menu">
                             <a href="/webbangiay/pages/user/profile.php">Tài khoản của tôi</a>
-                            <a href="/webbangiay/pages/orders.php">Đơn hàng</a>
+                            <a href="/webbangiay/pages/bill.php">Đơn hàng</a>
                             <a href="/webbangiay/pages/user/logout.php">Đăng xuất</a>
                         </div>
                     </div>
