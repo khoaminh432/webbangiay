@@ -19,13 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         switch ($action) {
          case 'add':
-    $addressParts = [
-        trim(htmlspecialchars($_POST['address_detail'])),
-        trim(htmlspecialchars($_POST['ward'])),
-        trim(htmlspecialchars($_POST['district'])),
-        trim(htmlspecialchars($_POST['province']))
-    ];
-    $fullAddress = implode(', ', array_filter($addressParts));
+   $addressParts = [
+    trim(htmlspecialchars($_POST['address_detail'])),
+    trim(htmlspecialchars($_POST['ward_name'])),
+    trim(htmlspecialchars($_POST['district_name'])),
+    trim(htmlspecialchars($_POST['province_name']))
+];
+$fullAddress = implode(', ', array_filter($addressParts));
     
     $newAddress = new InformationReceiveDTO([
         'address' => $fullAddress,
@@ -43,13 +43,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     break;
     
 case 'update':
-    $addressParts = [
-        trim(htmlspecialchars($_POST['address_detail'])),
-        trim(htmlspecialchars($_POST['ward'])),
-        trim(htmlspecialchars($_POST['district'])),
-        trim(htmlspecialchars($_POST['province']))
-    ];
-    $fullAddress = implode(', ', array_filter($addressParts));
+   $addressParts = [
+    trim(htmlspecialchars($_POST['address_detail'])),
+    trim(htmlspecialchars($_POST['ward_name'])),
+    trim(htmlspecialchars($_POST['district_name'])),
+    trim(htmlspecialchars($_POST['province_name']))
+];
+$fullAddress = implode(', ', array_filter($addressParts));
     
     $updatedAddress = new InformationReceiveDTO([
         'id' => $_POST['id'],
@@ -228,81 +228,88 @@ $allAddresses = $infoDao->get_by_user($userId);
 
     <!-- Modal Thêm Địa Chỉ Mới -->
     <!-- Thay đổi modal thêm/sửa địa chỉ -->
-        <div class="modal fade" id="addressModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <form method="post">
-                        <div class="modal-header">
-                            <h5 class="modal-title"><i class="fas fa-map-marker-alt me-2"></i><span id="modalTitle">Thêm địa chỉ mới</span></h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <input type="hidden" name="action" id="formAction" value="add">
-                            <input type="hidden" name="id" id="editId">
-                            
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="name" id="editName" required maxlength="100">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
-                                    <input type="tel" class="form-control" name="phone" id="editPhone" required pattern="[0-9]{10,11}">
-                                </div>
-                            </div>
-                            
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="form-label">Tỉnh/Thành phố <span class="text-danger">*</span></label>
-                                    <select class="form-select" name="province" id="provinceSelect" required>
-                                        <option value="">Chọn tỉnh/thành phố</option>
-                                        <option value="Bình Dương">Bình Dương</option>
-                                        <option value="Hồ Chí Minh">Hồ Chí Minh</option>
-                                        <option value="Hà Nội">Hà Nội</option>
-                                        <!-- Thêm các tỉnh thành khác -->
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Quận/Huyện <span class="text-danger">*</span></label>
-                                    <select class="form-select" name="district" id="districtSelect" required>
-                                        <option value="">Chọn quận/huyện</option>
-                                        <!-- Sẽ được cập nhật động -->
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Phường/Xã <span class="text-danger">*</span></label>
-                                    <select class="form-select" name="ward" id="wardSelect" required>
-                                        <option value="">Chọn phường/xã</option>
-                                        <!-- Sẽ được cập nhật động -->
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Địa chỉ cụ thể <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="address_detail" id="addressDetail" rows="2" required maxlength="255" placeholder="Số nhà, tên đường, tòa nhà..."></textarea>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Địa chỉ đầy đủ</label>
-                                <div class="form-control" id="fullAddressPreview" style="min-height: 50px; background-color: #f8f9fa;">
-                                    <!-- Hiển thị preview địa chỉ -->
-                                </div>
-                            </div>
-                            
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" name="is_default" id="isDefault">
-                                <label class="form-check-label" for="isDefault">Đặt làm địa chỉ mặc định</label>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                            <button type="submit" class="btn btn-primary" id="submitBtn">Thêm địa chỉ</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+      <div class="modal fade" id="addressModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Thêm action nếu cần: action="/your-route" -->
+      <form method="post" id="addressForm">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="fas fa-map-marker-alt me-2"></i>
+            <span id="modalTitle">Thêm địa chỉ mới</span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+
+        <div class="modal-body">
+          <input type="hidden" name="action" id="formAction" value="add">
+          <input type="hidden" name="id" id="editId">
+          <!-- Ẩn để lưu địa chỉ đầy đủ -->
+          <input type="hidden" id="fullAddress" name="fullAddress">
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="name" id="editName" required maxlength="100">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+              <input type="tel" class="form-control" name="phone" id="editPhone" required pattern="[0-9]{10,11}">
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label">Tỉnh/Thành phố <span class="text-danger">*</span></label>
+              <select class="form-select" name="province" id="provinceSelect" required>
+                <option value="">Chọn tỉnh/thành phố</option>
+              </select>
+              <input type="hidden" name="province_name" id="provinceName">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Quận/Huyện <span class="text-danger">*</span></label>
+              <select class="form-select" name="district" id="districtSelect" required>
+                <option value="">Chọn quận/huyện</option>
+              </select>
+              <input type="hidden" name="district_name" id="districtName">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Phường/Xã <span class="text-danger">*</span></label>
+              <select class="form-select" name="ward" id="wardSelect" required>
+                <option value="">Chọn phường/xã</option>
+              </select>
+              <input type="hidden" name="ward_name" id="wardName">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Địa chỉ cụ thể <span class="text-danger">*</span></label>
+            <textarea class="form-control" name="address_detail" id="addressDetail" rows="2" required maxlength="255" placeholder="Số nhà, tên đường, tòa nhà..."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Địa chỉ đầy đủ</label>
+            <div class="form-control" id="fullAddressPreview"
+                 style="min-height: 50px; background-color: #f8f9fa;">
+              <!-- JS sẽ fill vào đây -->
+            </div>
+          </div>
+
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="is_default" id="isDefault">
+            <label class="form-check-label" for="isDefault">Đặt làm địa chỉ mặc định</label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Thêm địa chỉ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
     </div>
     <?php require_once __DIR__."/../../layout/footer.php"?>
 
@@ -310,83 +317,94 @@ $allAddresses = $infoDao->get_by_user($userId);
     <script>
         
     // Lấy danh sách tỉnh/thành phố khi trang tải
-    document.addEventListener('DOMContentLoaded', function() {
-        fetch('https://provinces.open-api.vn/api/p/')
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('https://provinces.open-api.vn/api/p/')
+        .then(res => res.json())
+        .then(data => {
+            const provinceSelect = document.getElementById('provinceSelect');
+            provinceSelect.innerHTML = '<option value="">Chọn tỉnh/thành phố</option>';
+            data.forEach(province => {
+                const option = document.createElement('option');
+                option.value = province.code;
+                option.textContent = province.name;
+                provinceSelect.appendChild(option);
+            });
+        });
+});
+
+// Khi chọn tỉnh/thành phố, lấy quận/huyện
+document.getElementById('provinceSelect').addEventListener('change', function() {
+    const provinceCode = this.value;
+    const districtSelect = document.getElementById('districtSelect');
+    const wardSelect = document.getElementById('wardSelect');
+    districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
+    wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+    if (provinceCode) {
+        fetch(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`)
             .then(res => res.json())
             .then(data => {
-                const provinceSelect = document.getElementById('provinceSelect');
-                provinceSelect.innerHTML = '<option value="">Chọn tỉnh/thành phố</option>';
-                data.forEach(province => {
+                data.districts.forEach(district => {
                     const option = document.createElement('option');
-                    option.value = province.code;
-                    option.textContent = province.name;
-                    provinceSelect.appendChild(option);
+                    option.value = district.code;
+                    option.textContent = district.name;
+                    districtSelect.appendChild(option);
                 });
             });
-    });
-
-    // Khi chọn tỉnh/thành phố, lấy quận/huyện
-    document.getElementById('provinceSelect').addEventListener('change', function() {
-        const provinceCode = this.value;
-        const districtSelect = document.getElementById('districtSelect');
-        const wardSelect = document.getElementById('wardSelect');
-        districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
-        wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-        if (provinceCode) {
-            fetch(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`)
-                .then(res => res.json())
-                .then(data => {
-                    data.districts.forEach(district => {
-                        const option = document.createElement('option');
-                        option.value = district.code;
-                        option.textContent = district.name;
-                        districtSelect.appendChild(option);
-                    });
-                });
-        }
-        updateAddressPreview();
-    });
-    //sử dụng api provinces.open-api.vn để lấy danh sách quận huyện
-    // Khi chọn quận/huyện, lấy phường/xã
-    document.getElementById('districtSelect').addEventListener('change', function() {
-        const districtCode = this.value;
-        const wardSelect = document.getElementById('wardSelect');
-        wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-        if (districtCode) {
-            fetch(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`)
-                .then(res => res.json())
-                .then(data => {
-                    data.wards.forEach(ward => {
-                        const option = document.createElement('option');
-                        option.value = ward.code;
-                        option.textContent = ward.name;
-                        wardSelect.appendChild(option);
-                    });
-                });
-        }
-        updateAddressPreview();
-    });
-
-    // Cập nhật preview địa chỉ
-    function updateAddressPreview() {
-        const provinceSelect = document.getElementById('provinceSelect');
-        const districtSelect = document.getElementById('districtSelect');
-        const wardSelect = document.getElementById('wardSelect');
-        const detail = document.getElementById('addressDetail').value;
-
-        const province = provinceSelect.options[provinceSelect.selectedIndex]?.text || '';
-        const district = districtSelect.options[districtSelect.selectedIndex]?.text || '';
-        const ward = wardSelect.options[wardSelect.selectedIndex]?.text || '';
-
-        let fullAddress = [];
-        if (detail) fullAddress.push(detail);
-        if (ward) fullAddress.push(ward);
-        if (district) fullAddress.push(district);
-        if (province) fullAddress.push(province);
-
-        document.getElementById('fullAddressPreview').textContent = fullAddress.join(', ');
     }
+    updateAddressPreview();
+});
 
+// Khi chọn quận/huyện, lấy phường/xã
+document.getElementById('districtSelect').addEventListener('change', function() {
+    const districtCode = this.value;
+    const wardSelect = document.getElementById('wardSelect');
+    wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+    if (districtCode) {
+        fetch(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`)
+            .then(res => res.json())
+            .then(data => {
+                data.wards.forEach(ward => {
+                    const option = document.createElement('option');
+                    option.value = ward.code;
+                    option.textContent = ward.name;
+                    wardSelect.appendChild(option);
+                });
+            });
+    }
+    updateAddressPreview();
+});
+
+// Khi chọn phường/xã
+document.getElementById('wardSelect').addEventListener('change', updateAddressPreview);
+
+// Khi nhập địa chỉ chi tiết
+document.getElementById('addressDetail').addEventListener('input', updateAddressPreview);
+
+// Cập nhật preview địa chỉ
+function updateAddressPreview() {
+    const provinceSelect = document.getElementById('provinceSelect');
+    const districtSelect = document.getElementById('districtSelect');
+    const wardSelect = document.getElementById('wardSelect');
+    const detail = document.getElementById('addressDetail')?.value.trim();
+
+    // Lấy tên hiển thị
+    const province = provinceSelect.options[provinceSelect.selectedIndex]?.textContent || '';
+    const district = districtSelect.options[districtSelect.selectedIndex]?.textContent || '';
+    const ward = wardSelect.options[wardSelect.selectedIndex]?.textContent || '';
+
+    // Gán tên vào hidden input
+    document.getElementById('provinceName').value = province;
+    document.getElementById('districtName').value = district;
+    document.getElementById('wardName').value = ward;
+
+    const addressParts = [];
+    if (detail) addressParts.push(detail);
+    if (ward && ward !== "Chọn phường/xã") addressParts.push(ward);
+    if (district && district !== "Chọn quận/huyện") addressParts.push(district);
+    if (province && province !== "Chọn tỉnh/thành phố") addressParts.push(province);
+
+    document.getElementById('fullAddressPreview').textContent = addressParts.join(', ');
+}
     document.getElementById('wardSelect').addEventListener('change', updateAddressPreview);
     document.getElementById('addressDetail').addEventListener('input', updateAddressPreview);
 
@@ -405,6 +423,7 @@ $allAddresses = $infoDao->get_by_user($userId);
             document.getElementById('editName').value = '';
             document.getElementById('editPhone').value = '';
             document.getElementById('provinceSelect').value = '';
+            document.getElementById('provinceSelect').innerHTML = '<option value="">Chọn tỉnh/thành phố</option>';
             document.getElementById('districtSelect').innerHTML = '<option value="">Chọn quận/huyện</option>';
             document.getElementById('wardSelect').innerHTML = '<option value="">Chọn phường/xã</option>';
             document.getElementById('addressDetail').value = '';
@@ -436,6 +455,7 @@ $allAddresses = $infoDao->get_by_user($userId);
                     document.getElementById('addressDetail').value = fullAddress[0];
                     document.getElementById('wardSelect').innerHTML = `<option value="${fullAddress[1]}" selected>${fullAddress[1]}</option>`;
                     document.getElementById('districtSelect').innerHTML = `<option value="${fullAddress[2]}" selected>${fullAddress[2]}</option>`;
+                    document.getElementById('provinceSelect').innerHTML = `<option value="${fullAddress[3]}" selected>${fullAddress[3]}</option>`;
                     document.getElementById('provinceSelect').value = fullAddress[3];
                 }
                 
