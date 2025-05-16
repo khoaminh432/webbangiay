@@ -32,6 +32,9 @@ class ProductSizeColorDao {
         }
         return $list;
     }
+    public function getname($id_product,$id_color,$id_size){
+        
+    }
     // Xóa tất cả các bản ghi theo id_product
     public function delete_by_product($id_product) {
         $sql = "DELETE FROM product_size_color WHERE id_product = :id_product";

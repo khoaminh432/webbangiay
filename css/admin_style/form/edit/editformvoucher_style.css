@@ -19,8 +19,8 @@
     to { opacity: 1; }
 }
 
-.voucher-edit-card {
-    background-color: #fff;
+.object-edit-card {
+    background-color: #ffffff;
     border-radius: 12px;
     width: 85%;
     max-width: 800px;
@@ -31,6 +31,9 @@
     max-height: 90vh;
     display: flex;
     flex-direction: column;
+}
+.object-edit-card .form-group label{
+    color: rgb(42, 36, 36);
 }
 
 /* Header styles */

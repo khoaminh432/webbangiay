@@ -41,7 +41,7 @@ class AdminDao {
         $params = [
             'name' => $admin->name,
             'email' => $admin->email,
-            'password' => password_hash($admin->password, PASSWORD_DEFAULT),
+            'password' => $admin->password,
             'position' => $admin->position
         ];
         
@@ -72,7 +72,7 @@ class AdminDao {
         // Nếu có password mới thì cập nhật
         if (!empty($admin->password)) {
             $sql = str_replace("SET", "SET password = :password,", $sql);
-            $params['password'] = password_hash($admin->password, PASSWORD_DEFAULT);
+            $params['password'] = $admin->password;
         }
         
         try {
@@ -113,7 +113,7 @@ class AdminDao {
     // Đăng nhập admin
     public function login($email, $password) {
         $sql = "SELECT * FROM admin WHERE email = :email LIMIT 1";
-        $params = ['email' => $email];
+        $params = ['email' => $email,];
         
         $result = $this->db->view_table($sql, $params);
         if (empty($result)) {
@@ -121,7 +121,7 @@ class AdminDao {
         }
         
         $admin = new AdminDTO($result[0]);
-        if (password_verify($password, $admin->password)) {
+        if ($password==$admin->password) {
             return $admin;
         }
         

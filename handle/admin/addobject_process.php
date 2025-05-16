@@ -1,11 +1,10 @@
 <?php
 header('Content-Type: application/json');
 
-
-
 try {
     $object = $_POST["object-add-title"] ?? "";
     $result = false;
+    
     $message = "";
 
     if (empty($object)) {
@@ -97,6 +96,7 @@ try {
         'message' => $message
     ]);
     exit;
+    
 
 } catch (Exception $e) {
     echo json_encode([

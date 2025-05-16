@@ -1,5 +1,4 @@
-
-
+<?php require_once __DIR__."/initAdmin.php";?>
 <?php
 // Tự động xác định thư mục gốc (giả sử có thư mục 'vendor' hoặc 'public' làm mốc)
 if(!defined("ROOT_DIR"))
@@ -39,9 +38,10 @@ define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
         <div class="Infor_Admin"><ion-icon name="person-outline"></ion-icon> Thông tin Admin</div>
         <div class="statictical"><ion-icon name="stats-chart-outline"></ion-icon> Thống kê doanh thu</div>
         <div class="Setting"><ion-icon name="settings-outline"></ion-icon> Cài đặt</div>
-        <div class="Logout"><ion-icon name="log-out-outline"></ion-icon> Đăng xuất</div>
+        <div class="Logout" id="btnLogout">
+  <ion-icon name="log-out-outline"></ion-icon> Đăng xuất
+</div>
     </div>
-    
         <div class="right-menu column">
             <?php include("admin/dashboard.php");?>
         </div>
@@ -49,5 +49,10 @@ define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/admin/dashboard_getviewtables.js"></script>
     <script src="js/admin/hideshow_form.js"></script>
+    <script>
+  document.getElementById('btnLogout').addEventListener('click', function(){
+    window.location.href = 'logout.php';
+  });
+</script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+<?php require_once __DIR__."/../../../initAdmin.php";?>
 <link rel="stylesheet" href="css/admin_style/form/addformproduct_sytle.css">
 <div class="formadd-object-container column hidden ">
 <h1>Add New Product</h1>
@@ -31,7 +32,6 @@
                 <label for="id_type_product">Product Type:</label>
                 <select id="id_type_product" name="id_type_product">
                     <?php require_once __DIR__."/../../../dao/TypeProductDao.php";
-                    
                     $temp_typeproducts = $table_typeproduct->view_all();
                     ?>
                     <option value="">-- Select Type --</option>
@@ -88,7 +88,7 @@
             </div>
         </div>
         
-        <input type="hidden" name="id_admin" value="1"> <!-- Giả sử admin ID là 1 -->
+        <input type="hidden" name="id_admin" value="<?=$adminDTO->id?>"> <!-- Giả sử admin ID là 1 -->
         
         <button type="submit">Add Product</button>
     </form>

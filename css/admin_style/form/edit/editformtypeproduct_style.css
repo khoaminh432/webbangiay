@@ -20,7 +20,7 @@
     to { opacity: 1; }
 }
 
-.typeproduct-edit-card {
+.object-edit-card {
     background-color: #fff;
     border-radius: 12px;
     width: 85%;
@@ -277,7 +277,7 @@ select {
         padding: 20px;
     }
     
-    .typeproduct-edit-card {
+    .object-edit-card {
         width: 100%;
     }
     

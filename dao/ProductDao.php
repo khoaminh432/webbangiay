@@ -145,7 +145,8 @@ class ProductDao {
             'id_type_product' => $product->id_type_product,
             'id_admin' => $product->id_admin,
             'id_supplier' => $product->id_supplier,
-            'is_active' => $product->is_active
+            'is_active' => $product->is_active,
+            "image_url" => $product->image_url
         ];
         
         try {

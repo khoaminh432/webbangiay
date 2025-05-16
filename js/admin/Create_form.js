@@ -20,7 +20,10 @@ document.querySelector(".add-form").addEventListener("submit", function(e) {
             form.reset();
             // Gán lại giá trị đã lưu
             form.querySelector('input[name="object-add-title"]').value = objectTitle;
-        Swal.fire({ icon: 'success', title:"Thành công", text:data.message });
+        Swal.fire({ icon: 'success', title:"Thành công", text:data.message })
+        .then(result=>{location.reload();});
+        
+
         } else {
             Swal.fire({ icon: 'warning', title:"Lỗi", text:data.message })
         }

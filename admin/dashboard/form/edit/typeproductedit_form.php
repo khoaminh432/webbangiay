@@ -1,3 +1,4 @@
+<?php require_once __DIR__."/../../../../initAdmin.php";?>
 <?php
 require_once __DIR__ . "/../../../../dao/TypeProductDao.php";
 require_once __DIR__ . "/../../../../dao/AdminDao.php";
@@ -13,9 +14,9 @@ $admin = $table_admins->get_by_id($typeId); // Assuming you have an AdminDao
 ?>
 <link rel="stylesheet" href="css/admin_style/form/edit/editformtypeproduct_style.css">
 <div class="typeproduct-edit-model">
-    <form id="typeproductEditForm" class="typeproduct-edit-card" method="POST" action="update_typeproduct.php">
+    <form id="typeproductEditForm" class="object-edit-card">
         <input type="hidden" name="id" value="<?= $typeProduct->id ?>">
-        
+        <input type="hidden" name="object" value="typeproduct">
         <div class="card-header">
             <h2 class="card-title">Chỉnh sửa Loại sản phẩm</h2>
             <div class="action-buttons">
@@ -105,3 +106,4 @@ $admin = $table_admins->get_by_id($typeId); // Assuming you have an AdminDao
 </div>
 
 <script src="js/admin/closeview_form.js"></script>
+<script src="js/admin/Edit_form.js"></script>

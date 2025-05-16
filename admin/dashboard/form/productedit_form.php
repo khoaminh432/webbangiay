@@ -1,3 +1,4 @@
+<?php require_once __DIR__."/../../../initAdmin.php";?>
 <div class="edit-form-container hidden" id="editProductForm">
     <h2>Edit Product</h2>
     <form action="admin/dashboard/table/product_management.php" method="POST" enctype="multipart/form-data">

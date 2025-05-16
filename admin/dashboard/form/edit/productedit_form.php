@@ -1,3 +1,4 @@
+<?php require_once __DIR__."/../../../../initAdmin.php";?>
 <?php require_once __DIR__."/../../../../dao/ProductDao.php";
 require_once __DIR__."/../../../../dao/SupplierDao.php";
 require_once __DIR__."/../../../../dao/TypeProductDao.php";
@@ -40,9 +41,9 @@ $vouchers = $table_vouchers->view_all();      // Example - implement as needed
 
 <link rel="stylesheet" href="css/admin_style/form/edit/editformproduct_style.css">
 <div class="product-edit-model">
-    <form id="productEditForm" class="product-edit-card" method="POST" action="update_product.php" enctype="multipart/form-data">
+    <form id="productEditForm" class="object-edit-card">
         <input type="hidden" name="id" value="<?= $product->id ?>">
-        
+        <input type="hidden" name="object" value="product">
         <div class="card-header">
             <h2 class="card-title">Edit Product</h2>
             <div class="action-buttons">
@@ -65,7 +66,6 @@ $vouchers = $table_vouchers->view_all();      // Example - implement as needed
                             <input type="file" id="productImageUpload" name="image" accept="image/*" style="display:none;">
                         </div>
                     </div>
-                    
                     <div class="status-toggle">
                         <label class="toggle-switch">
                             <input type="checkbox" name="is_active" <?= $product->is_active ? 'checked' : '' ?>>
@@ -92,7 +92,7 @@ $vouchers = $table_vouchers->view_all();      // Example - implement as needed
                         
                         <div class="form-group">
                             <label for="productQuantity">Stock Quantity</label>
-                            <input type="number" id="productQuantity" name="quantity" min="0" value="<?= $product->quantity ?>" required>
+                            <input type="number" id="productQuantity" name="quantity" min="0" value="<?= $product->quantity ?>" required readonly   >
                         </div>
                     </div>
 
@@ -148,13 +148,13 @@ $vouchers = $table_vouchers->view_all();      // Example - implement as needed
                 </div>
             </div>
         </div>
+        <input type="hidden" name="id_admin" value="<?=$adminDTO->id?>">
     </form>
 </div>
 
 <script src="js/admin/closeview_form.js"></script>
+<script src="js/admin/Edit_form.js"></script>
 <script>
-    
-    
 // Image preview functionality
 document.getElementById('productImageUpload').addEventListener('change', function(e) {
     const file = e.target.files[0];

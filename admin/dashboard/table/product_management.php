@@ -1,8 +1,25 @@
+
+<?php
+// Tự động xác định thư mục gốc (giả sử có thư mục 'vendor' hoặc 'public' làm mốc)
+if(!defined("ROOT_DIR"))
+{$root_dir = "webbangiay";
+$lastElement = "";
+$currentDir = __DIR__;
+while(true){
+$pathArray = explode(DIRECTORY_SEPARATOR, $currentDir);
+$pathArray = array_filter($pathArray); // Loại bỏ phần tử rỗng
+$lastElement = array_slice($pathArray, -1)[0];
+if ($lastElement==$root_dir)
+    break;
+$currentDir = dirname($currentDir);
+}
+define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
+
+?>
 <?php
 require_once __DIR__ . "/../../../dao/ProductDao.php";
 $table_products= new ProductDao();
 $products = $table_products->view_all(true);
-define('ROOT_DIR', dirname(__DIR__));
 ?>
 
 <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
@@ -38,7 +55,7 @@ define('ROOT_DIR', dirname(__DIR__));
                     <td><?= $product->quantity ?></td>
                     <td><?= $product->weight ?>g</td>
                     <td><?php require_once __DIR__."/../../../dao/TypeProductDao.php";
-                        $name_type = $table_typeproduct->get_by_id($product->id)->name;
+                        $name_type = $table_typeproduct->get_by_id($product->id_type_product)->name;
                     ?>
                         <?= $product->id_type_product." ($name_type)" ?>
                         </td>

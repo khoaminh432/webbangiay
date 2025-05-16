@@ -1,3 +1,4 @@
+<?php require_once __DIR__."/../../../initAdmin.php";?>
 <link rel="stylesheet" href="css/admin_style/form/addformpaymentmethod_style.css">
 <div class="formadd-object-container column hidden">
 <h1>Thêm Loại Sản Phẩm Mới</h1>
@@ -20,7 +21,7 @@
             </label>
         </div>
     </div>
-    <input type="hidden" name="id_admin" value="1">
+    <input type="hidden" name="id_admin" value="<?=$adminDTO->id?>">
     <button type="submit">Thêm Loại Sản Phẩm</button>
 </form>
 </div>

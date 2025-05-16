@@ -1,3 +1,4 @@
+<?php require_once __DIR__."/../../../initAdmin.php";?>
 <link rel="stylesheet" href="css/admin_style/form/addformvoucher_style.css">
 <div class="formadd-object-container column hidden" >
 <h1>Add New Voucher</h1>
@@ -61,7 +62,7 @@
         </div>
     </div>
     
-    <input type="hidden" name="id_admin" value="1"> <!-- Giả sử admin ID là 1 -->
+    <input type="hidden" name="id_admin" value="<?=$adminDTO->id?>"> <!-- Giả sử admin ID là 1 -->
     
     <button type="submit">Add Voucher</button>
 </form>

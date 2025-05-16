@@ -1,3 +1,4 @@
+<?php require_once __DIR__."/../../../initAdmin.php";?>
 <link rel="stylesheet" href="css/admin_style/form/addformuser_style.css">
 <div class="formadd-object-container column hidden">
 <h1>Add New User</h1>

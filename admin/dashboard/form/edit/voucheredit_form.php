@@ -1,3 +1,4 @@
+<?php require_once __DIR__."/../../../../initAdmin.php";?>
 <?php
 require_once __DIR__ . "/../../../../dto/VoucherDTO.php";
 require_once __DIR__ . "/../../../../dao/VoucherDao.php";
@@ -14,9 +15,9 @@ $admin = $table_admins->get_by_id($voucher->id_admin); // Assuming you have an A
 ?>
 <link rel="stylesheet" href="css/admin_style/form/edit/editformvoucher_style.css">
 <div class="voucher-edit-model">
-    <form id="voucherEditForm" class="voucher-edit-card" method="POST" action="update_voucher.php">
+    <form id="voucherEditForm" class="object-edit-card">
         <input type="hidden" name="id" value="<?= $voucher->id ?>">
-        
+        <input type="hidden" name="object" value="voucher">
         <div class="card-header">
             <h2 class="card-title">Edit Voucher</h2>
             <div class="action-buttons">
@@ -123,6 +124,7 @@ $admin = $table_admins->get_by_id($voucher->id_admin); // Assuming you have an A
 </div>
 
 <script src="js/admin/closeview_form.js"></script>
+<script src="js/admin/Edit_form.js"></script>
 <script>
 // Toggle end date field based on no expiration checkbox
 document.getElementById('noExpiration').addEventListener('change', function() {

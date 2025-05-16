@@ -57,7 +57,20 @@ CREATE TABLE product_size_color (
   FOREIGN KEY (id_color) REFERENCES colors(id) ON DELETE CASCADE,
   UNIQUE KEY (id_product, id_size, id_color) COMMENT 'Mỗi sản phẩm chỉ có 1 bản ghi cho mỗi cặp size và màu'
 );
-
+DELIMITER $$
+CREATE TRIGGER trg_update_product_quantity_after_insert
+AFTER INSERT ON product_size_color
+FOR EACH ROW
+BEGIN
+  UPDATE products
+  SET quantity = (
+    SELECT SUM(quantity)
+    FROM product_size_color
+    WHERE id_product = NEW.id_product
+  )
+  WHERE id = NEW.id_product;
+END$$
+DELIMITER ;
 -- Thêm lại dữ liệu product_size_color với size mới
 INSERT INTO product_size_color (id_product, id_size, id_color, quantity) VALUES
 -- Sản phẩm 1 (Nike Air Max) - size 39-43
@@ -93,3 +106,52 @@ INSERT INTO product_size_color (id_product, id_size, id_color, quantity) VALUES
 (6, 4, 6, 8),
 (7, 1, 7, 15),
 (8, 3, 1, 2);
+
+DELIMITER $$
+CREATE TRIGGER trg_update_product_quantity_after_update
+AFTER UPDATE ON product_size_color
+FOR EACH ROW
+BEGIN
+  -- Nếu đổi sang sản phẩm khác, cập nhật cả hai
+  IF NEW.id_product != OLD.id_product THEN
+    UPDATE products
+    SET quantity = (
+      SELECT SUM(quantity)
+      FROM product_size_color
+      WHERE id_product = OLD.id_product
+    )
+    WHERE id = OLD.id_product;
+
+    UPDATE products
+    SET quantity = (
+      SELECT SUM(quantity)
+      FROM product_size_color
+      WHERE id_product = NEW.id_product
+    )
+    WHERE id = NEW.id_product;
+  ELSE
+    -- Cập nhật lại sản phẩm hiện tại
+    UPDATE products
+    SET quantity = (
+      SELECT SUM(quantity)
+      FROM product_size_color
+      WHERE id_product = NEW.id_product
+    )
+    WHERE id = NEW.id_product;
+  END IF;
+END$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER trg_update_product_quantity_after_delete
+AFTER DELETE ON product_size_color
+FOR EACH ROW
+BEGIN
+  UPDATE products
+  SET quantity = (
+    SELECT IFNULL(SUM(quantity), 0)
+    FROM product_size_color
+    WHERE id_product = OLD.id_product
+  )
+  WHERE id = OLD.id_product;
+END$$
+DELIMITER ;

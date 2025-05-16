@@ -1,3 +1,4 @@
+<?php require_once __DIR__."/../../../initAdmin.php";?>
 <?php
 require_once __DIR__ . '/../../../dao/SizeDao.php';
 require_once __DIR__ . '/../../../dao/ColorDao.php';
@@ -195,35 +196,41 @@ document.getElementById('sizeColorForm').addEventListener('submit', function (e)
 
     const form = e.target;
     const formData = new FormData(form);
+
     Swal.fire({
-            title: "Bạn có chắc chắn muốn lưu thay đổi!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Đồng ý',
-            cancelButtonText: 'Hủy'
-          }).then(result => {
-            if (result.isConfirmed) {
-              onConfirm(formData);
-            }
-          });    
-    function onConfirm(formData){fetch('handle/admin/save_size_color.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire("Thành công", data.message, "success");
-            closeForm();
-        } else {
-            Swal.fire("Lỗi", data.message, "error");
+        title: "Bạn có chắc chắn muốn lưu thay đổi?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Đồng ý',
+        cancelButtonText: 'Hủy'
+    }).then(result => {
+        if (result.isConfirmed) {
+            fetch('handle/admin/save_size_color.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: "Thành công!",
+                        text: data.message,
+                        icon: "success"
+                    });
+                    closeForm()
+                    // KHÔNG đóng form ở đây
+                } else {
+                    Swal.fire("Lỗi", data.message, "error");
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                Swal.fire("Lỗi", "Lỗi AJAX: " + error, "error");
+            });
         }
-    })
-    .catch(error => {
-        console.log(error)
-        alert('❌ Lỗi AJAX: ' + error);
-        
-    });}
+        // KHÔNG làm gì nếu là Hủy
+    });
 });
+
 </script>
 
