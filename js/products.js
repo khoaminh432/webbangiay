@@ -332,3 +332,48 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style); 
+
+$(document).ready(function() {
+    // Xử lý sự kiện click phân trang
+    $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        
+        var url = $(this).attr('href');
+        
+        // Hiển thị loading
+        $('.product-grid').html('<div class="loading">Đang tải sản phẩm...</div>');
+        
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(data) {
+                // Tạo div tạm để parse HTML
+                var $temp = $('<div>').html(data);
+                
+                // Lấy nội dung mới
+                var productContent = $temp.find('.product-grid').html();
+                var paginationContent = $temp.find('.pagination').html();
+                
+                // Cập nhật nội dung
+                $('.product-grid').html(productContent);
+                $('.pagination').html(paginationContent);
+                
+                // Cuộn lên đầu
+                $('html, body').animate({
+                    scrollTop: $('.product-grid').offset().top - 100
+                }, 300);
+                
+                // Cập nhật URL
+                history.pushState(null, null, url);
+            },
+            error: function(xhr) {
+                $('.product-grid').html('<div class="error">Lỗi tải trang: ' + xhr.statusText + '</div>');
+            }
+        });
+    });
+    
+    // Xử lý nút back/forward
+    $(window).on('popstate', function() {
+        location.reload();
+    });
+});

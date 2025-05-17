@@ -9,7 +9,7 @@
 <body>
     <div class="wrapper">
         <div class="form-box login">
-            <h2>Login</h2>
+            <h2>Đăng nhập</h2>
             <form action="login">
                 <div class="input-box">
                     <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
@@ -19,26 +19,26 @@
                 <div class="input-box">
                     <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
                     <input type="password" name="password" required>
-                    <label>Password</label>
+                    <label>Mật khẩu</label>
                 </div> 
                 <div class="remember-forgot">
-                    <a href="#">Forgot Password?</a>
+                    <a href="#">Quên mật khẩu?</a>
                 </div>
-                <button type="submit" class="btn">Login</button>
+                <button type="submit" class="btn">Đăng nhập</button>
                 <div class="login-register">
-                    <p>Don't have an account? <a href="#" class="register-link"> Register</a>
+                    <p>Chưa có tài khoản? <a href="#" class="register-link"> Đăng ký</a>
                     </p>
                 </div>
             </form>
         </div>
 
         <div class="form-box register">
-            <h2>Register</h2>
+            <h2>Đăng ký</h2>
             <form action="register">
                 <div class="input-box">
                     <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
                     <input type="text" name="username" required>
-                    <label>Username</label>
+                    <label>Tên người dùng: </label>
                 </div>
                 <div class="input-box">
                     <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
@@ -48,16 +48,16 @@
                 <div class="input-box">
                     <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
                     <input type="password" required name="password">
-                    <label>Password</label>
+                    <label>Mật khẩu: </label>
                 </div>
                 <div class="input-box">
                     <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
                     <input type="password" required name="confirm_password">
-                    <label>Confirm password</label>
+                    <label>Xác nhận mật khẩu: </label>
                 </div>  
-                <button type="submit" class="btn">Sign up</button>
+                <button type="submit" class="btn">Đăng ký</button>
                 <div class="login-register">
-                    <p>Already have an account? <a href="#" class="login-link"> Login</a>
+                    <p>Đã có tài khoản? <a href="#" class="login-link"> Đăng nhập</a>
                     </p>
                 </div>
             </form>
