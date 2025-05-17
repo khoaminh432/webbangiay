@@ -290,6 +290,7 @@ class ProductDao {
             return false;
         }
     }
+tquan
     // đừng xóa
     // public function view_allsp() {
     //     $query = "SELECT p.*, tp.name as name_type_product,
@@ -301,6 +302,8 @@ class ProductDao {
     //     $stmt->execute();
     //     return $stmt->fetchAll(PDO::FETCH_OBJ);
     // }
+
+main
     public function get_products_with_details() {
         $sql = "SELECT p.*, tp.name as type_name, s.name as supplier_name,
                 pi.image_url
@@ -315,6 +318,7 @@ class ProductDao {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+tquan
     public function get_type_name($type_id) {
         $sql = "SELECT name FROM type_product WHERE id = ?";
         $stmt = $this->db->conn->prepare($sql);
@@ -359,5 +363,9 @@ class ProductDao {
         return $this->conn;
     }
 }
+
+}   
+
+main
 ?>
 <?php $table_products=new ProductDao();?>

@@ -14,6 +14,7 @@ class ProductDTO {
     public $created_at;
     public $updated_at;
     public $image_url;
+    
 
     public function __construct($data) {
         $this->id = $data['id'] ?? null;
