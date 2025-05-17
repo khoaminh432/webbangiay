@@ -5,6 +5,10 @@ require_once __DIR__ . '/../database/database_sever.php';
 class ProductDao {
     private $db;
     private $conn; // đừng xóa
+tquan
+
+
+main
     public function __construct() {
         $this->db = new database_sever();
         $this->conn = $this->db->conn; // đừng xóa
@@ -160,6 +164,7 @@ class ProductDao {
     }
 
     // Cập nhật số lượng sản phẩm
+tquan
     public function update_quantity($productId, $quantity) {
         $sql = "UPDATE products SET quantity = :quantity WHERE id = :id";
         $params = [
@@ -192,47 +197,33 @@ class ProductDao {
     public function delete($id) {
         $sql = "DELETE FROM products WHERE id = :id";
         $params = ['id' => $id];
+
+    public function get_products_with_details() {
+        $sql = "SELECT p.*, tp.name as type_name, s.name as supplier_name,
+                pi.image_url
+                FROM products p
+                LEFT JOIN type_product tp ON p.id_type_product = tp.id
+                LEFT JOIN supplier s ON p.id_supplier = s.id
+                LEFT JOIN product_images pi ON p.id = pi.id_product AND pi.is_primary = 1
+                WHERE p.is_active = 1
+                GROUP BY p.id";
+main
         
-        try {
-            return $this->db->delete_table($sql, $params);
-        } catch (PDOException $e) {
-            error_log("ProductDao Delete Error: " . $e->getMessage());
-            return false;
-        }
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    // Khôi phục sản phẩm đã xóa (chuyển is_active = TRUE)
-    public function restore($id) {
-        $sql = "UPDATE products SET is_active = TRUE WHERE id = :id";
-        $params = ['id' => $id];
-        
-        try {
-            return $this->db->update_table($sql, $params);
-        } catch (PDOException $e) {
-            error_log("ProductDao Restore Error: " . $e->getMessage());
-            return false;
-        }
+    public function count_all_products($includeInactive = false) {
+    $sql = "SELECT COUNT(*) as total FROM products";
+    if (!$includeInactive) {
+        $sql .= " WHERE is_active = TRUE";
+    }
+    $result = $this->db->view_table($sql);
+    return $result[0]['total'] ?? 0;    
     }
 
-    // Lấy sản phẩm nổi bật (ví dụ: sắp xếp theo số lượng bán)
-    public function get_featured_products($limit = 5) {
-        $sql = "SELECT p.* FROM products p 
-                LEFT JOIN order_details od ON p.id = od.id_product 
-                WHERE p.is_active = TRUE
-                GROUP BY p.id 
-                ORDER BY SUM(od.quantity) DESC 
-                LIMIT :limit";
-        
-        $params = ['limit' => $limit];
-        $results = $this->db->view_table($sql, $params);
-        
-        $products = [];
-        foreach ($results as $row) {
-            $products[] = new ProductDTO($row);
-        }
-        return $products;
-    }
-
+tquan
     // Lấy sản phẩm mới nhất
     public function get_newest_products($limit = 5) {
         $sql = "SELECT * FROM products 
@@ -290,7 +281,7 @@ class ProductDao {
             return false;
         }
     }
-tquan
+
     // đừng xóa
     // public function view_allsp() {
     //     $query = "SELECT p.*, tp.name as name_type_product,
@@ -305,19 +296,29 @@ tquan
 
 main
     public function get_products_with_details() {
+
+    public function get_products_paginated($offset, $limit, $includeInactive = false) {
+main
         $sql = "SELECT p.*, tp.name as type_name, s.name as supplier_name,
                 pi.image_url
                 FROM products p
                 LEFT JOIN type_product tp ON p.id_type_product = tp.id
                 LEFT JOIN supplier s ON p.id_supplier = s.id
-                LEFT JOIN product_images pi ON p.id = pi.id_product AND pi.is_primary = 1
-                WHERE p.is_active = 1
-                GROUP BY p.id";
+                LEFT JOIN product_images pi ON p.id = pi.id_product AND pi.is_primary = 1";
+        
+        if (!$includeInactive) {
+            $sql .= " WHERE p.is_active = 1";
+        }
+        
+        $sql .= " GROUP BY p.id LIMIT :limit OFFSET :offset";
         
         $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+tquan
 tquan
     public function get_type_name($type_id) {
         $sql = "SELECT name FROM type_product WHERE id = ?";
@@ -365,6 +366,9 @@ tquan
 }
 
 }   
+
+    }   
+main
 
 main
 ?>

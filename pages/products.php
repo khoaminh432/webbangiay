@@ -1,36 +1,33 @@
 <?php
+require_once __DIR__ . '/../DTO/Pagination.php';
+require_once __DIR__ . "/../dao/ProductDao.php";
 
-require_once __DIR__ . "../../dao/ProductDao.php";
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Khởi tạo ProductDao
 $productDao = new ProductDao();
 
-// Lấy danh sách sản phẩm với thông tin đầy đủ
-$products = $productDao->get_products_with_details();
-
-// Lấy category từ URL nếu có
+// Xử lý tham số
+$current_page = isset($_GET['page_num']) ? max(1, (int)$_GET['page_num']) : 1;
+$per_page = 8;
 $category = isset($_GET['category']) ? $_GET['category'] : null;
 $search = isset($_GET['search']) ? $_GET['search'] : null;
 
-// Lọc sản phẩm theo category hoặc search nếu có
+// Lấy sản phẩm theo điều kiện
 if ($category) {
-    $products = array_filter($products, function ($product) use ($category) {
-        return $product->type_product_id == $category;
-    });
+    $products = $productDao->get_by_type($category);
+    $total_products = count($products);
+    $products = array_slice($products, ($current_page - 1) * $per_page, $per_page);
 } elseif ($search) {
-    $search = strtolower($search);
-    $products = array_filter($products, function ($product) use ($search) {
-        return strpos(strtolower($product->name), $search) !== false ||
-            strpos(strtolower($product->description), $search) !== false;
-    });
+    $products = $productDao->search($search);
+    $total_products = count($products);
+    $products = array_slice($products, ($current_page - 1) * $per_page, $per_page);
+} else {
+    $total_products = $productDao->count_all_products();
+    $products = $productDao->get_products_paginated(($current_page - 1) * $per_page, $per_page);
 }
+
+$pagination = new Pagination($total_products, $current_page, $per_page);
 ?>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
 
 <div class="product-page">
     <div class="container">
@@ -72,7 +69,7 @@ if ($category) {
                                     <a href="/webbangiay/layout/login_signup.php" class="login-to-buy">
                                         <i class="fas fa-lock"></i>
                                     </a>
-                                <?php endif; ?>
+                                <?php endif; ?> 
                             </div>
                         </div>
                         <div class="product-info">
@@ -86,8 +83,31 @@ if ($category) {
                 <p class="no-products">Không tìm thấy sản phẩm nào.</p>
             <?php endif; ?>
         </div>
+        <div class="pagination">
+            <?php if ($pagination->hasPrevious()): ?>
+                <a href="?page=products&page_num=<?= $pagination->currentPage - 1 ?><?= $category ? '&category='.$category : '' ?><?= $search ? '&search='.$search : '' ?>">Trước</a>
+            <?php endif; ?>
+            
+            <?php 
+            // Hiển thị tối đa 5 trang xung quanh trang hiện tại
+            $start = max(1, $pagination->currentPage - 2);
+            $end = min($pagination->totalPages, $pagination->currentPage + 2);
+            
+            for ($i = $start; $i <= $end; $i++): ?>
+                <a href="?page=products&page_num=<?= $i ?><?= $category ? '&category='.$category : '' ?><?= $search ? '&search='.$search : '' ?>" 
+                class="<?= $i == $pagination->currentPage ? 'active' : '' ?>">
+                    <?= $i ?>
+                </a>
+            <?php endfor; ?>
+            
+            <?php if ($pagination->hasNext()): ?>
+                <a href="?page=products&page_num=<?= $pagination->currentPage + 1 ?><?= $category ? '&category='.$category : '' ?><?= $search ? '&search='.$search : '' ?>">Sau</a>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
+
+
 
 <!-- Quick View Modal -->
 <div id="quickViewModal" class="modal">
@@ -126,4 +146,6 @@ if ($category) {
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </div>

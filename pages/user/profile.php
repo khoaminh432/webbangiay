@@ -15,7 +15,7 @@ $userDao = new UserDao();
 $informationReceiveDao = new InformationReceiveDao();
 
 $user_id = $_SESSION['user_id'];
-if (isset($_SESSION['is_admin'])) {
+if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
     $user_id = $_GET['user_id'] ?? $user_id;
 }
 
@@ -40,7 +40,7 @@ $js = 'user/profile.js';
     <!-- Minimalist header -->
     <div class="profile-header">
         <h1 class="profile-title">THÔNG TIN CÁ NHÂN</h1>
-        <?php if (isset($_SESSION['is_admin'])): ?>
+        <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
             <a href="/webbangiay/admin_dashboard.php" class="back-link">
                 ← Quay lại
             </a>
@@ -107,7 +107,7 @@ $js = 'user/profile.js';
             Chỉnh sửa thông tin
         </a>
       
-        <a href="/webbangiay/pages/user/logout.php" class="btn-logout">
+        <a href="/webbangiay/layout/user/logout.php" class="btn-logout">
             Đăng xuất
         </a>
     </div>

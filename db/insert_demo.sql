@@ -1,8 +1,70 @@
 -- Xóa bảng product_size_color trước vì có khóa ngoại tới bảng size
 DROP TABLE IF EXISTS product_size_color;
-
+DROP TABLE IF EXISTS role_permissions;
 -- Xóa bảng size cũ
 DROP TABLE IF EXISTS sizes;
+-- Bảng người dùng
+DROP TABLE IF EXISTS roles;
+-- Bảng vai trò
+DROP TABLE IF EXISTS permissions;
+
+CREATE TABLE roles (
+    position_id INT PRIMARY KEY,
+    role_name VARCHAR(50)
+);
+-- Bảng quyền
+CREATE TABLE permissions (
+    permission_id INT PRIMARY KEY,
+    permission_name VARCHAR(100)
+);
+
+-- Bảng ánh xạ vai trò - quyền
+CREATE TABLE role_permissions (
+    position_id INT,
+    permission_id INT,
+    PRIMARY KEY (position_id, permission_id),
+    FOREIGN KEY (position_id) REFERENCES roles(position_id),
+    FOREIGN KEY (permission_id) REFERENCES permissions(permission_id)
+);
+INSERT INTO roles (position_id, role_name) VALUES
+(0, 'Nhân viên'),
+(1, 'Quản lý kho'),
+(2, 'Người giám sát'),
+(3, 'Admin');
+INSERT INTO permissions (permission_id, permission_name) VALUES
+(1, 'view_data'),
+(2, 'edit_data'),
+(3, 'delete_data'),
+(4, 'add_data'),
+(5, 'change_status'),
+(6, 'view_reports');
+-- Admin có tất cả các quyền
+INSERT INTO role_permissions (position_id, permission_id) VALUES
+(3, 1),
+(3, 2),
+(3, 3),
+(3, 4),
+(3, 5),
+(3, 6);
+
+-- Manager có quyền xem, sửa, xem báo cáo
+INSERT INTO role_permissions (position_id, permission_id) VALUES
+(2, 1),
+(2, 2),
+(2, 5),
+(2, 6);
+INSERT INTO role_permissions (position_id, permission_id) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5);
+-- nhân viên xem xóa thêm
+INSERT INTO role_permissions (position_id, permission_id) VALUES
+(0, 1),
+(0, 3),
+(0, 4);
+
 
 -- Tạo lại bảng size với các size 37-44
 CREATE TABLE sizes (
@@ -57,6 +119,9 @@ CREATE TABLE product_size_color (
   FOREIGN KEY (id_color) REFERENCES colors(id) ON DELETE CASCADE,
   UNIQUE KEY (id_product, id_size, id_color) COMMENT 'Mỗi sản phẩm chỉ có 1 bản ghi cho mỗi cặp size và màu'
 );
+ALTER TABLE bill_products
+ADD COLUMN product_sizecolor_id INT;
+
 DELIMITER $$
 CREATE TRIGGER trg_update_product_quantity_after_insert
 AFTER INSERT ON product_size_color
@@ -106,6 +171,39 @@ INSERT INTO product_size_color (id_product, id_size, id_color, quantity) VALUES
 (6, 4, 6, 8),
 (7, 1, 7, 15),
 (8, 3, 1, 2);
+UPDATE bill_products
+SET product_sizecolor_id = 1
+WHERE id = 1;
+
+UPDATE bill_products
+SET product_sizecolor_id = 2
+WHERE id = 2;
+
+UPDATE bill_products
+SET product_sizecolor_id = 3
+WHERE id = 3;
+
+UPDATE bill_products
+SET product_sizecolor_id = 4
+WHERE id = 4;
+
+UPDATE bill_products
+SET product_sizecolor_id = 5
+WHERE id = 5;
+
+UPDATE bill_products
+SET product_sizecolor_id = 6
+WHERE id = 6;
+
+UPDATE bill_products
+SET product_sizecolor_id = 7
+WHERE id = 7;
+
+UPDATE bill_products
+SET product_sizecolor_id = 8
+WHERE id = 8;
+
+
 
 DELIMITER $$
 CREATE TRIGGER trg_update_product_quantity_after_update
