@@ -2,6 +2,9 @@
 session_start();
 require_once __DIR__ . '/../DAO/BillDAO.php';
 require_once __DIR__ . '/../DAO/BillProductDAO.php';
+require_once __DIR__ . '/../DAO/ProductDAO.php';
+require_once __DIR__ . '/../DAO/ColorDAO.php';
+require_once __DIR__ . '/../DAO/SizeDAO.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -11,6 +14,9 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 $billDao = new BillDao();
 $billProductDao = new BillProductDao();
+$productDao = new ProductDao();
+$colorDao = new ColorDao();
+$sizeDao = new SizeDao();
 
 $bills = $billDao->get_by_user($userId);
 
@@ -40,6 +46,25 @@ if (isset($_GET['bill_id'])) {
     <link rel="stylesheet" href="../css/header.css">
     <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/bill.css">
+    <style>
+        .color-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            color: white;
+            font-size: 12px;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+        }
+        
+        .order-products td, .order-products th {
+            padding: 12px 8px;
+            vertical-align: middle;
+        }
+        
+        .product-name {
+            min-width: 200px;
+        }
+    </style>
 </head>
 <body>
   <?php include(__DIR__ . '/../layout/header.php'); ?>
@@ -144,6 +169,8 @@ if (isset($_GET['bill_id'])) {
               <thead>
                 <tr>
                   <th>Sản phẩm</th>
+                  <th>Màu sắc</th>
+                  <th>Kích cỡ</th>
                   <th>Đơn giá</th>
                   <th>Số lượng</th>
                   <th class="text-right">Thành tiền</th>
@@ -155,9 +182,39 @@ if (isset($_GET['bill_id'])) {
                 foreach ($billProducts as $product): 
                   $subtotal = $product->quantity * $product->unit_price;
                   $total += $subtotal;
+                  
+                  // Get product details
+                  $productDetail = $productDao->get_by_id($product->id_product);
+                  
+                  // Initialize color and size as null
+                  $colorDetail = null;
+                  $sizeDetail = null;
+                  
+                  // Check if product has color and size properties
+                  if (property_exists($product, 'id_color') && $product->id_color) {
+                      $colorDetail = $colorDao->get_by_id($product->id_color);
+                  }
+                  
+                  if (property_exists($product, 'id_size') && $product->id_size) {
+                      $sizeDetail = $sizeDao->get_by_id($product->id_size);
+                  }
                 ?>
-                  <tr>
-                    <td data-label="Sản phẩm" class="product-name">Sản phẩm #<?= htmlspecialchars($product->id_product) ?></td>
+                  <tr> 
+                    <td data-label="Sản phẩm" class="product-name">
+                      <?= htmlspecialchars($productDetail ? $productDetail->name : 'Sản phẩm #' . $product->id_product) ?>
+                    </td>
+                    <td data-label="Màu sắc">
+                      <?php if ($colorDetail): ?>
+                        <span class="color-badge" style="background-color: <?= htmlspecialchars($colorDetail->hex_code) ?>">
+                          <?= htmlspecialchars($colorDetail->name) ?>
+                        </span>
+                      <?php else: ?>
+                        -
+                      <?php endif; ?>
+                    </td>
+                    <td data-label="Kích cỡ">
+                      <?= htmlspecialchars($sizeDetail ? $sizeDetail->size_number : '-') ?>
+                    </td>
                     <td data-label="Đơn giá" class="product-price"><?= number_format($product->unit_price, 0, ',', '.') ?>₫</td>
                     <td data-label="Số lượng"><?= htmlspecialchars($product->quantity) ?></td>
                     <td data-label="Thành tiền" class="text-right product-total"><?= number_format($subtotal, 0, ',', '.') ?>₫</td>

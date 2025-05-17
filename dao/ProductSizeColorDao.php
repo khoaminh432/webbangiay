@@ -178,6 +178,85 @@ class ProductSizeColorDao {
         }
     }
 
+    public function getVariantWithDetails($id) {
+        $sql = "SELECT psc.*, c.name as color_name, c.hex_code, s.size_number
+                FROM product_size_color psc
+                LEFT JOIN colors c ON psc.id_color = c.id
+                LEFT JOIN sizes s ON psc.id_size = s.id
+                WHERE psc.id = :id";
+        
+        $params = ['id' => $id];
+        $results = $this->db->view_table($sql, $params);
+        
+        return !empty($results) ? $results[0] : null;
+    }
+
+    /**
+     * Lấy tất cả biến thể của sản phẩm với thông tin màu và size
+     */
+    public function getProductVariantsWithDetails($productId) {
+        $sql = "SELECT psc.*, c.name as color_name, c.hex_code, s.size_number
+                FROM product_size_color psc
+                LEFT JOIN colors c ON psc.id_color = c.id
+                LEFT JOIN sizes s ON psc.id_size = s.id
+                WHERE psc.id_product = :product_id";
+        
+        $params = ['product_id' => $productId];
+        return $this->db->view_table($sql, $params);
+    }
+
+    /**
+     * Lấy thông tin tồn kho theo màu sắc
+     */
+    public function getInventoryByColor($productId, $colorId) {
+        $sql = "SELECT psc.id_size, psc.quantity, s.size_number
+                FROM product_size_color psc
+                JOIN sizes s ON psc.id_size = s.id
+                WHERE psc.id_product = :product_id 
+                AND psc.id_color = :color_id";
+        
+        $params = [
+            'product_id' => $productId,
+            'color_id' => $colorId
+        ];
+        return $this->db->view_table($sql, $params);
+    }
+
+    /**
+     * Lấy thông tin tồn kho theo kích cỡ
+     */
+    public function getInventoryBySize($productId, $sizeId) {
+        $sql = "SELECT psc.id_color, psc.quantity, c.name as color_name, c.hex_code
+                FROM product_size_color psc
+                JOIN colors c ON psc.id_color = c.id
+                WHERE psc.id_product = :product_id 
+                AND psc.id_size = :size_id";
+        
+        $params = [
+            'product_id' => $productId,
+            'size_id' => $sizeId
+        ];
+        return $this->db->view_table($sql, $params);
+    }
+
+    /**
+     * Kiểm tra tồn tại và trả về ID nếu có
+     */
+    public function findVariantId($productId, $colorId, $sizeId) {
+        $sql = "SELECT id FROM product_size_color
+                WHERE id_product = :product_id
+                AND id_color = :color_id
+                AND id_size = :size_id";
+        
+        $params = [
+            'product_id' => $productId,
+            'color_id' => $colorId,
+            'size_id' => $sizeId
+        ];
+        
+        $result = $this->db->view_table($sql, $params);
+        return !empty($result) ? $result[0]['id'] : null;
+    }
 }
 ?>
 <?php $psc_table = new ProductSizeColorDao(); ?>

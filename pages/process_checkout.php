@@ -6,6 +6,7 @@ require_once __DIR__ . '/../DAO/BillDao.php';
 require_once __DIR__ . '/../DAO/BillProductDao.php';
 require_once __DIR__ . '/../DAO/ProductDao.php';
 require_once __DIR__ . '/../DAO/InformationReceiveDao.php';
+require_once __DIR__ . '/../DAO/ProductSizeColorDao.php';
 require_once __DIR__ . '/../database/database_sever.php';
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -22,7 +23,7 @@ function sendJsonResponse($success, $message, $redirect = null) {
     exit();
 }
 
-// Kiểm tra giỏ hàng trước khi xử lý
+// Kiểm tra giỏ hàng
 if (empty($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
     sendJsonResponse(false, 'Giỏ hàng của bạn đang trống!', '/webbangiay/index.php?page=products');
 }
@@ -45,6 +46,7 @@ try {
     $db = new database_sever();
     $infoDao = new InformationReceiveDao();
     $productDao = new ProductDao();
+    $pscDao = new ProductSizeColorDao();
     
     // Kiểm tra địa chỉ giao hàng
     $address = $infoDao->get_by_id($addressId, $userId);
@@ -56,80 +58,118 @@ try {
     $totalAmount = 0;
     $validatedItems = [];
     
-    foreach ($_SESSION['cart'] as $productId => $item) {
+    foreach ($_SESSION['cart'] as $productKey => $item) {
+        $parts = explode('_', $productKey);
+        $productId = (int)$parts[0];
+        $colorId = isset($parts[1]) ? (int)$parts[1] : null;
+        $sizeId = isset($parts[2]) ? (int)$parts[2] : null;
+
         $product = $productDao->get_by_id($productId);
         if (!$product) {
-            throw new Exception("Sản phẩm không tồn tại!");
+            throw new Exception("Sản phẩm #$productId không tồn tại!");
         }
         
-        if ($product->quantity < $item['quantity']) {
-            throw new Exception("Sản phẩm {$product->name} chỉ còn {$product->quantity} sản phẩm!");
+        // Kiểm tra số lượng tồn kho
+        if ($colorId !== null && $sizeId !== null) {
+            $available = $pscDao->get_quantity($productId, $sizeId, $colorId);
+            if ($available < $item['quantity']) {
+                throw new Exception("Sản phẩm {$product->name} (Màu: $colorId, Size: $sizeId) chỉ còn $available sản phẩm!");
+            }
+        } else {
+            if ($product->quantity < $item['quantity']) {
+                throw new Exception("Sản phẩm {$product->name} chỉ còn {$product->quantity} sản phẩm!");
+            }
         }
-        
-        $itemTotal = $item['price'] * $item['quantity'];
-        $totalAmount += $itemTotal;
         
         $validatedItems[] = [
             'product' => $product,
+            'product_key' => $productKey,
             'quantity' => $item['quantity'],
-            'price' => $item['price']
+            'price' => $item['price'],
+            'color_id' => $colorId,
+            'size_id' => $sizeId
         ];
+        $totalAmount += $item['price'] * $item['quantity'];
     }
 
     // Tạo đơn hàng
     $billDao = new BillDao();
     $billProductDao = new BillProductDao();
     
-    $shippingAddress = "{$address->name} | {$address->phone} | {$address->address}";
-    
     $bill = new BillDTO([
         'id_user' => $userId,
         'id_payment_method' => $paymentMethodId,
         'total_amount' => $totalAmount,
-        'shipping_address' => $shippingAddress,
+        'shipping_address' => "{$address->name} | {$address->phone} | {$address->address}",
         'status' => 'pending',
         'bill_date' => date('Y-m-d H:i:s')
     ]);
 
-    // Xử lý transaction
+    // Bắt đầu transaction
     $db->conn->beginTransaction();
     
     try {
+        // 1. Tạo bill
         $billId = $billDao->insert($bill);
         if (!$billId) {
             throw new Exception("Không thể tạo đơn hàng!");
         }
 
+        // 2. Thêm sản phẩm vào bill
         foreach ($validatedItems as $item) {
-            $billProduct = new BillProductDTO([
+            $billProductData = [
                 'id_bill' => $billId,
                 'id_product' => $item['product']->id,
                 'quantity' => $item['quantity'],
                 'unit_price' => $item['price']
-            ]);
+            ];
             
-            if (!$billProductDao->insert($billProduct)) {
-                throw new Exception("Không thể thêm sản phẩm vào đơn hàng!");
+            // Thêm màu và size nếu có
+            if ($item['color_id'] !== null) {
+                $billProductData['id_color'] = $item['color_id'];
+            }
+            if ($item['size_id'] !== null) {
+                $billProductData['id_size'] = $item['size_id'];
             }
             
-            // Cập nhật số lượng tồn kho
-            $item['product']->quantity -= $item['quantity'];
-            if (!$productDao->update($item['product'])) {
-                throw new Exception("Không thể cập nhật số lượng tồn kho!");
+            $billProduct = new BillProductDTO($billProductData);
+            
+            if (!$billProductDao->insert($billProduct)) {
+                throw new Exception("Không thể thêm sản phẩm #{$item['product']->id} vào đơn hàng!");
+            }
+            
+            // 3. Cập nhật tồn kho
+            if ($item['color_id'] !== null && $item['size_id'] !== null) {
+                // Giảm số lượng trong product_size_color
+                if (!$pscDao->update_quantity(
+                    $item['product']->id,
+                    $item['size_id'],
+                    $item['color_id'],
+                    -$item['quantity']
+                )) {
+                    throw new Exception("Không thể cập nhật tồn kho chi tiết!");
+                }
+            } else {
+                // Giảm số lượng trong product
+                $item['product']->quantity -= $item['quantity'];
+                if (!$productDao->update($item['product'])) {
+                    throw new Exception("Không thể cập nhật tồn kho chung!");
+                }
             }
         }
         
         $db->conn->commit();
         unset($_SESSION['cart']);
         
-        header("Location: /webbangiay/pages/order_success.php?order_id=" . $billId);
+        header("Location: /webbangiay/pages/order_success.php?order_id=$billId");
         exit();
+        
     } catch (Exception $e) {
         $db->conn->rollBack();
         throw $e;
     }
     
 } catch (Exception $e) {
-    error_log("Checkout Error - User: {$userId} - " . $e->getMessage());
+    error_log("Checkout Error: " . $e->getMessage());
     sendJsonResponse(false, $e->getMessage(), '/webbangiay/pages/checkout.php');
 }

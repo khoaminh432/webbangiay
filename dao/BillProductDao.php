@@ -21,26 +21,44 @@ class BillProductDao {
         return $items;
     }
 
-    public function insert(BillProductDTO $item) {
-        $sql = "INSERT INTO bill_products (id_bill, id_product, quantity, unit_price) 
-                VALUES (:id_bill, :id_product, :quantity, :unit_price)";
-        
-        $params = [
-            'id_bill' => $item->id_bill,
-            'id_product' => $item->id_product,
-            'quantity' => $item->quantity,
-            'unit_price' => $item->unit_price
-        ];
-        
-        try {
-            $this->db->insert_table($sql, $params);
-            return $this->db->lastInsertId();
-        } catch (PDOException $e) {
-            error_log("BillProductDao Insert Error: " . $e->getMessage());
+   
+   public function insert(BillProductDTO $billProduct) {
+    $sql = "INSERT INTO bill_products 
+            (id_bill, id_product, quantity, unit_price" 
+            . (isset($billProduct->id_color) ? ", id_color" : "") 
+            . (isset($billProduct->id_size) ? ", id_size" : "") 
+            . ") VALUES 
+            (:id_bill, :id_product, :quantity, :unit_price"
+            . (isset($billProduct->id_color) ? ", :id_color" : "") 
+            . (isset($billProduct->id_size) ? ", :id_size" : "") 
+            . ")";
+    
+    $params = [
+        'id_bill' => $billProduct->id_bill,
+        'id_product' => $billProduct->id_product,
+        'quantity' => $billProduct->quantity,
+        'unit_price' => $billProduct->unit_price
+    ];
+    
+    if (isset($billProduct->id_color)) {
+        $params['id_color'] = $billProduct->id_color;
+    }
+    if (isset($billProduct->id_size)) {
+        $params['id_size'] = $billProduct->id_size;
+    }
+    
+    try {
+        $result = $this->db->insert_table($sql, $params);
+        if (!$result) {
+            error_log("Insert BillProduct failed: " . print_r($params, true));
             return false;
         }
+        return $result;
+    } catch (PDOException $e) {
+        error_log("BillProductDAO Insert Error: " . $e->getMessage());
+        return false;
     }
-
+}
     public function delete_by_bill($billId) {
         $sql = "DELETE FROM bill_products WHERE id_bill = :id_bill";
         $params = ['id_bill' => $billId];

@@ -121,7 +121,7 @@ SQL;
             error_log("ProductDao Insert Error: " . $e->getMessage());
             return false;
         }
-    }
+    }   
 
     // Cập nhật thông tin sản phẩm
 
@@ -263,6 +263,26 @@ public function get_by_type(int $typeId, bool $includeInactive = false): array
     $rows = $this->db->view_table($sql, ['typeId' => $typeId]);
     return array_map(fn($r) => new ProductDTO($r), $rows);
 }
+ public function get_products_with_details() {
+        $sql = "SELECT p.*, tp.name as type_name, s.name as supplier_name,
+                pi.image_url
+                FROM products p
+                LEFT JOIN type_product tp ON p.id_type_product = tp.id
+                LEFT JOIN supplier s ON p.id_supplier = s.id
+                LEFT JOIN product_images pi ON p.id = pi.id_product AND pi.is_primary = 1
+                WHERE p.is_active = 1
+                GROUP BY p.id";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }   
+    public function count_all_products(): int
+    {
+        $sql = "SELECT COUNT(*) AS total FROM products WHERE is_active = 1";
+        $row = $this->db->view_table($sql);
+        return (int)($row[0]['total'] ?? 0);
+    }
 }
 
 // khởi tạo sẵn nếu cần

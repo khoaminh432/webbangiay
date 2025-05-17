@@ -141,7 +141,7 @@ $pagination = new Pagination($total_products, $current_page, $per_page);
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <button class="add-to-cart-btn" id="modalAddToCart">Thêm vào giỏ hàng</button>
                 <?php else: ?>
-                    <a href="/webbangiay/pages/login.php" class="login-to-buy-btn">Đăng nhập để mua hàng</a>
+                    <a href="/webbangiay/layout/login_signup.php" class="login-to-buy-btn">Đăng nhập để mua hàng</a>
                 <?php endif; ?>
             </div>
         </div>
