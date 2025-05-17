@@ -241,7 +241,7 @@ body {
 
 .notification.show {
     opacity: 1;
-
+}
 .search-bar {
     flex: 1;
     max-width: 600px;
@@ -264,23 +264,7 @@ body {
     border: none;
     border-radius: 0 4px 4px 0;
     cursor: pointer;
-} */
-    margin: 0 4px;
-    text-decoration: none;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    color: #333;
-}
-
-.pagination a.active {
-    background-color: #4CAF50;
-    color: white;
-    border-color: #4CAF50;
-}
-
-.pagination a:hover:not(.active) {
-    background-color: #f1f1f1;
-}
+} 
 .loading {
     text-align: center;
     padding: 50px;
