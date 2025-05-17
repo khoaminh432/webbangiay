@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../DAO/InformationReceiveDao.php';
 require_once __DIR__ . '/../DTO/InformationReceiveDTO.php';
+require_once __DIR__ . '/../DAO/PaymentMethodDao.php';
+require_once __DIR__ . '/../DTO/PaymentMethodDTO.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -18,7 +20,11 @@ if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
 $userId = $_SESSION['user_id'];
 $infoDao = new InformationReceiveDao();
 $addresses = $infoDao->get_by_user($userId);
-
+$paymentMethodDao = new PaymentMethodDao();
+$activePaymentMethods = $paymentMethodDao->view_all();
+$activePaymentMethods = array_filter($activePaymentMethods, function($method) {
+    return $method->is_active == 1;
+});
 $totalPrice = 0;
 ?>
 
@@ -70,10 +76,15 @@ $totalPrice = 0;
 
         <div class="form-group">
             <label for="payment_method">Phương thức thanh toán:</label>
+        
             <select id="payment_method" name="payment_method" required>
-                <option value="cod">Thanh toán khi nhận hàng</option>
-                <option value="online">Thanh toán trực tuyến</option>
-            </select>
+                 <option value="">-- Chọn phương thức thanh toán --</option>
+                 <?php foreach ($activePaymentMethods as $method): ?>
+                <option value="<?php echo $method->id; ?>">
+                 <?php echo htmlspecialchars($method->name); ?>
+        </option>
+     <?php endforeach; ?>
+</select>
         </div>
 
         <button type="submit" class="checkout-btn">Xác nhận đặt hàng</button>

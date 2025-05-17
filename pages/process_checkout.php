@@ -30,16 +30,16 @@ if (empty($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
 // Kiểm tra đăng nhập
 if (empty($_SESSION['user_id'])) {
     sendJsonResponse(false, 'Bạn cần đăng nhập để thanh toán!', '/webbangiay/pages/login.php');
-}
+}   
 
 // Kiểm tra dữ liệu đầu vào
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['address_id'])) {
-    sendJsonResponse(false, 'Thông tin giao hàng không hợp lệ!', '/webbangiay/pages/checkout.php');
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['address_id']) || empty($_POST['payment_method'])) {
+    sendJsonResponse(false, 'Thông tin thanh toán không hợp lệ!', '/webbangiay/pages/checkout.php');
 }
 
 $userId = (int)$_SESSION['user_id'];
 $addressId = (int)$_POST['address_id'];
-$paymentMethod = in_array($_POST['payment_method'] ?? '', ['cod', 'online']) ? $_POST['payment_method'] : 'cod';
+$paymentMethodId = (int)$_POST['payment_method'];
 
 try {
     $db = new database_sever();
@@ -84,7 +84,7 @@ try {
     
     $bill = new BillDTO([
         'id_user' => $userId,
-        'id_payment_method' => $paymentMethod === 'cod' ? 1 : 2,
+        'id_payment_method' => $paymentMethodId,
         'total_amount' => $totalAmount,
         'shipping_address' => $shippingAddress,
         'status' => 'pending',
@@ -122,8 +122,9 @@ try {
         $db->conn->commit();
         unset($_SESSION['cart']);
         
-header("Location: /webbangiay/pages/order_success.php?order_id=" . $billId);
-exit();    } catch (Exception $e) {
+        header("Location: /webbangiay/pages/order_success.php?order_id=" . $billId);
+        exit();
+    } catch (Exception $e) {
         $db->conn->rollBack();
         throw $e;
     }

@@ -5,6 +5,7 @@ require_once __DIR__ . '/../database/database_sever.php';
 class ProductDao {
     private $db;
     private $conn; // đừng xóa
+
     public function __construct() {
         $this->db = new database_sever();
         $this->conn = $this->db->conn; // đừng xóa
@@ -174,4 +175,37 @@ class ProductDao {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
-}
+
+    public function count_all_products($includeInactive = false) {
+    $sql = "SELECT COUNT(*) as total FROM products";
+    if (!$includeInactive) {
+        $sql .= " WHERE is_active = TRUE";
+    }
+    $result = $this->db->view_table($sql);
+    return $result[0]['total'] ?? 0;    
+    }
+
+    public function get_products_paginated($offset, $limit, $includeInactive = false) {
+        $sql = "SELECT p.*, tp.name as type_name, s.name as supplier_name,
+                pi.image_url
+                FROM products p
+                LEFT JOIN type_product tp ON p.id_type_product = tp.id
+                LEFT JOIN supplier s ON p.id_supplier = s.id
+                LEFT JOIN product_images pi ON p.id = pi.id_product AND pi.is_primary = 1";
+        
+        if (!$includeInactive) {
+            $sql .= " WHERE p.is_active = 1";
+        }
+        
+        $sql .= " GROUP BY p.id LIMIT :limit OFFSET :offset";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+    }   
+
+?>
+<?php $table_products=new ProductDao();?>
