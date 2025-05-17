@@ -1,9 +1,12 @@
 <?php
 require_once __DIR__ . '/../DTO/BillDTO.php';
 require_once __DIR__ . '/../DTO/BillProductDTO.php';
+require_once __DIR__ . '/../DTO/PaymentMethodDTO.php';
 require_once __DIR__ . '/../DAO/BillDao.php';
 require_once __DIR__ . '/../DAO/BillProductDao.php';
 require_once __DIR__ . '/../DAO/ProductDao.php';
+require_once __DIR__ . '/../DAO/PaymentMethodDao.php';
+require_once __DIR__ . '/../database/database_sever.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -29,6 +32,7 @@ try {
     $billDao = new BillDao();
     $billProductDao = new BillProductDao();
     $productDao = new ProductDao();
+    $paymentMethodDao = new PaymentMethodDao();
     
     // Lấy thông tin đơn hàng
     $order = $billDao->get_by_id($orderId, $userId);
@@ -36,6 +40,10 @@ try {
     if (!$order) {
         throw new Exception("Đơn hàng không tồn tại hoặc bạn không có quyền xem đơn hàng này");
     }
+    
+    // Lấy thông tin phương thức thanh toán
+    $paymentMethod = $paymentMethodDao->get_by_id($order->id_payment_method);
+    $paymentMethodName = $paymentMethod ? $paymentMethod->name : 'Không xác định';
     
     // Lấy danh sách sản phẩm trong đơn hàng
     $orderItems = $billProductDao->get_by_bill($orderId);
@@ -146,7 +154,7 @@ try {
                     <h2>Thông tin đơn hàng</h2>
                     <p><strong>Mã đơn hàng:</strong> #<?php echo htmlspecialchars($order->id); ?></p>
                     <p><strong>Ngày đặt hàng:</strong> <?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($order->bill_date))); ?></p>
-                    <p><strong>Phương thức thanh toán:</strong> <?php echo htmlspecialchars($order->id_payment_method == 1 ? 'Thanh toán khi nhận hàng (COD)' : 'Thanh toán online'); ?></p>
+                    <p><strong>Phương thức thanh toán:</strong> <?php echo htmlspecialchars($paymentMethodName); ?></p>
                     <p><strong>Địa chỉ giao hàng:</strong> <?php echo htmlspecialchars($order->shipping_address); ?></p>
                     <p><strong>Tình trạng:</strong> <?php echo htmlspecialchars(ucfirst($order->status)); ?></p>
                     
