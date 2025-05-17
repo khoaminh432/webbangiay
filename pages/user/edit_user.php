@@ -105,7 +105,10 @@ $title = "Chỉnh sửa thông tin - " . htmlspecialchars($user->username);
             
             <div class="form-group">
                 <label for="address">Địa chỉ</label>
-                <input type="text" id="address" name="address" value="<?php echo isset($address->address) ? htmlspecialchars($address->address) : ''; ?>">
+                <input type="text" id="address" name="address" value="<?php echo isset($address->address) ? htmlspecialchars($address->address) : ''; ?>" readonly>
+                  <a href="/webbangiay/pages/user/receive.php" class="edit-link">
+                        [Chỉnh sửa]
+                    </a>
             </div>
         </div>
         

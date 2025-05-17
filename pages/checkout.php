@@ -1,4 +1,8 @@
 <?php
+require_once __DIR__ . '/../DAO/InformationReceiveDao.php';
+require_once __DIR__ . '/../DTO/InformationReceiveDTO.php';
+require_once __DIR__ . '/../DAO/PaymentMethodDao.php';
+require_once __DIR__ . '/../DTO/PaymentMethodDTO.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -13,11 +17,18 @@ if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
     return;
 }
 
+$userId = $_SESSION['user_id'];
+$infoDao = new InformationReceiveDao();
+$addresses = $infoDao->get_by_user($userId);
+$paymentMethodDao = new PaymentMethodDao();
+$activePaymentMethods = $paymentMethodDao->view_all();
+$activePaymentMethods = array_filter($activePaymentMethods, function($method) {
+    return $method->is_active == 1;
+});
 $totalPrice = 0;
 ?>
 
 <link rel="stylesheet" href="../css/checkout.css">
-
 <div class="checkout-container">
     <h1>Thanh toán</h1>
     <table class="checkout-table">
@@ -52,26 +63,28 @@ $totalPrice = 0;
     <h2>Thông tin giao hàng</h2>
     <form action="/webbangiay/pages/process_checkout.php" method="POST" class="checkout-form">
         <div class="form-group">
-            <label for="name">Họ và tên:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-
-        <div class="form-group">
-            <label for="address">Địa chỉ:</label>
-            <textarea id="address" name="address" required></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="phone">Số điện thoại:</label>
-            <input type="text" id="phone" name="phone" required>
+            <label for="address_id">Chọn địa chỉ nhận hàng:</label>
+            <select id="address_id" name="address_id" required>
+                <option value="">-- Chọn địa chỉ --</option>
+                <?php foreach ($addresses as $address): ?>
+            <option value="<?php echo $address->id; ?>" <?php if ($address->is_default) echo 'selected'; ?>>
+                        <?php echo htmlspecialchars($address->name . ' | ' . $address->phone . ' | ' . $address->address . ($address->is_default ? ' (Mặc định)' : '')); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
         <div class="form-group">
             <label for="payment_method">Phương thức thanh toán:</label>
+        
             <select id="payment_method" name="payment_method" required>
-                <option value="cod">Thanh toán khi nhận hàng</option>
-                <option value="online">Thanh toán trực tuyến</option>
-            </select>
+                 <option value="">-- Chọn phương thức thanh toán --</option>
+                 <?php foreach ($activePaymentMethods as $method): ?>
+                <option value="<?php echo $method->id; ?>">
+                 <?php echo htmlspecialchars($method->name); ?>
+        </option>
+     <?php endforeach; ?>
+</select>
         </div>
 
         <button type="submit" class="checkout-btn">Xác nhận đặt hàng</button>
