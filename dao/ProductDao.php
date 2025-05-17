@@ -4,9 +4,11 @@ require_once __DIR__ . '/../database/database_sever.php';
 
 class ProductDao {
     private $db;
+    private $conn;
     
     public function __construct() {
         $this->db = new database_sever();
+        $this->conn = $this->db->conn;
     }
 
     // Lấy tất cả sản phẩm (có thể thêm điều kiện is_active)
