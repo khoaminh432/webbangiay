@@ -109,5 +109,23 @@ class InformationReceiveDao {
         ];
         return $this->db->update_table($sql, $params);
     }
+    public function get_by_id($id, $userId = null) {
+    $sql = "SELECT * FROM information_receive WHERE id = :id";
+    $params = ['id' => $id];
+    
+    // Nếu có userId, kiểm tra địa chỉ thuộc về user đó
+    if ($userId !== null) {
+        $sql .= " AND id_user = :user_id";
+        $params['user_id'] = $userId;
+    }
+    
+    $result = $this->db->view_table($sql, $params);
+    
+    if (!empty($result)) {
+        return new InformationReceiveDTO($result[0]); // Trả về đối tượng DTO
+    }
+    
+    return null; // Trả về null nếu không tìm thấy
+}
 }
 ?><?php $table_information_receive = new InformationReceiveDao();?>
