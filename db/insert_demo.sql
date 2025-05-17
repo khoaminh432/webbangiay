@@ -119,7 +119,7 @@ CREATE TABLE product_size_color (
   FOREIGN KEY (id_color) REFERENCES colors(id) ON DELETE CASCADE,
   UNIQUE KEY (id_product, id_size, id_color) COMMENT 'Mỗi sản phẩm chỉ có 1 bản ghi cho mỗi cặp size và màu'
 );
-ALTER TABLE bill_product
+ALTER TABLE bill_products
 ADD COLUMN product_sizecolor_id INT;
 
 DELIMITER $$
@@ -171,35 +171,35 @@ INSERT INTO product_size_color (id_product, id_size, id_color, quantity) VALUES
 (6, 4, 6, 8),
 (7, 1, 7, 15),
 (8, 3, 1, 2);
-UPDATE bill_product
+UPDATE bill_products
 SET product_sizecolor_id = 1
 WHERE id = 1;
 
-UPDATE bill_product
+UPDATE bill_products
 SET product_sizecolor_id = 2
 WHERE id = 2;
 
-UPDATE bill_product
+UPDATE bill_products
 SET product_sizecolor_id = 3
 WHERE id = 3;
 
-UPDATE bill_product
+UPDATE bill_products
 SET product_sizecolor_id = 4
 WHERE id = 4;
 
-UPDATE bill_product
+UPDATE bill_products
 SET product_sizecolor_id = 5
 WHERE id = 5;
 
-UPDATE bill_product
+UPDATE bill_products
 SET product_sizecolor_id = 6
 WHERE id = 6;
 
-UPDATE bill_product
+UPDATE bill_products
 SET product_sizecolor_id = 7
 WHERE id = 7;
 
-UPDATE bill_product
+UPDATE bill_products
 SET product_sizecolor_id = 8
 WHERE id = 8;
 
