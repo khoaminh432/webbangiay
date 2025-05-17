@@ -1,4 +1,7 @@
 <?php require_once __DIR__."/../../initAdmin.php";?>
+<?php require_once __DIR__."/../../dao/RoleDao.php";
+
+?>
 <style>
     .admin-form {
     background: linear-gradient(145deg, #1f2023, #38393f);
@@ -77,8 +80,9 @@
     <input class="form-input" type="email" id="admin-email" value="<?= htmlspecialchars($adminDTO->email ?? 'Chưa có') ?>" readonly />
 
     <label class="form-label" for="admin-position">Chức vụ:</label>
+    <?php $roleDao = new RoleDao();?>
     <input class="form-input" type="text" id="admin-position" value="<?= 
-    htmlspecialchars($adminDTO->position?"Quản trị viên":"Nhân viên") ?>" readonly />
+    htmlspecialchars($roleDao->get_role_by_id($adminDTO->position)->role_name) ?>" readonly />
 
     <label class="form-label" for="admin-created">Ngày tạo:</label>
     <input class="form-input" type="text" id="admin-created" value="<?= htmlspecialchars($adminDTO->created_at ?? '---') ?>" readonly />

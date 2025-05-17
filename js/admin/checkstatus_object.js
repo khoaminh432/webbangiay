@@ -1,16 +1,21 @@
-// Lắng nghe sự kiện change cho tất cả select
-document.querySelectorAll('.status-select').forEach(select => {
-    select.addEventListener('change', function() {
-        const objectId = this.dataset.objectId;
-        const status1 = this.value;
-        const choose_status = status1.split("-")
-        const status = choose_status[1]
-        console.log(`ID: ${objectId} cập nhật thành: ${status} của ${choose_status[0]}`);
-        
+// Sử dụng event delegation để đảm bảo hoạt động sau khi lọc
+document.addEventListener('change', function (e) {
+    if (e.target && e.target.classList.contains('status-select')) {
+        const selectElement = e.target;
+        const objectId = selectElement.dataset.objectId;
+        const status1 = selectElement.value;
+        const choose_status = status1.split("-");
+        const status = choose_status[1];
+        const object = choose_status[0];
+
+        console.log(`ID: ${objectId} cập nhật thành: ${status} của ${object}`);
+
         // Gọi API cập nhật
-        updateBillStatus(objectId, status,choose_status[0]);
-    });
-    function updateBillStatus(billId, status, object) {
+        updateBillStatus(objectId, status, object);
+    }
+});
+
+function updateBillStatus(billId, status, object) {
     fetch('handle/admin/update_status.php', {
         method: 'POST',
         headers: {
@@ -25,9 +30,12 @@ document.querySelectorAll('.status-select').forEach(select => {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log('Cập nhật thành công');
+            console.log('✅ Cập nhật thành công');
         } else {
-            console.error('Lỗi:', data.message);
+            console.error('❌ Lỗi:', data.message);
         }
+    })
+    .catch(error => {
+        console.error('❌ Lỗi fetch:', error);
     });
-}});
+}

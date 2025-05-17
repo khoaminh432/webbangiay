@@ -114,6 +114,28 @@ class UserDao {
             return false;
         }
     }
+    // Trong class UserDao:
+        public function filter_users_custom($filters = []) {
+    // Lấy tất cả user trước rồi filter ở PHP, giống bạn làm với bill
+    $users = $this->view_all();
+
+    $filtered = array_filter($users, function($user) use ($filters) {
+        if (!empty($filters['username']) && stripos($user->username, $filters['username']) === false) {
+            return false;
+        }
+        if (!empty($filters['email']) && stripos($user->email, $filters['email']) === false) {
+            return false;
+        }
+        if (!empty($filters['status']) && strtolower($user->status) !== strtolower($filters['status'])) {
+            return false;
+        }
+        return true;
+    });
+
+    return $filtered;
+}
+
+
     // Xóa người dùng
     public function delete($id) {
         $sql = "DELETE FROM users WHERE id = :id";

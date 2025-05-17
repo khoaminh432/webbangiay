@@ -15,8 +15,3 @@ $currentDir = dirname($currentDir);
 define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
 
 ?>
-<?php 
-    session_start();
-    require_once ROOT_DIR."/dao/AdminDao.php";
-    $adminDTO = $table_admins->login($_SESSION['email'],$_SESSION['password']);
-?>

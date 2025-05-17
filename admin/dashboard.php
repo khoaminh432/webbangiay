@@ -56,7 +56,7 @@ $web_root_relative_path = str_replace($_SERVER['DOCUMENT_ROOT'], '', ROOT_DIR . 
 <div class="main-content">
             <div id="content-area" >
                 <!-- Nội dung sẽ được tải động ở đây -->
-                <?php require_once __DIR__ . "/dashboard/dashboard_products.php";?>
+                <?php require_once __DIR__ . "/dashboard/dashboard_users.php";?>
             </div>
 
         </div>

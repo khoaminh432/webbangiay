@@ -2,115 +2,105 @@
 require_once __DIR__ . '/../DTO/ProductDTO.php';
 require_once __DIR__ . '/../database/database_sever.php';
 
-
 class ProductDao
 {
     private $db;
-    private $conn; // đừng xóa
+    private $conn;
 
-
-
-
-main
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = new database_sever();
-        $this->conn = $this->db->conn; // đừng xóa
+        $this->conn = $this->db->conn;
     }
 
-
-    // Lấy tất cả sản phẩm (có thể thêm điều kiện is_active)
-    public function view_all($includeInactive = false)
+    /**
+     * Lấy tất cả sản phẩm (tùy chọn include inactive)
+     */
+    public function view_all($includeInactive = false): array
     {
         $sql = "SELECT * FROM products";
         if (!$includeInactive) {
             $sql .= " WHERE is_active = TRUE";
         }
-        $results = $this->db->view_table($sql);
-        $products = [];
-        foreach ($results as $row) {
-            $products[] = new ProductDTO($row);
-        }
-        return $products;
+
+        $rows = $this->db->view_table($sql);
+        return array_map(fn($r) => new ProductDTO($r), $rows);
     }
-    public function getID()
+    /**
+     * Sinh ID kế tiếp (liên tục từ 1)
+     */
+    public function generateNextId(): int
     {
         $sql = "SELECT id FROM products ORDER BY id ASC";
-        $result = $this->db->view_table($sql);
+        $rows = $this->db->view_table($sql);
 
-        $expectedID = 1;
-        foreach ($result as $row) {
-            if ((int)$row['id'] != $expectedID) {
-                return $expectedID;
+        $expected = 1;
+        foreach ($rows as $r) {
+            if ((int)$r['id'] !== $expected) {
+                return $expected;
             }
-            $expectedID++;
+            $expected++;
         }
-        return $expectedID;
+        return $expected;
     }
-    public function get_by_type($typeId)
+
+    /**
+     * Lấy sản phẩm theo ID
+     */
+    public function get_by_id(int $id): ?ProductDTO
     {
-        $sql = "SELECT * FROM products WHERE id_type_product = :type_id AND is_active = TRUE";
-        $params = ['type_id' => $typeId];
-        $results = $this->db->view_table($sql, $params);
-        
-        $products = [];
-        foreach ($results as $row) {
-            $products[] = new ProductDTO($row);
-        }
-        return $products;
-    }{
-    public function get_by_id($id)
-    {
-        $sql = "SELECT A.*, B.image_url 
-                FROM products AS A
-                LEFT JOIN product_images AS B ON A.id = B.id_product AND B.is_primary = 1
-                WHERE A.id = :id";
-        $params = ['id' => $id];
-        $result = $this->db->view_table($sql, $params);
-        
-        return !empty($result) ? new ProductDTO($result[0]) : null;
+        $sql = <<<SQL
+        SELECT p.*, pi.image_url
+        FROM products p
+        LEFT JOIN product_images pi
+          ON pi.id_product = p.id AND pi.is_primary = 1
+        WHERE p.id = :id
+        SQL;
+        $row = $this->db->view_table($sql, ['id' => $id]);
+        return $row ? new ProductDTO($row[0]) : null;
     }
-{
-    public function get_by_ids($ids)
+
+    /**
+     * Lấy nhiều sản phẩm theo mảng ID
+     */
+    public function get_by_ids(array $ids): array
     {
         if (empty($ids)) return [];
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
-        $sql = "SELECT products.id, products.name, price, quantity, image_url  FROM products 
-                LEFT JOIN product_images ON products.id = product_images.id_product AND product_images.is_primary = 1 
-                WHERE products.id IN ($placeholders)";
-        $result = $this->db->view_table($sql, $ids);
-
-        $products = [];
-        foreach ($result as $row) {
-            $products[] = new ProductDTO($row);
-        }
-        return $products;
+        $sql = <<<SQL
+SELECT p.id, p.name, p.price, p.quantity, pi.image_url
+FROM products p
+LEFT JOIN product_images pi
+  ON pi.id_product = p.id AND pi.is_primary = 1
+WHERE p.id IN ($placeholders)
+SQL;
+        $rows = $this->db->view_table($sql, $ids);
+        return array_map(fn($r) => new ProductDTO($r), $rows);
     }
-        // Tìm kiếm sản phẩm
-    public function search($keyword, $includeInactive = false) {
 
-        $sql = "SELECT * FROM products WHERE name LIKE :keyword OR description LIKE :keyword";
+    /**
+     * Tìm kiếm theo tên hoặc mô tả
+     */
+    public function search(string $keyword, bool $includeInactive = false): array
+    {
+        $sql = "SELECT * FROM products WHERE (name LIKE :kw OR description LIKE :kw)";
         if (!$includeInactive) {
             $sql .= " AND is_active = TRUE";
         }
-
-        $params = ['keyword' => '%' . $keyword . '%'];
-        $results = $this->db->view_table($sql, $params);
-
-        $products = [];
-        foreach ($results as $row) {
-            $products[] = new ProductDTO($row);
-        }
-        return $products;
+        $params = ['kw' => "%{$keyword}%"];
+        $rows = $this->db->view_table($sql, $params);
+        return array_map(fn($r) => new ProductDTO($r), $rows);
     }
 
-    // Thêm sản phẩm mới
-    public function insert(ProductDTO $product)
-    {
-        $sql = "INSERT INTO products (id,name, quantity, description, price, weight, id_voucher, id_type_product, id_admin, id_supplier, is_active, image_url) 
+    /**
+     * Thêm mới sản phẩm
+     */
+    public function insert(ProductDTO $product){
+            $sql = "INSERT INTO products (id,name, quantity, description, price, weight, id_voucher, id_type_product, id_admin, id_supplier, is_active, image_url) 
                 VALUES (:id,:name, :quantity, :description, :price, :weight, :id_voucher, :id_type_product, :id_admin, :id_supplier, :is_active, :image_url)";
 
         $params = [
-            "id" =>$this->getID(),
+            "id" =>$this->generateNextId(),
             'name' => $product->name,
             'quantity' => $product->quantity,
             'description' => $product->description,
@@ -135,287 +125,148 @@ main
 
     // Cập nhật thông tin sản phẩm
 
-    public function update(ProductDTO $product)
+
+    /**
+     * Cập nhật sản phẩm
+     */
+    public function update(ProductDTO $product): bool
     {
-        $sql = "UPDATE products SET 
-                name = :name,
-                quantity = :quantity,
-                description = :description,
-                price = :price,
-                weight = :weight,
-                id_voucher = :id_voucher,
-                id_type_product = :id_type_product,
-                id_admin = :id_admin,
-                id_supplier = :id_supplier,
-                is_active = :is_active,
-                image_url = :image_url
-                WHERE id = :id";
+        $sql = <<<SQL
+UPDATE products SET
+  name = :name,
+  quantity = :quantity,
+  description = :description,
+  price = :price,
+  weight = :weight,
+  id_voucher = :id_voucher,
+  id_type_product = :id_type_product,
+  id_admin = :id_admin,
+  id_supplier = :id_supplier,
+  is_active = :is_active,
+  image_url = :image_url
+WHERE id = :id
+SQL;
+        return (bool)$this->db->update_table($sql, (array)$product);
+    }
 
-        $params = [
-            'id' => $product->id,
-            'name' => $product->name,
-            'quantity' => $product->quantity,
-            'description' => $product->description,
-            'price' => $product->price,
-            'weight' => $product->weight,
-            'id_voucher' => $product->id_voucher,
-            'id_type_product' => $product->id_type_product,
-            'id_admin' => $product->id_admin,
-            'id_supplier' => $product->id_supplier,
-            'is_active' => $product->is_active,
-            "image_url" => $product->image_url
-        ];
-        
-        try {
-            return $this->db->update_table($sql, $params);
-        } catch (PDOException $e) {
-            error_log("ProductDao Update Error: " . $e->getMessage());
-            return false;
-        }
-    }
-    public function delete($id) {
-
-    // Cập nhật số lượng sản phẩm
-tquan
-    public function update_quantity($productId, $quantity) {
-        $sql = "UPDATE products SET quantity = :quantity WHERE id = :id";
-        $params = [
-            'id' => $productId,
-            'quantity' => $quantity
-        ];
-        
-        try {
-            return $this->db->update_table($sql, $params);
-        } catch (PDOException $e) {
-            error_log("ProductDao Update Quantity Error: " . $e->getMessage());
-            return false;
-        }
-    }
-    // Cập nhật số lượng sản phẩm
-    public function update_active($productId, $is_active) {
-        $sql = "UPDATE products SET is_active = :is_active WHERE id = :id";
-        $params = [
-            'id' => $productId,
-            'is_active' => $is_active
-        ];
-        
-        try {
-            return $this->db->update_table($sql, $params);
-        } catch (PDOException $e) {
-            error_log("ProductDao Update Quantity Error: " . $e->getMessage());
-            return false;
-        }
-    }
-    public function delete($id) {
+    /**
+     * Xóa sản phẩm
+     */
+    public function delete(int $id): bool
+    {
         $sql = "DELETE FROM products WHERE id = :id";
-        $params = ['id' => $id];
-
-    public function get_products_with_details() {
-        $sql = "SELECT p.*, tp.name as type_name, s.name as supplier_name,
-                pi.image_url
-                FROM products p
-                LEFT JOIN type_product tp ON p.id_type_product = tp.id
-                LEFT JOIN supplier s ON p.id_supplier = s.id
-                LEFT JOIN product_images pi ON p.id = pi.id_product AND pi.is_primary = 1
-                WHERE p.is_active = 1
-                GROUP BY p.id";
-main
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
+        return (bool)$this->db->delete_table($sql, ['id' => $id]);
     }
 
-    public function count_all_products($includeInactive = false) {
-    $sql = "SELECT COUNT(*) as total FROM products";
-    if (!$includeInactive) {
-        $sql .= " WHERE is_active = TRUE";
-    }
-
-    $result = $this->db->view_table($sql);
-    return $result[0]['total'] ?? 0;    
-    }
-
-
-    public function get_products_paginated($offset, $limit, $includeInactive = false)
+    /**
+     * Cập nhật số lượng
+     */
+    public function update_quantity(int $id, int $qty): bool
     {
-        $sql = "SELECT p.*, tp.name as type_name, s.name as supplier_name,
-                pi.image_url
-                FROM products p
-                LEFT JOIN type_product tp ON p.id_type_product = tp.id
-                LEFT JOIN supplier s ON p.id_supplier = s.id
-                LEFT JOIN product_images pi ON p.id = pi.id_product AND pi.is_primary = 1";
+        $sql = "UPDATE products SET quantity = :qty WHERE id = :id";
+        return (bool)$this->db->update_table($sql, ['id' => $id, 'qty' => $qty]);
+    }
 
+    /**
+     * Cập nhật trạng thái active/inactive
+     */
+    public function update_active(int $id, bool $active): bool
+    {
+        $sql = "UPDATE products SET is_active = :active WHERE id = :id";
+        return (bool)$this->db->update_table($sql, ['id' => $id, 'active' => $active]);
+    }
+
+    /**
+     * Đếm tổng sản phẩm
+     */
+    public function count_all(bool $includeInactive = false): int
+    {
+        $sql = "SELECT COUNT(*) AS total FROM products" .
+               (!$includeInactive ? " WHERE is_active = TRUE" : "");
+        $row = $this->db->view_table($sql);
+        return (int)($row[0]['total'] ?? 0);
+    }
+
+    /**
+     * Lấy danh sách kèm chi tiết, phân trang
+     */
+    public function get_products_paginated(int $offset, int $limit, bool $includeInactive = false): array
+    {
+        $sql = <<<SQL
+SELECT p.*, tp.name AS type_name, s.name AS supplier_name,
+       pi.image_url
+FROM products p
+LEFT JOIN type_product tp ON p.id_type_product = tp.id
+LEFT JOIN supplier s ON p.id_supplier = s.id
+LEFT JOIN product_images pi ON pi.id_product = p.id AND pi.is_primary = 1
+SQL;
         if (!$includeInactive) {
             $sql .= " WHERE p.is_active = 1";
         }
-
         $sql .= " GROUP BY p.id LIMIT :limit OFFSET :offset";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-
-    // Lấy sản phẩm mới nhất
-    public function get_newest_products($limit = 5) {
-        $sql = "SELECT * FROM products 
-                WHERE is_active = TRUE 
-                ORDER BY id DESC 
-                LIMIT :limit";
-        
-        $params = ['limit' => $limit];
-        $results = $this->db->view_table($sql, $params);
-        
-        $products = [];
-        foreach ($results as $row) {
-            $products[] = new ProductDTO($row);
-        }
-        return $products;
+    /**
+     * Lấy sản phẩm mới nhất
+     */
+    public function get_newest_products(int $limit = 5): array
+    {
+        $sql = "SELECT * FROM products WHERE is_active = TRUE ORDER BY id DESC LIMIT :limit";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return array_map(fn($r) => new ProductDTO((array)$r), $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
-    public function check_billproduct($id_product)
+    public function getConnection()
     {
-        require_once __DIR__ . "/BillProductDao.php";
+        return $this->conn;
+    }
+    public function check_billproduct($id_product){
+        require_once __DIR__."/BillProductDao.php";
         $temp = $table_billproducts->get_by_product($id_product);
         return empty($temp);
     }
-
-    public function get_by_voucher($id_voucher)
-    {
-        $sql = "SELECT * FROM products WHERE id_voucher = :id_voucher";
-        $params = ['id_voucher' => $id_voucher];
-        $results = $this->db->view_table($sql, $params);
-
-        $products = [];
-        foreach ($results as $row) {
-            $products[] = new ProductDTO($row);
-        }
-        return $products;
-    }
-
-    public function exists_by_dto(ProductDTO $product)
-    {
-        $sql = "SELECT COUNT(*) as total 
-                FROM products 
-                WHERE name = :name 
-                  AND price = :price 
-                  AND quantity = :quantity 
-                  AND id_type_product = :id_type_product 
-                  AND id_supplier = :id_supplier";
-
-        $params = [
-            'name' => $product->name,
-            'price' => $product->price,
-            'quantity' => $product->quantity,
-            'id_type_product' => $product->id_type_product,
-            'id_supplier' => $product->id_supplier,
-        ];
-
-        try {
-            $result = $this->db->view_table($sql, $params);
-            return isset($result[0]['total']) && $result[0]['total'] > 0;
-        } catch (PDOException $e) {
-            error_log("ProductDao exists_by_dto Error: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    // đừng xóa
-    // public function view_all() {
-    //     $query = "SELECT p.*, tp.name as name_type_product,
-    //                 (SELECT image_url FROM product_images WHERE id_product = p.id AND is_primary = 1 LIMIT 1) as image_url
-    //               FROM  products p
-    //               LEFT JOIN type_product tp ON p.id_admin = tp.id_admin
-    //               ORDER BY p.id DESC";
-    //     $stmt = $this->db->conn->prepare($query);
-    //     $stmt->execute();
-    //     return $stmt->fetchAll(PDO::FETCH_OBJ);
-    // }
-
-
-    public function get_products_paginated($offset, $limit, $includeInactive = false) {
-
-        $sql = "SELECT p.*, tp.name as type_name, s.name as supplier_name,
-                pi.image_url
-                FROM products p
-                LEFT JOIN type_product tp ON p.id_type_product = tp.id
-                LEFT JOIN supplier s ON p.id_supplier = s.id
-                LEFT JOIN product_images pi ON p.id = pi.id_product AND pi.is_primary = 1";
-        
-        if (!$includeInactive) {
-            $sql .= " WHERE p.is_active = 1";
-        }
-        
-        $sql .= " GROUP BY p.id LIMIT :limit OFFSET :offset";
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
-    }
-        $sql = "SELECT name FROM type_product WHERE id = ?";
-        $stmt = $this->db->conn->prepare($sql);
-        $stmt->execute([$type_id]);
-        $result = $stmt->fetch(PDO::FETCH_OBJ);
-        return $result ? $result->name : '';
-    }
-
-
-    public function get_supplier_name($supplier_id)
-    {
-        $sql = "SELECT name FROM supplier WHERE id = ?";
-        $stmt = $this->db->conn->prepare($sql);
-        $stmt->execute([$supplier_id]);
-        $result = $stmt->fetch(PDO::FETCH_OBJ);
-        return $result ? $result->name : '';
-    }
-    // xóa mềm sản phẩm
-    // public function deletesp($id) {
-    //     $sql = "UPDATE products SET is_active = FALSE WHERE id = :id";
-    //     $params = ['id' => $id];
-
-    //     try {
-    //         return $this->db->update_table($sql, $params);
-    //     } catch (PDOException $e) {
-    //         error_log("ProductDao Delete Error: " . $e->getMessage());
-    //         return false;
-    //     }
-    // }
-
-    public function get_product_by_id($id)
-    {
-        $query = "SELECT p.*, tp.name as name_type_product, pi.image_url 
-                 FROM products p
-                 LEFT JOIN type_product tp ON p.id_admin = tp.id_admin
-                 LEFT JOIN product_images pi ON p.id = pi.id_product AND pi.is_primary = 1
-                 WHERE p.id = :id";
-
-        $stmt = $this->db->conn->prepare($query);
-        $stmt->bindParam(":id", $id);
-        $stmt->execute();
-        
-        return $stmt->fetch(PDO::FETCH_OBJ);
-    }
-    public function getConnection() {
-        return $this->conn;
-    }
-    public function delete($id)
-    {
-        $sql = "DELETE FROM products WHERE id = :id";
-        $params = ['id' => $id];
-
-        try {
-            return $this->db->delete_table($sql, $params);
-        } catch (PDOException $e) {
-            error_log("ProductDao Delete Error: " . $e->getMessage());
-            return false;
-        }
-    }
+    public function exists_by_dto(ProductDTO $dto) {
+    $conn = $this->db->getConnection();
+    $sql = "SELECT COUNT(*) FROM products WHERE name = :name AND  id_type_product= :id_type_product";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':name', $dto->name);
+    $stmt->bindParam(':id_type_product', $dto->id_type_product);
+    $stmt->execute();
+    $count = $stmt->fetchColumn();
+    return $count > 0;
 }
+    /**
+ * Lấy sản phẩm theo loại sản phẩm
+ */
+public function get_by_type(int $typeId, bool $includeInactive = false): array
+{
+    $sql = <<<SQL
+    SELECT p.*
+    FROM products p
+    WHERE p.id_type_product = :typeId
+    SQL;
+    
+    if (!$includeInactive) {
+        $sql .= " AND p.is_active = TRUE";
+    }
+    
+    $sql .= " ORDER BY p.id DESC";
+    
+    $rows = $this->db->view_table($sql, ['typeId' => $typeId]);
+    return array_map(fn($r) => new ProductDTO($r), $rows);
+}
+}
+
+// khởi tạo sẵn nếu cần
+// $table_products = new ProductDao();
 ?>
+
 <?php $table_products = new ProductDao(); ?>

@@ -1,105 +1,87 @@
-
 $(document).ready(function() {
+    // Sử dụng event delegation để đảm bảo các nút động cũng được xử lý
+    const container = $(document);
 
-    // Xử lý sự kiện click trên các nút action
-    $('.action-btn').click(function() {
-        const action = $(this).data('action'); // 'view', 'update', 'delete'
-        const userId = $(this).data('id'); // ID của user
-        console.log(action,userId)
-        const check_test = action.split("-")
-        switch (check_test[0]) {
-            
+    // Xử lý sự kiện click trên các nút action (view, update, delete)
+    container.on('click', '.action-btn', function() {
+        const action = $(this).data('action'); // ví dụ 'view-bill', 'delete-bill'
+        const itemId = $(this).data('id');    // ID của đối tượng
+        console.log('Action:', action, 'ID:', itemId);
+
+        const [cmd, type] = action.split('-');
+        switch (cmd) {
             case 'view':
-                viewObject(userId,check_test[1])
-                console.log("vvvie")
+                viewObject(itemId, type);
                 break;
             case 'update':
-                editObject(userId,check_test[1])
-                console.log("update");
+                editObject(itemId, type);
                 break;
             case 'delete':
-
-                console.log(check_test[1])
-                deleteobject(userId,check_test[1])
+                deleteObject(itemId, type);
                 break;
             default:
-                console.log("chưa chọn")
+                console.log('Không xác định action');
         }
     });
 
-    // Hàm xem chi tiết user (Modal/Popup)
-    function viewObject(userId,check_test) {
+    // Hàm xem chi tiết đối tượng (Modal/Popup)
+    function viewObject(id, type) {
         $.ajax({
-            url: `admin/dashboard/form/view/${check_test}view_form.php`,
+            url: `admin/dashboard/form/view/${type}view_form.php`,
             type: 'GET',
-            data: { id: userId },
+            data: { id },
             success: function(response) {
-                // Mở modal và hiển thị dữ liệu
-                
                 $('#objectViewModal').html(response).fadeIn();
             },
-            error: function(xhr) {
-                alert('Lỗi khi tải dữ liệu!');
+            error: function() {
+                Swal.fire('Lỗi', 'Không tải được dữ liệu', 'error');
             }
         });
     }
-    function editObject(userId,check_test){
+
+    // Hàm sửa đối tượng (Modal/Popup)
+    function editObject(id, type) {
         $.ajax({
-            url: `admin/dashboard/form/edit/${check_test}edit_form.php`,
+            url: `admin/dashboard/form/edit/${type}edit_form.php`,
             type: 'GET',
-            data: { id: userId },
+            data: { id },
             success: function(response) {
-                // Mở modal và hiển thị dữ liệu
                 $('#objectViewModal').html(response).fadeIn();
             },
-            error: function(xhr) {
-                alert('Lỗi khi tải dữ liệu!');
+            error: function() {
+                Swal.fire('Lỗi', 'Không tải được dữ liệu', 'error');
             }
         });
     }
-    function deleteobject(objectid,check_test){
-        
+
+    // Hàm xóa đối tượng với xác nhận
+    function deleteObject(id, type) {
         Swal.fire({
-            title: "Bạn có chắc chắn muốn xóa!",
+            title: 'Bạn có chắc chắn muốn xóa?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Đồng ý',
             cancelButtonText: 'Hủy'
-          }).then(result => {
+        }).then(result => {
             if (result.isConfirmed) {
-              onConfirm(objectid,check_test);
+                $.ajax({
+                    url: 'handle/admin/deleteobject_process.php',
+                    type: 'GET',
+                    data: { id, check: type },
+                    dataType: 'json',
+                    success: function(res) {
+                        if (res.success) {
+                            $(`tr[data-id=\"${id}\"]`).remove();
+                            Swal.fire('Thành công', res.message, 'success');
+                        } else {
+                            Swal.fire('Lỗi', res.message || 'Xóa thất bại', 'error');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Lỗi', 'Kết nối máy chủ thất bại', 'error');
+                    }
+                });
             }
-          });    
-          function onConfirm(objectId,check_test){
-            $.ajax({
-                url: `handle/admin/deleteobject_process.php`,
-                type: 'GET',
-                data: { 
-                    id: objectId,
-                    check: check_test
-                },
-                dataType: "json", // Đúng chính tả
-                success: function(response) {
-                    const row = document.querySelector(`tr[data-id="${objectId}"]`);
-                    console.log(response.success,response.message)
-                    try{if (response.success) {
-                        row.remove( )
-                        Swal.fire("Thành công", response.message, "success");
-                    } else {
-                        Swal.fire("Lỗi", response.message || "Xóa thất bại!", "error");
-                    }}
-                    catch (error){
-                    console.error("Đã xảy ra lỗi:", error.message);}
-                    
-                },
-                error: function(xhr) {
-                    console.log(xhr);
-                    Swal.fire("Lỗi", "Kết nối máy chủ thất bại!", "error");
-                }
-            });
-            }
-        
-        
+        });
     }
-    
 });
