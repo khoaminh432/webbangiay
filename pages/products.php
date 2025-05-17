@@ -18,7 +18,7 @@ $search = isset($_GET['search']) ? $_GET['search'] : null;
 // Lọc sản phẩm theo category hoặc search nếu có
 if ($category) {
     $products = array_filter($products, function ($product) use ($category) {
-        return $product->type_product_id == $category;
+        return $product->id_type_product == $category;
     });
 } elseif ($search) {
     $search = strtolower($search);

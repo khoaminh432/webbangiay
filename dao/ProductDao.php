@@ -291,7 +291,7 @@ class ProductDao {
         }
     }
     // đừng xóa
-    // public function view_allsp() {
+    // public function view_all() {
     //     $query = "SELECT p.*, tp.name as name_type_product,
     //                 (SELECT image_url FROM product_images WHERE id_product = p.id AND is_primary = 1 LIMIT 1) as image_url
     //               FROM  products p
