@@ -41,7 +41,7 @@ body {
     height: 40px;
 }
 
-.search-bar {
+/* .search-bar {
     flex: 1;
     max-width: 600px;
     margin: 0 20px;
@@ -63,7 +63,7 @@ body {
     border: none;
     border-radius: 0 4px 4px 0;
     cursor: pointer;
-}
+} */
 
 .user-actions {
     display: flex;
