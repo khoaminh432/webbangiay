@@ -162,7 +162,6 @@ try {
                         <h3>Sản phẩm đã đặt</h3>
                         <?php foreach ($products as $item): ?>
                             <div class="order-item">
-                                <img src="/webbangiay/img/products/<?php echo htmlspecialchars($item['product']->image_url); ?>" alt="<?php echo htmlspecialchars($item['product']->name); ?>" class="order-item-img">
                                 <div>
                                     <h4><?php echo htmlspecialchars($item['product']->name); ?></h4>
                                     <p>Số lượng: <?php echo htmlspecialchars($item['quantity']); ?></p>
