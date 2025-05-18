@@ -5,7 +5,8 @@ require_once __DIR__ . '/../DAO/BillProductDAO.php';
 require_once __DIR__ . '/../DAO/ProductDAO.php';
 require_once __DIR__ . '/../DAO/ColorDAO.php';
 require_once __DIR__ . '/../DAO/SizeDAO.php';
-
+require_once __DIR__ . '/../DAO/PaymentMethodDao.php';
+require_once __DIR__ . '/../database/database_sever.php';
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -27,13 +28,28 @@ $showModal = false;
 
 if (isset($_GET['bill_id'])) {
     $billId = $_GET['bill_id'];
+    
+    // Khởi tạo DAO cần thiết
+    $paymentMethodDao = new PaymentMethodDao();
+
     $selectedBill = $billDao->get_by_id($billId);
     
+    $BillStatus = $selectedBill->status;
     if ($selectedBill && $selectedBill->id_user == $userId) {
+        $paymentMethod = $paymentMethodDao->get_by_id($selectedBill->id_payment_method);
+        $paymentMethodName = $paymentMethod ? $paymentMethod->name : 'Không xác định';
         $billProducts = $billProductDao->get_by_bill($billId);
+        $products =$productDao->get_by_ids(array_column($billProducts, 'id_product'));
+        // Lấy thông tin sản phẩm từ DAO
+        $imageUrls = [];
+        foreach ($products as $product) {
+            $imageUrls[$product->id] = $product->image_url;
+        }
         $showModal = true;
     }
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -124,126 +140,109 @@ if (isset($_GET['bill_id'])) {
   </div>
   
   <!-- Order Detail Modal -->
-  <?php if ($showModal): ?>
-    <div class="modal show" id="orderModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3 class="modal-title">Chi tiết đơn hàng #<?= htmlspecialchars($selectedBill->id) ?></h3>
-          <button class="modal-close" onclick="closeModal()">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div class="order-detail">
-            <div class="order-detail-header">
-              <div class="order-detail-card">
-                <div class="order-detail-card-title">Ngày đặt hàng</div>
-                <div class="order-detail-card-value"><?= htmlspecialchars($selectedBill->bill_date) ?></div>
-              </div>
-              <div class="order-detail-card">
-                <div class="order-detail-card-title">Trạng thái</div>
-                <div class="order-detail-card-value">
-                  <span class="order-item-status status-<?= htmlspecialchars($selectedBill->status) ?>">
-                    <i class="fas fa-circle"></i>
-                    <?php 
-                      switch ($selectedBill->status) {
-                        case 'pending': echo 'Đang xử lý'; break;
-                        case 'completed': echo 'Hoàn thành'; break;
-                        case 'cancelled': echo 'Đã hủy'; break;
-                        default: echo htmlspecialchars($selectedBill->status);
-                      }
-                    ?>
-                  </span>
-                </div>
-              </div>
-              <div class="order-detail-card">
-                <div class="order-detail-card-title">Phương thức thanh toán</div>
-                <div class="order-detail-card-value">Thanh toán khi nhận hàng</div>
-              </div>
-              <div class="order-detail-card">
-                <div class="order-detail-card-title">Địa chỉ giao hàng</div>
-                <div class="order-detail-card-value"><?= htmlspecialchars($selectedBill->shipping_address) ?></div>
-              </div>
-            </div>
-            
-            <h3>Sản phẩm</h3>
-            <table class="order-products">
-              <thead>
-                <tr>
-                  <th>Sản phẩm</th>
-                  <th>Màu sắc</th>
-                  <th>Kích cỡ</th>
-                  <th>Đơn giá</th>
-                  <th>Số lượng</th>
-                  <th class="text-right">Thành tiền</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php 
-                $total = 0;
-                foreach ($billProducts as $product): 
-                  $subtotal = $product->quantity * $product->unit_price;
-                  $total += $subtotal;
-                  
-                  // Get product details
-                  $productDetail = $productDao->get_by_id($product->id_product);
-                  
-                  // Initialize color and size as null
-                  $colorDetail = null;
-                  $sizeDetail = null;
-                  
-                  // Check if product has color and size properties
-                  if (property_exists($product, 'id_color') && $product->id_color) {
-                      $colorDetail = $colorDao->get_by_id($product->id_color);
-                  }
-                  
-                  if (property_exists($product, 'id_size') && $product->id_size) {
-                      $sizeDetail = $sizeDao->get_by_id($product->id_size);
-                  }
-                ?>
-                  <tr> 
-                    <td data-label="Sản phẩm" class="product-name">
-                      <?= htmlspecialchars($productDetail ? $productDetail->name : 'Sản phẩm #' . $product->id_product) ?>
-                    </td>
-                    <td data-label="Màu sắc">
-                      <?php if ($colorDetail): ?>
-                        <span class="color-badge" style="background-color: <?= htmlspecialchars($colorDetail->hex_code) ?>">
-                          <?= htmlspecialchars($colorDetail->name) ?>
-                        </span>
-                      <?php else: ?>
-                        -
-                      <?php endif; ?>
-                    </td>
-                    <td data-label="Kích cỡ">
-                      <?= htmlspecialchars($sizeDetail ? $sizeDetail->size_number : '-') ?>
-                    </td>
-                    <td data-label="Đơn giá" class="product-price"><?= number_format($product->unit_price, 0, ',', '.') ?>₫</td>
-                    <td data-label="Số lượng"><?= htmlspecialchars($product->quantity) ?></td>
-                    <td data-label="Thành tiền" class="text-right product-total"><?= number_format($subtotal, 0, ',', '.') ?>₫</td>
-                  </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
-            
-            <div class="order-summary">
-              <table class="order-summary-table">
-                <tr>
-                  <td>Tạm tính:</td>
-                  <td class="text-right"><?= number_format($total, 0, ',', '.') ?>₫</td>
-                </tr>
-                <tr>
-                  <td>Phí vận chuyển:</td>
-                  <td class="text-right">0₫</td>
-                </tr>
-                <tr>
-                  <td>Tổng cộng:</td>
-                  <td class="text-right"><?= number_format($total, 0, ',', '.') ?>₫</td>
-                </tr>
-              </table>
+ <?php if ($showModal): ?>
+  <?php
+    $total = 0; // ✅ Khởi tạo tổng tiền
+  ?>
+  <div class="modal show" id="orderModal">
+    <div class="modal-content" style="max-width: 800px; margin: 4rem auto; background: #fff; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.2); padding: 2rem; position: relative;">
+      <button onclick="closeModal()" style="position: absolute; top: 10px; right: 20px; font-size: 24px; background: none; border: none; cursor: pointer;">&times;</button>
+     <?php 
+   
+switch ($BillStatus) {
+    case 'pending':
+        echo '<div class="success-icon" style="text-align:center; color:rgb(204, 135, 31); font-size: 4rem;">
+            <i class="fa-solid fa-hourglass-half"></i>
+              </div>';
+        break;
+        
+    case 'completed':
+      echo '<div class="success-icon" style="text-align:center; color:rgb(0, 243, 73); font-size: 4rem;">
+            <i class="fa-solid fa-circle-check"></i>
+              </div>';
+        break;
+        
+    case 'cancelled':
+ echo '<div class="success-icon" style="text-align:center; color:rgb(231, 10, 10); font-size: 4rem;">
+<i class="fa-solid fa-xmark"></i>              </div>';        break;
+      case 'processing':
+        echo '<div class="success-icon" style="text-align:center; color:rgb(43, 31, 204); font-size: 4rem;">
+            <i class="fa-solid fa-truck"></i>
+              </div>';
+        break;
+    default:
+        $statusClass = '';
+        break;
+}
+?>
+
+      <h2 class="text-center">Chi tiết đơn hàng #<?= htmlspecialchars($selectedBill->id) ?></h2>
+      <p class="text-center">Cảm ơn bạn đã mua sắm tại YourStore!</p>
+
+      <div class="order-details" style="margin-top: 2rem;">
+        <p><strong>Ngày đặt hàng:</strong> <?= htmlspecialchars($selectedBill->bill_date) ?></p>
+        <p><strong>Phương thức thanh toán:</strong> <?php echo htmlspecialchars($paymentMethodName); ?></p>
+        <p><strong>Địa chỉ giao hàng:</strong> <?= htmlspecialchars($selectedBill->shipping_address) ?></p>
+        <p><strong>Trạng thái:</strong> 
+          <?php 
+            switch ($selectedBill->status) {
+              case 'pending': echo 'Đang xử lý'; break;
+              case 'completed': echo 'Hoàn thành'; break;
+              case 'cancelled': echo 'Đã hủy'; break;
+              default: echo htmlspecialchars($selectedBill->status);
+            }
+          ?>
+        </p>
+      </div>
+
+      <div class="order-items" style="margin-top: 2rem; border-top: 1px solid #eee; padding-top: 1rem;">
+        <h3>Sản phẩm đã đặt</h3>
+        <?php foreach ($billProducts as $product): 
+          $subtotal = $product->quantity * $product->unit_price;
+          $total += $subtotal; // ✅ Cộng dồn tổng tiền
+          $productDetail = $productDao->get_by_id($product->id_product);
+          $colorDetail = property_exists($product, 'id_color') ? $colorDao->get_by_id($product->id_color) : null;
+          $sizeDetail = property_exists($product, 'id_size') ? $sizeDao->get_by_id($product->id_size) : null;
+        ?>
+          <div class="order-item" style="display: flex; border-bottom: 1px solid #eee; padding: 1rem 0;">
+                            <td>
+
+            <div style="flex-grow: 1;">
+              <h4 style="margin: 0;"><?= htmlspecialchars($productDetail->name) ?></h4>
+              <p style="margin: 4px 0;">Màu: <?= $colorDetail ? "<span class='color-badge' style='background-color: {$colorDetail->hex_code}; color: #fff; padding: 2px 6px; border-radius: 12px;'>{$colorDetail->name}</span>" : '-' ?></p>
+              <p style="margin: 4px 0;">Kích cỡ: <?= htmlspecialchars($sizeDetail->size_number ?? '-') ?></p>
+              <p style="margin: 4px 0;">Số lượng: <?= $product->quantity ?></p>
+              <p style="margin: 4px 0;">Đơn giá: <?= number_format($product->unit_price, 0, ',', '.') ?>₫</p>
+              <p style="margin: 4px 0;"><strong>Thành tiền: <?= number_format($subtotal, 0, ',', '.') ?>₫</strong></p>
             </div>
           </div>
-        </div>
+        <?php endforeach; ?>
+      </div>
+
+      <div class="order-summary" style="margin-top: 2rem; background: #f9f9f9; padding: 1rem; border-radius: 6px;">
+        <table style="width: 100%;">
+          <tr>
+            <td><strong>Tạm tính:</strong></td>
+            <td style="text-align: right;"><?= number_format($total, 0, ',', '.') ?>₫</td>
+          </tr>
+          <tr>
+            <td><strong>Phí vận chuyển:</strong></td>
+            <td style="text-align: right;">0₫</td>
+          </tr>
+          <tr>
+            <td><strong>Tổng cộng:</strong></td>
+            <td style="text-align: right; font-size: 1.2rem; font-weight: bold;"><?= number_format($total, 0, ',', '.') ?>₫</td>
+          </tr>
+        </table>
+      </div>
+
+      <div style="text-align:center;">
+        <a href="/webbangiay/index.php" class="btn-continue" style="margin-top: 2rem; display: inline-block; background: #4CAF50; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; text-decoration: none;">Tiếp tục mua sắm</a>
       </div>
     </div>
-  <?php endif; ?>
+  </div>
+<?php endif; ?>
+
   
   <?php include(__DIR__ . '/../layout/footer.php'); ?>
   

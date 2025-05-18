@@ -12,7 +12,7 @@ class ProductDao
         $this->db = new database_sever();
         $this->conn = $this->db->conn;
     }
-
+    
     /**
      * Lấy tất cả sản phẩm (tùy chọn include inactive)
      */

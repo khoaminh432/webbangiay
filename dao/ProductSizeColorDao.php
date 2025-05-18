@@ -58,25 +58,36 @@ class ProductSizeColorDao {
     }
 
     // Thêm mới
-    public function insert(ProductSizeColorDTO $psc) {
-        $sql = "INSERT INTO product_size_color (id,id_product, id_size, id_color, quantity, created_at, updated_at)
-                VALUES (:id,:id_product, :id_size, :id_color, :quantity, NOW(), NOW())";
 
-        $params = [
-            "id" => $this->getID(),
-            'id_product' => $psc->id_product,
-            'id_size' => $psc->id_size,
-            'id_color' => $psc->id_color,
-            'quantity' => $psc->quantity
-        ];
 
-        try {
-            return $this->db->insert_table($sql, $params);
-        } catch (PDOException $e) {
-            error_log("PSC Insert Error: " . $e->getMessage());
-            return false;
-        }
+// Add validation to insert method
+public function insert(ProductSizeColorDTO $psc) {
+    // Validate required fields
+    if (empty($psc->id_product) || empty($psc->id_size) || 
+        empty($psc->id_color) || !is_numeric($psc->quantity)) {
+        error_log("Missing required fields in ProductSizeColor insert");
+        return false;
     }
+
+    $sql = "INSERT INTO product_size_color 
+            (id, id_product, id_size, id_color, quantity, created_at, updated_at)
+            VALUES (:id, :id_product, :id_size, :id_color, :quantity, NOW(), NOW())";
+
+    $params = [
+        "id" => $this->getID(),
+        'id_product' => $psc->id_product,
+        'id_size' => $psc->id_size,
+        'id_color' => $psc->id_color,
+        'quantity' => $psc->quantity
+    ];
+
+    try {
+        return $this->db->insert_table($sql, $params);
+    } catch (PDOException $e) {
+        error_log("PSC Insert Error: " . $e->getMessage());
+        return false;
+    }
+}
 
     // Cập nhật số lượng
     public function update(ProductSizeColorDTO $psc) {
@@ -136,28 +147,59 @@ class ProductSizeColorDao {
             return false;
         }
     }
-
-    // Cập nhật số lượng theo id_product, id_size, id_color (nếu tồn tại)
-    public function update_quantity($id_product, $id_size, $id_color, $quantity) {
-        $sql = "UPDATE product_size_color SET 
-                    quantity = :quantity,
-                    updated_at = NOW()
-                WHERE id_product = :id_product AND id_size = :id_size AND id_color = :id_color";
-
-        $params = [
-            'id_product' => $id_product,
-            'id_size' => $id_size,
-            'id_color' => $id_color,
-            'quantity' => $quantity
-        ];
-
-        try {
-            return $this->db->update_table($sql, $params);
-        } catch (PDOException $e) {
-            error_log("PSC Update Quantity Error: " . $e->getMessage());
-            return false;
-        }
+public function get_version($productId, $sizeId, $colorId) {
+    $sql = "SELECT version FROM product_size_color 
+            WHERE id_product = :product_id
+            AND id_size = :size_id
+            AND id_color = :color_id";
+    
+    $params = [
+        'product_id' => $productId,
+        'size_id' => $sizeId,
+        'color_id' => $colorId
+    ];
+    
+    try {
+        $result = $this->db->view_table($sql, $params);
+        return isset($result[0]['version']) ? (int)$result[0]['version'] : 1;
+    } catch (PDOException $e) {
+        error_log("Get Version Error: " . $e->getMessage());
+        return 1; // Trả về version mặc định nếu có lỗi
     }
+}
+    // Cập nhật số lượng theo id_product, id_size, id_color (nếu tồn tại)
+   public function update_quantity($productId, $sizeId, $colorId, $quantityChange) {
+    $sql = "UPDATE product_size_color 
+            SET quantity = quantity + :quantity_change,
+                version = version + 1
+            WHERE id_product = :product_id
+            AND id_size = :size_id
+            AND id_color = :color_id
+            AND version = :current_version";
+    
+    // Lấy version hiện tại trước
+    $current_version = $this->get_version($productId, $sizeId, $colorId);
+    
+    
+    $params = [
+        'product_id' => $productId,
+        'size_id' => $sizeId,
+        'color_id' => $colorId,
+        'quantity_change' => $quantityChange,
+        'current_version' => $current_version
+    ];
+    
+    try {
+        $affected = $this->db->update_table($sql, $params);
+        if ($affected === 0) {
+            throw new Exception("Phiên bản dữ liệu đã thay đổi");
+        }
+        return true;
+    } catch (PDOException $e) {
+        error_log("Update Quantity Error: " . $e->getMessage());
+        return false;
+    }
+}
     // Lấy số lượng theo id_product, id_size, id_color
     public function get_quantity($id_product, $id_size, $id_color) {
         $sql = "SELECT quantity FROM product_size_color 
@@ -225,6 +267,36 @@ class ProductSizeColorDao {
     /**
      * Lấy thông tin tồn kho theo kích cỡ
      */
+  public function reserveStock($productId, $sizeId, $colorId, $quantity) {
+    // Lấy số lượng còn lại (quantity - reserved)
+    $available = $this->get_available_quantity($productId, $sizeId, $colorId);
+    if ($available < $quantity) {
+        return false; // Không đủ hàng
+    }
+
+    // Cập nhật tồn kho: giảm quantity, tăng reserved
+    $sql = "UPDATE product_size_color 
+            SET quantity = quantity - :quantity,
+                reserved = reserved + :quantity,
+                updated_at = NOW()
+            WHERE id_product = :product_id
+            AND id_size = :size_id
+            AND id_color = :color_id
+            AND (quantity - reserved) >= :quantity";
+    $params = [
+        'product_id' => $productId,
+        'size_id' => $sizeId,
+        'color_id' => $colorId,
+        'quantity' => $quantity
+    ];
+    try {
+        $affected = $this->db->update_table($sql, $params);
+        return $affected > 0;
+    } catch (PDOException $e) {
+        error_log("Reserve Stock Error: " . $e->getMessage());
+        return false;
+    }
+}
     public function getInventoryBySize($productId, $sizeId) {
         $sql = "SELECT psc.id_color, psc.quantity, c.name as color_name, c.hex_code
                 FROM product_size_color psc
@@ -257,6 +329,28 @@ class ProductSizeColorDao {
         $result = $this->db->view_table($sql, $params);
         return !empty($result) ? $result[0]['id'] : null;
     }
+    public function get_available_quantity($productId, $sizeId, $colorId) {
+    $sql = "SELECT (quantity - reserved) as available 
+            FROM product_size_color 
+            WHERE id_product = :product_id 
+            AND id_size = :size_id 
+            AND id_color = :color_id
+            FOR UPDATE"; // Khóa bản ghi khi đọc
+    
+    $params = [
+        'product_id' => $productId,
+        'size_id' => $sizeId,
+        'color_id' => $colorId
+    ];
+    
+    try {
+        $result = $this->db->view_table($sql, $params);
+        return isset($result[0]['available']) ? (int)$result[0]['available'] : 0;
+    } catch (PDOException $e) {
+        error_log("Get Available Quantity Error: " . $e->getMessage());
+        return 0;
+    }
+}
 }
 ?>
 <?php $psc_table = new ProductSizeColorDao(); ?>
