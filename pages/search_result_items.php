@@ -3,21 +3,24 @@
 <?php else: ?>
     <div class="product-grid">
         <?php foreach ($products as $product): ?>
+            <?php 
+            $product = (object)$product;
+            ?>
             <div class="product-card">
                 <div class="product-image">
                     <?php if (!empty($product->image_url)): ?>
-                        <img src='/webbangiay/img/product/<?php echo htmlspecialchars($product->id . "/" . $product->image_url); ?>'
-                            alt="<?php echo htmlspecialchars($product->name); ?>">
+                        <img src='/webbangiay/img/product/<?php echo htmlspecialchars($product->image_url); ?>'
+                            alt="<?php echo htmlspecialchars($product->name ?? ''); ?>">
                     <?php else: ?>
                         <img src='/webbangiay/img/product/default.jpg'
-                            alt="<?php echo htmlspecialchars($product->name); ?>">
+                            alt="<?php echo htmlspecialchars($product->name ?? ''); ?>">
                     <?php endif; ?>
                     <div class="product-actions">
-                        <button class="quick-view" data-id="<?php echo $product->id; ?>">
+                        <button class="quick-view" data-id="<?php echo $product->id ?? ''; ?>">
                             <i class="fas fa-eye"></i>
                         </button>
                         <?php if (isset($_SESSION['user_id'])): ?>
-                            <button class="add-to-cart" data-id="<?php echo $product->id; ?>">
+                            <button class="add-to-cart" data-id="<?php echo $product->id ?? ''; ?>">
                                 <i class="fas fa-shopping-cart"></i>
                             </button>
                         <?php else: ?>
@@ -28,9 +31,9 @@
                     </div>
                 </div>
                 <div class="product-info">
-                    <h3 class="product-name"><?php echo htmlspecialchars($product->name); ?></h3>
-                    <p class="product-price"><?php echo number_format($product->price, 0, ',', '.'); ?> VNĐ</p>
-                    <p class="product-type"><?php echo htmlspecialchars(isset($product->type_name) ? $product->type_name : ''); ?></p>
+                    <h3 class="product-name"><?php echo htmlspecialchars($product->name ?? ''); ?></h3>
+                    <p class="product-price"><?php echo isset($product->price) ? number_format($product->price, 0, ',', '.') : '0'; ?> VNĐ</p>
+                    <p class="product-type"><?php echo htmlspecialchars($product->type_name ?? ''); ?></p>
                 </div>
             </div>
         <?php endforeach; ?>
