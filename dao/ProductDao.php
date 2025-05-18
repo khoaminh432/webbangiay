@@ -284,7 +284,59 @@ public function get_by_type(int $typeId, bool $includeInactive = false): array
         $row = $this->db->view_table($sql);
         return (int)($row[0]['total'] ?? 0);
     }
+    public function countFilteredProducts($query, $category, $min_price, $max_price) {
+    $sql = "SELECT COUNT(*) as total FROM products WHERE 1=1";
+    $params = array();
+    
+    if (!empty($query)) {
+        $sql .= " AND name LIKE ?";
+        $params[] = "%$query%";
+    }
+    if (!empty($category)) {
+        $sql .= " AND id_type_product = ?";
+        $params[] = $category;
+    }
+    if (!empty($min_price)) {
+        $sql .= " AND price >= ?";
+        $params[] = $min_price;
+    }
+    if (!empty($max_price)) {
+        $sql .= " AND price <= ?";
+        $params[] = $max_price;
+    }
+    
+    $result = $this->db->view_table($sql, $params);
+    return (int)($result[0]['total'] ?? 0);
 }
+
+    public function getFilteredProductsWithPagination($query, $category, $min_price, $max_price, $offset, $limit) {
+        $sql = "SELECT *, image_url FROM products WHERE 1=1";
+        $params = array();
+        
+        if (!empty($query)) {
+            $sql .= " AND name LIKE ?";
+            $params[] = "%$query%";
+        }
+        if (!empty($category)) {
+            $sql .= " AND id_type_product = ?";
+            $params[] = $category;
+        }
+        if (!empty($min_price)) {
+            $sql .= " AND price >= ?";
+            $params[] = $min_price;
+        }
+        if (!empty($max_price)) {
+            $sql .= " AND price <= ?";
+            $params[] = $max_price;
+        }
+        
+        $sql .= " LIMIT ?, ?";
+        $params[] = $offset;
+        $params[] = $limit;
+        
+        return $this->db->view_table($sql, $params);
+    }
+    }
 
 // khởi tạo sẵn nếu cần
 // $table_products = new ProductDao();
