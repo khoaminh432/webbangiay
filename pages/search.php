@@ -1,6 +1,7 @@
 <?php
 require_once '../database/database_sever.php';
 require_once __DIR__ . '/../dao/ProductDao.php';
+require_once __DIR__ . '/../DTO/Pagination.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -32,6 +33,7 @@ else if (!empty($query) || !empty($category) || !empty($min_price) || !empty($ma
         if (!empty($category)) {
             $match = $match && ($product->id_type_product == $category);
         }
+
         if (!empty($min_price)) {
             $match = $match && ($product->price >= $min_price);
         }
@@ -41,6 +43,18 @@ else if (!empty($query) || !empty($category) || !empty($min_price) || !empty($ma
         return $match;
     });
 }
+$currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$perPage = 8;
+$totalItems = $productDao->countFilteredProducts($query, $category, $min_price, $max_price);
+$pagination = new Pagination($totalItems, $currentPage, $perPage);
+$products = $productDao->getFilteredProductsWithPagination(
+    $query, 
+    $category, 
+    $min_price, 
+    $max_price, 
+    $pagination->getOffset(), 
+    $pagination->getLimit()
+);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -59,6 +73,26 @@ else if (!empty($query) || !empty($category) || !empty($min_price) || !empty($ma
         <h1>Kết quả tìm kiếm</h1>
         <div id="searchResults">
             <?php include 'search_result_items.php'; ?>
+
+            <div class="pagination">
+                <?php if ($pagination->hasPrevious()): ?>
+                    <a href="?query=<?= urlencode($query) ?>&category=<?= urlencode($category) ?>&min_price=<?= urlencode($min_price) ?>&max_price=<?= urlencode($max_price) ?>&page=<?= $pagination->currentPage - 1 ?>">Trước</a>
+                <?php endif; ?>
+                
+                <?php 
+                $start = max(1, $pagination->currentPage - 2);
+                $end = min($pagination->totalPages, $pagination->currentPage + 2);    
+                for ($i = $start; $i <= $end; $i++): ?>
+                    <a href="?query=<?= urlencode($query) ?>&category=<?= urlencode($category) ?>&min_price=<?= urlencode($min_price) ?>&max_price=<?= urlencode($max_price) ?>&page=<?= $i ?>" 
+                    class="<?= $i == $pagination->currentPage ? 'active' : '' ?>">
+                        <?= $i ?>
+                    </a>
+                <?php endfor; ?>
+                
+                <?php if ($pagination->hasNext()): ?>
+                    <a href="?query=<?= urlencode($query) ?>&category=<?= urlencode($category) ?>&min_price=<?= urlencode($min_price) ?>&max_price=<?= urlencode($max_price) ?>&page=<?= $pagination->currentPage + 1 ?>">Sau</a>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
     <?php include '../layout/footer.php'; ?>
@@ -185,6 +219,45 @@ else if (!empty($query) || !empty($category) || !empty($min_price) || !empty($ma
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
+        }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .error {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #f44336;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .pagination a {
+            padding: 8px 16px;
+            margin: 0 4px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #333;
+        }
+
+        .pagination a.active {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #f1f1f1;
         }
     </style>
 </body>
