@@ -1,4 +1,6 @@
 <?php
+
+require_once __DIR__."/../../../../handle/admin/functionpermission.php";
 require_once __DIR__ . "/../../../../dao/UserDao.php";
 // Kiểm tra xem ID có tồn tại không
 if (!isset($_GET['id'])) {

@@ -4,6 +4,7 @@ require_once __DIR__ . "/../../../dao/AdminDao.php";
 $vouchers = $table_vouchers->view_all(true);
 
 ?>
+ <?php require_once __DIR__."/../form/voucheradd_form.php";?>
 <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
 
 <div class=" voucher-management object-management active">

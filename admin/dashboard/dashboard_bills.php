@@ -18,7 +18,8 @@
         </div>
     </div>
     
-    <div class="content-object-container"><?php include("table/bill_management.php");?></div>
+    <div class="content-object-container">
+        <?php include("table/bill_management.php");?></div>
     
     
     <style>
@@ -27,7 +28,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 400px;
+        width: auto;
         background: #fff;
         border-radius: 12px;
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
@@ -104,6 +105,10 @@
     .cancel-btn:hover {
         background-color: #ddd;
     }
+    .row{
+        display: flex;
+        flex-direction: row;
+    }
 
 </style>    
     <div class="form-view-modal" id="objectViewModal"></div>
@@ -113,6 +118,10 @@
         <h2>Bộ lọc hóa đơn</h2>
         <form id="filterForm">
             <div class="form-group-bill">
+                <label>Người tạo:</label>
+                <input type="text" name="creator" placeholder="Tên người lập hóa đơn">
+            </div>
+            <div class="row"><div class="form-group-bill">
                 <label>Ngày lập từ:</label>
                 <input type="date" name="start_date">
             </div>
@@ -124,14 +133,15 @@
                 <label>Trạng thái:</label>
                 <select name="status">
                     <option value="">Tất cả</option>
-                    <option value="paid">Đã thanh toán</option>
-                    <option value="unpaid">Chưa thanh toán</option>
-                </select>
+                    <option value="processing">processing</option>
+                    <option value="shipping">shipping</option>
+                    <option value="completed">completed</option>
+                    <option value="cancelled">cancelled</option>
+            </select>
             </div>
-            <div class="form-group-bill">
-                <label>Người tạo:</label>
-                <input type="text" name="creator" placeholder="Tên người lập hóa đơn">
-            </div>
+        </div>
+            
+            
             <div class="button-group">
                 <button type="submit" class="apply-btn">Áp dụng</button>
                 <button type="button" class="cancel-btn" onclick="

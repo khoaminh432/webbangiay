@@ -26,12 +26,14 @@ $(document).ready(function() {
 
     // Hàm xem chi tiết đối tượng (Modal/Popup)
     function viewObject(id, type) {
+        permission = 1
         $.ajax({
             url: `admin/dashboard/form/view/${type}view_form.php`,
             type: 'GET',
-            data: { id },
+            data: { id,permission },
             success: function(response) {
                 $('#objectViewModal').html(response).fadeIn();
+                
             },
             error: function() {
                 Swal.fire('Lỗi', 'Không tải được dữ liệu', 'error');
@@ -41,21 +43,24 @@ $(document).ready(function() {
 
     // Hàm sửa đối tượng (Modal/Popup)
     function editObject(id, type) {
-        $.ajax({
-            url: `admin/dashboard/form/edit/${type}edit_form.php`,
-            type: 'GET',
-            data: { id },
-            success: function(response) {
-                $('#objectViewModal').html(response).fadeIn();
-            },
-            error: function() {
-                Swal.fire('Lỗi', 'Không tải được dữ liệu', 'error');
-            }
-        });
-    }
+        permission = 2
+    $.ajax({
+        url: `admin/dashboard/form/edit/${type}edit_form.php`,
+        type: 'GET',
+        data: { id,permission:permission },
+        success: function(response) {
+            $('#objectViewModal').html(response).fadeIn();
+        },
+        error: function() {
+            Swal.fire('Lỗi', 'Không tải được dữ liệu', 'error');
+        }
+    });
+}
+
 
     // Hàm xóa đối tượng với xác nhận
     function deleteObject(id, type) {
+        permission = 3
         Swal.fire({
             title: 'Bạn có chắc chắn muốn xóa?',
             icon: 'warning',
@@ -67,7 +72,7 @@ $(document).ready(function() {
                 $.ajax({
                     url: 'handle/admin/deleteobject_process.php',
                     type: 'GET',
-                    data: { id, check: type },
+                    data: { id, check: type,permission },
                     dataType: 'json',
                     success: function(res) {
                         if (res.success) {

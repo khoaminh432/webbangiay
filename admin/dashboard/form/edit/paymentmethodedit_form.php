@@ -1,5 +1,9 @@
-<?php require_once __DIR__ . "/../../../../initAdmin.php";
+<?php 
+
+
 require_once __DIR__ . "/../../../../dao/PaymentMethodDao.php";
+require_once __DIR__."/../../../../initAdmin.php";
+require_once __DIR__."/../../../../handle/admin/functionpermission.php";
 
 if (!isset($_GET['id'])) {
     die("<p class='error'>Thiếu ID phương thức thanh toán!</p>");

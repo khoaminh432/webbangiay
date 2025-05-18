@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . "/../../../../dto/VoucherDTO.php";
+
+require_once __DIR__."/../../../../handle/admin/functionpermission.php";
 require_once __DIR__ . "/../../../../dao/VoucherDao.php";
 
 // Kiểm tra xem ID có tồn tại không

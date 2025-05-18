@@ -16,7 +16,6 @@ $filtered_users = array_filter($users, function($user) use ($username, $email, $
     if (!empty($username) && stripos($user->username, $username) === false) {
         return false;
     }
-    
     // Kiểm tra email (nếu có điều kiện)
     if (!empty($email) && stripos($user->email, $email) === false) {
         return false;
@@ -31,6 +30,7 @@ $filtered_users = array_filter($users, function($user) use ($username, $email, $
     return true;
 });
 ?>
+<?php require_once __DIR__."/../form/useradd_form.php";?>
 <script src="js/admin/CRUD_form.js"></script>
 <script src="js/admin/checkstatus_object.js"></script>
     <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">

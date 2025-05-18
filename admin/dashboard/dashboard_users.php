@@ -39,7 +39,8 @@ define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
         </div>
     </div>
    
-    <div class="content-object-container"><?php require_once __DIR__."/form/useradd_form.php";?>
+    <div class="content-object-container">
+        
     
     <?php require_once __DIR__."/table/user_management.php";?></div>
 <style>/* === FILTER MODAL SHARED STYLE === */

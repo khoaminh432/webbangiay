@@ -4,6 +4,7 @@ document.querySelector(".add-form").addEventListener("submit", function(e) {
 
     const form = e.target;
     const formData = new FormData(form);
+    formData.append('permission', '4');
     console.log(form)
     console.log(formData)
     fetch("handle/admin/addobject_process.php", {
@@ -25,7 +26,7 @@ document.querySelector(".add-form").addEventListener("submit", function(e) {
         
 
         } else {
-            Swal.fire({ icon: 'warning', title:"Lỗi", text:data.message })
+            Swal.fire({ icon: 'error', title:"Lỗi", text:data.message })
         }
     })
     .catch(error => {

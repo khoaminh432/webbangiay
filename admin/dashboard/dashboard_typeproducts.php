@@ -6,10 +6,7 @@
         </div>
         <div class="search-container">
             <div class="search-bar">
-                <div class="filter-bar" title="Bộ lọc nâng cao">
-                    <ion-icon name="filter-circle"></ion-icon>
-                    <span class="filter-text">Lọc</span>
-                </div>
+                
                 <input type="text" placeholder="Tìm kiếm sản phẩm...">
                 <button class="search-btn">
                     <ion-icon name="search-outline"></ion-icon>

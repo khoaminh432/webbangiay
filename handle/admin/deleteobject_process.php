@@ -1,5 +1,6 @@
 <?php
 // Trả kết quả về dạng JSON
+require_once __DIR__."/permission_process.php";
 header('Content-Type: application/json');
 
 // Biến mặc định
@@ -11,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Nhận dữ liệu từ request
     $id = isset($_GET['id']) ? intval($_GET['id']) : null;
     $check = $_GET['check'] ?? null;
-
+    
     // Kiểm tra dữ liệu đầu vào
     if (!$id || !$check) {
         echo json_encode([

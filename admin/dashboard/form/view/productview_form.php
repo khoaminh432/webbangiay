@@ -1,4 +1,7 @@
-<?php require_once __DIR__."/../../../../dao/ProductDao.php";
+<?php 
+
+require_once __DIR__."/../../../../handle/admin/functionpermission.php";
+require_once __DIR__."/../../../../dao/ProductDao.php";
 require_once __DIR__."/../../../../dao/SupplierDao.php";
 if (!isset($_GET['id'])) {
     die("<p class='error'>Thiếu ID sản phẩm!</p>");

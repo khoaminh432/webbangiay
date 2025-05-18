@@ -7,7 +7,6 @@ class RolePermissionDTO {
         $this->position_id   = $data['position_id'] ?? null;
         $this->permission_id = $data['permission_id'] ?? null;
     }
-
     public function __toString() {
         return sprintf(
             "RolePermissionDTO[position_id=%s, permission_id=%s, assigned_at=%s]",
