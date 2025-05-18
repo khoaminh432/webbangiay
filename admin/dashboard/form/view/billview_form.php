@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__."/../../../../handle/admin/functionpermission.php";
 require_once __DIR__ . "/../../../../dao/BillDao.php";
 require_once __DIR__ . "/../../../../dao/UserDao.php";
 require_once __DIR__ . "/../../../../dao/PaymentMethodDao.php";

@@ -1,4 +1,6 @@
-<?php require_once __DIR__ . "/../../../../initAdmin.php";
+<?php 
+require_once __DIR__."/../../../../initAdmin.php";
+require_once __DIR__."/../../../../handle/admin/functionpermission.php";
 require_once __DIR__ . "/../../../../dao/UserDao.php";
 
 if (!isset($_GET['id'])) {

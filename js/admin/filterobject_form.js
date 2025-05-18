@@ -29,6 +29,8 @@ document.getElementById('filterForm').addEventListener('submit', function(e) {
         .then(response => response.text())
         .then(data => {
             console.log(data);
+            const $tbody = $('table.data-table tbody');
+            $tbody.empty();     // Xóa hết <tr> cũ
             document.querySelector('.content-object-container').innerHTML = data;
             document.getElementById('filterModal').style.display = 'none';
         })

@@ -1,4 +1,6 @@
 <?php
+
+require_once __DIR__."/../../../../handle/admin/functionpermission.php";
 require_once __DIR__ . "/../../../../dao/TypeProductDao.php";
 
 if (!isset($_GET['id'])) {

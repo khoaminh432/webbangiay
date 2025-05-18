@@ -1,4 +1,5 @@
-<?php require_once __DIR__."/../../../../initAdmin.php";?>
+<?php require_once __DIR__."/../../../../initAdmin.php";
+require_once __DIR__."/../../../../handle/admin/functionpermission.php";?>
 <?php require_once __DIR__."/../../../../dao/ProductDao.php";
 require_once __DIR__."/../../../../dao/SupplierDao.php";
 require_once __DIR__."/../../../../dao/TypeProductDao.php";

@@ -19,6 +19,11 @@ define('ROOT_DIR', dirname(__DIR__));
             </tr>
         </thead>
         <tbody>
+            <?php if (empty($typeProducts)):?>
+        <tr><td colspan="8" style="text-align: center; font-size: 1.5em;">
+                Không có Loại sản phẩm
+            </td></tr>
+            <?php else: ?>
             <?php foreach ($typeProducts as $type): ?>
                 <tr data-id="<?= $type->id ?>">
                     <td><?= $type->id ?></td>
@@ -51,6 +56,7 @@ define('ROOT_DIR', dirname(__DIR__));
                     </td>
                 </tr>
             <?php endforeach; ?>
+            <?php endif;?>
         </tbody>
     </table>
 </div>

@@ -190,6 +190,7 @@ SQL;
     /**
      * Lấy danh sách kèm chi tiết, phân trang
      */
+
     public function get_products_paginated(int $offset, int $limit, bool $includeInactive = false): array
     {
         $sql = <<<SQL

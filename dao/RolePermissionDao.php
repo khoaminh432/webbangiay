@@ -56,7 +56,14 @@ class RolePermissionDao {
         }
         return $items;
     }
-
+    public function checkrole($position_id,$permission_id){
+        $tablerolepermissions= $this->get_by_role($position_id);
+        foreach($tablerolepermissions as $rolepermission){
+            if ($permission_id==$rolepermission->permission_id)
+                return true;
+        }
+        return false;
+    }
     // Lấy phân quyền theo permission
     public function get_by_permission($permission_id) {
         $sql = "SELECT * FROM role_permissions WHERE permission_id = :permission_id";

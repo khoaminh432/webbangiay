@@ -7,8 +7,6 @@
         </div>
         <div class="search-container">
         <div class="search-bar">
-            <div class="filter-bar"><ion-icon name="filter-circle"></ion-icon>
-            <span class="filter-text">Lọc</span></div>
             <input type="text" placeholder="Tìm kiếm phương thức...">
             <button class="search-btn">
             <ion-icon name="search-outline"></ion-icon> <!-- Icon tìm kiếm từ Font Awesome -->
