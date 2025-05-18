@@ -184,6 +184,8 @@ CREATE TABLE bill_products
   id INT NOT NULL AUTO_INCREMENT,
   id_bill INT NOT NULL,
   id_product INT NOT NULL,
+  id_color INT NOT NULL,
+  id_size INT NOT NULL,
   quantity INT NOT NULL DEFAULT 1,
   unit_price DECIMAL(10,2) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
