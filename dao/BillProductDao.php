@@ -22,7 +22,7 @@ class BillProductDao {
     }
 
    
-   public function insert(BillProductDTO $billProduct) {
+  public function insert(BillProductDTO $billProduct) {
     // Validate required fields
     if (empty($billProduct->id_bill) || empty($billProduct->id_product) || 
         empty($billProduct->quantity) || empty($billProduct->unit_price)) {
@@ -30,39 +30,41 @@ class BillProductDao {
         return false;
     }
 
-    $sql = "INSERT INTO bill_products 
-            (id_bill, id_product, quantity, unit_price" 
-            . (isset($billProduct->id_color) ? ", id_color" : "") 
-            . (isset($billProduct->id_size) ? ", id_size" : "") 
-            . ") VALUES 
-            (:id_bill, :id_product, :quantity, :unit_price"
-            . (isset($billProduct->id_color) ? ", :id_color" : "") 
-            . (isset($billProduct->id_size) ? ", :id_size" : "") 
-            . ")";
-    
+    // Bắt đầu xây dựng SQL
+    $columns = ['id_bill', 'id_product', 'quantity', 'unit_price'];
+    $placeholders = [':id_bill', ':id_product', ':quantity', ':unit_price'];
     $params = [
         'id_bill' => $billProduct->id_bill,
         'id_product' => $billProduct->id_product,
         'quantity' => $billProduct->quantity,
         'unit_price' => $billProduct->unit_price
     ];
-    
-    if (isset($billProduct->id_color)) {
+
+    // Thêm id_color nếu hợp lệ
+    if (!is_null($billProduct->id_color)) {
         if (!is_numeric($billProduct->id_color)) {
             error_log("Invalid color ID in BillProduct insert");
             return false;
         }
+        $columns[] = 'id_color';
+        $placeholders[] = ':id_color';
         $params['id_color'] = $billProduct->id_color;
     }
-    
-    if (isset($billProduct->id_size)) {
+
+    // Thêm id_size nếu hợp lệ
+    if (!is_null($billProduct->id_size)) {
         if (!is_numeric($billProduct->id_size)) {
             error_log("Invalid size ID in BillProduct insert");
             return false;
         }
+        $columns[] = 'id_size';
+        $placeholders[] = ':id_size';
         $params['id_size'] = $billProduct->id_size;
     }
-    
+
+    // Ghép chuỗi câu SQL
+    $sql = "INSERT INTO bill_products (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $placeholders) . ")";
+
     try {
         $result = $this->db->insert_table($sql, $params);
         if (!$result) {
@@ -75,6 +77,7 @@ class BillProductDao {
         return false;
     }
 }
+
     public function delete_by_bill($billId) {
         $sql = "DELETE FROM bill_products WHERE id_bill = :id_bill";
         $params = ['id_bill' => $billId];

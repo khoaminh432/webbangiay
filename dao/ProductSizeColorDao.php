@@ -34,7 +34,49 @@ class ProductSizeColorDao {
     }
     public function getname($id_product,$id_color,$id_size){
         
+    }public function set_quantity($productId, $sizeId, $colorId, $newQuantity, $newReserved = null) {
+    $sql = "UPDATE product_size_color 
+            SET quantity = :new_quantity,
+                updated_at = NOW()";
+
+    $params = [
+        'new_quantity' => $newQuantity,
+        'product_id' => $productId,
+        'size_id' => $sizeId,
+        'color_id' => $colorId
+    ];
+
+    // Nếu truyền reserved mới, thì cập nhật luôn
+    if ($newReserved !== null) {
+        $sql .= ", reserved = :new_reserved";
+        $params['new_reserved'] = $newReserved;
     }
+
+    $sql .= " WHERE id_product = :product_id
+              AND id_size = :size_id
+              AND id_color = :color_id";
+
+    try {
+        $affected = $this->db->update_table($sql, $params);
+        return $affected > 0;
+    } catch (PDOException $e) {
+        error_log("Set Quantity Error: " . $e->getMessage());
+        return false;
+    }
+}
+public function get_by_product_size_color($productId, $sizeId, $colorId) {
+    $sql = "SELECT * FROM product_size_color 
+            WHERE id_product = :product_id AND id_size = :size_id AND id_color = :color_id";
+
+    $results = $this->db->view_table($sql, [
+        'product_id' => $productId,
+        'size_id' => $sizeId,
+        'color_id' => $colorId
+    ]);
+    return !empty($results) ? new ProductSizeColorDTO($results[0]) : null;
+}
+
+
     // Xóa tất cả các bản ghi theo id_product
     public function delete_by_product($id_product) {
         $sql = "DELETE FROM product_size_color WHERE id_product = :id_product";

@@ -4,6 +4,8 @@ require_once __DIR__ . '/../DTO/InformationReceiveDTO.php';
 require_once __DIR__ . '/../DAO/PaymentMethodDao.php';
 require_once __DIR__ . '/../DAO/BillDao.php';
 require_once __DIR__ . '/../DAO/BillProductDao.php';
+require_once __DIR__ . '/../DAO/ProductSizeColorDao.php';
+
 require_once __DIR__ . '/../DAO/ProductDao.php';
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -58,6 +60,8 @@ try {
     $billDao = new BillDao();
     $billProductDao = new BillProductDao();
     $productDao = new ProductDao();
+    $pscDao = new ProductSizeColorDao();
+
 
     // Tạo hóa đơn
     $bill = new BillDTO([
@@ -89,7 +93,18 @@ try {
         }
 
         // Cập nhật tồn kho
-        $productDao->update_quantity($item['id'], $item['quantity']);
+        // Lấy tồn kho hiện tại trong bảng product_size_color
+$currentPSC = $pscDao->get_by_product_size_color($item['id'], $item['size_id'], $item['color_id']);
+
+if (!$currentPSC) {
+    throw new Exception("Không tìm thấy biến thể sản phẩm (product_size_color)");
+}
+
+$newQuantity = $currentPSC->quantity - $item['quantity'];
+if ($newQuantity < 0) $newQuantity = 0; // không âm
+
+$pscDao->set_quantity($item['id'], $item['size_id'], $item['color_id'], $newQuantity);
+
     }
 
     // Xóa giỏ hàng
