@@ -11,15 +11,77 @@ if ($from && $to) {
 }
 ?>
    
-    <style>
+    
+<div class="statistic-container">
+    <h2>Thống kê Top 5 Khách Hàng Mua Nhiều Nhất</h2>
+    <form class="statistic-formcustomer" id="statistic-customer-form" method="GET">
+        <label>Từ ngày:</label>
+        <input type="date" name="from_date" required value="<?php echo $from; ?>">
+        <label>Đến ngày:</label>
+        <input type="date" name="to_date" required value="<?php echo $to; ?>">
+        <label>Sắp xếp:</label>
+        <select name="order">
+            <option value="desc" <?php if($order=='desc') echo 'selected'; ?>>Giảm dần</option>
+            <option value="asc" <?php if($order=='asc') echo 'selected'; ?>>Tăng dần</option>
+        </select>
+        <button type="submit">Thống kê</button>
+    </form>
+    <div id="statistic-customer-result">
+        <?php if (!empty($topCustomers)): ?>
+            <?php foreach ($topCustomers as $cus): ?>
+                <div class="customer-block">
+                    <h3>
+                        <?php echo htmlspecialchars($cus['username']); ?> 
+                        (<?php echo htmlspecialchars($cus['email']); ?>)
+                    </h3>
+                    <div class="total-spent">
+                        Tổng mua: <?php echo number_format($cus['total_spent']); ?> VNĐ
+                    </div>
+                    <?php if (!empty($cus['orders'])): ?>
+                        <table class="order-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã đơn hàng</th>
+                                    <th>Ngày mua</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Chi tiết</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($cus['orders'] as $order): ?>
+                                    <tr>
+                                        <td><?php echo $order['id']; ?></td>
+                                        <td><?php echo $order['created_at']; ?></td>
+                                        <td><?php echo number_format($order['total_amount']); ?> VNĐ</td>
+                                        <td>
+                                        <a href="#" class="view-order-detail" 
+                                        data-id="<?php echo $order['id']; ?>">Xem chi tiết</a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <p>Không có đơn hàng trong thời gian này.</p>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        <?php elseif ($from && $to): ?>
+            <p>Không có dữ liệu trong khoảng thời gian này.</p>
+        <?php endif; ?>
+    </div>
+</div>
+<style>
     
     .statistic-container {
+        z-index: 1000;
         max-width: 950px;
         margin: 40px auto;
         background: #232837;
         border-radius: 18px;
         box-shadow: 0 4px 24px rgba(0,0,0,0.25);
         padding: 32px 40px 40px 40px;
+        height: 500px;
     }
     h2 {
         text-align: center;
@@ -150,64 +212,6 @@ if ($from && $to) {
         }
     }
 </style>
-<div class="statistic-container">
-    <h2>Thống kê Top 5 Khách Hàng Mua Nhiều Nhất</h2>
-    <form class="statistic-formcustomer" method="GET" action="">
-        <label>Từ ngày:</label>
-        <input type="date" name="from_date" required value="<?php echo $from; ?>">
-        <label>Đến ngày:</label>
-        <input type="date" name="to_date" required value="<?php echo $to; ?>">
-        <label>Sắp xếp:</label>
-        <select name="order">
-            <option value="desc" <?php if($order=='desc') echo 'selected'; ?>>Giảm dần</option>
-            <option value="asc" <?php if($order=='asc') echo 'selected'; ?>>Tăng dần</option>
-        </select>
-        <button type="submit">Thống kê</button>
-    </form>
-
-    <?php if (!empty($topCustomers)): ?>
-        <?php foreach ($topCustomers as $cus): ?>
-            <div class="customer-block">
-                <h3>
-                    <?php echo htmlspecialchars($cus['username']); ?> 
-                    (<?php echo htmlspecialchars($cus['email']); ?>)
-                </h3>
-                <div class="total-spent">
-                    Tổng mua: <?php echo number_format($cus['total_spent']); ?> VNĐ
-                </div>
-                <?php if (!empty($cus['orders'])): ?>
-                    <table class="order-table">
-                        <thead>
-                            <tr>
-                                <th>Mã đơn hàng</th>
-                                <th>Ngày mua</th>
-                                <th>Tổng tiền</th>
-                                <th>Chi tiết</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($cus['orders'] as $order): ?>
-                                <tr>
-                                    <td><?php echo $order['id']; ?></td>
-                                    <td><?php echo $order['created_at']; ?></td>
-                                    <td><?php echo number_format($order['total_amount']); ?> VNĐ</td>
-                                    <td>
-                                    <a href="#" class="view-order-detail" 
-                                    data-id="<?php echo $order['id']; ?>">Xem chi tiết</a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                <?php else: ?>
-                    <p>Không có đơn hàng trong thời gian này.</p>
-                <?php endif; ?>
-            </div>
-        <?php endforeach; ?>
-    <?php elseif ($from && $to): ?>
-        <p>Không có dữ liệu trong khoảng thời gian này.</p>
-    <?php endif; ?>
-</div>
 <div id="order-modal-overlay" style="display:none;
 position:fixed;
 top:0;left:0;
@@ -228,3 +232,25 @@ border-radius:14px;
 box-shadow:0 8px 32px rgba(0,0,0,0.35);
 background:#232837;"></div>
 <script src="js/admin/statistic.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(e) {
+    e.preventDefault()
+    var form = document.getElementById('statistic-customer-form');
+    if(form) {
+        form.onsubmit = function(e) {
+            e.preventDefault();
+            var formData = new FormData(form);
+            var params = new URLSearchParams(formData).toString();
+            fetch('admin/statistic_infor/statisticfromcustomer.php?' + params)
+                .then(res => res.text())
+                .then(html => {
+                    // Lấy phần #statistic-customer-result trong html trả về
+                    var temp = document.createElement('div');
+                    temp.innerHTML = html;
+                    var result = temp.querySelector('#statistic-customer-result');
+                    document.getElementById('statistic-customer-result').innerHTML = result ? result.innerHTML : '';
+                });
+        };
+    }
+});
+</script>

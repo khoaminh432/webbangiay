@@ -120,8 +120,8 @@ CREATE TABLE product_size_color (
   UNIQUE KEY (id_product, id_size, id_color) COMMENT 'Mỗi sản phẩm chỉ có 1 bản ghi cho mỗi cặp size và màu'
 );
 
--- ALTER TABLE bill_products
--- ADD COLUMN product_sizecolor_id INT;
+ALTER TABLE bill_products
+ADD COLUMN product_sizecolor_id INT;
 
 DELIMITER $$
 CREATE TRIGGER trg_update_product_quantity_after_insert

@@ -3,19 +3,86 @@
 require_once __DIR__ . '/../../dao/StatisticDao.php';
 $labels = [];
 $revenues = [];
-if (isset($_GET['from_date']) && isset($_GET['to_date'])) {
-    $from = $_GET['from_date'];
-    $to = $_GET['to_date'];
+$input = json_decode(file_get_contents("php://input"), true);
+$from = $input['from_date'] ?? null;
+$to = $input['to_date'] ?? null;
     $statisticDao = new StatisticDao();
     $data = $statisticDao->revenueByProduct($from, $to);
     foreach ($data as $row) {
         $labels[] = $row['name'];
         $revenues[] = $row['total_revenue'];
-    }
+    
 }
 ?>
+
+<div class="statistic-container">
+    <h2>Thống kê doanh thu theo sản phẩm</h2>
+    <form class="statistic-form" id="statistic-product-form">
+        <label>Từ ngày:</label>
+        <input type="date" name="from_date" required value="<?php echo isset($_GET['from_date']) ? $_GET['from_date'] : ''; ?>">
+        <label>Đến ngày:</label>
+        <input type="date" name="to_date" required value="<?php echo isset($_GET['to_date']) ? $_GET['to_date'] : ''; ?>">
+        <button type="submit">Thống kê</button>
+    </form>
+    <div id="statistic-product-result">
+        <?php if (!empty($labels)): ?>
+            <div class="chart-container">
+                <canvas id="revenueChart" width="800" height="400"></canvas>
+            </div>
+            <script>
+                // Vẽ lại biểu đồ mỗi lần có dữ liệu mới
+                if (window.revenueChartObj) window.revenueChartObj.destroy();
+                const ctx = document.getElementById('revenueChart').getContext('2d');
+                window.revenueChartObj = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: <?php echo json_encode($labels); ?>,
+                        datasets: [{
+                            label: 'Doanh thu (VNĐ)',
+                            data: <?php echo json_encode($revenues); ?>,
+                            backgroundColor: 'rgba(79, 140, 255, 0.7)',
+                            borderRadius: 8,
+                            maxBarThickness: 48
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let value = context.parsed.y || 0;
+                                        return ' ' + value.toLocaleString() + ' VNĐ';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: 'white', font: { weight: 500 } }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: 'white',
+                                    callback: function(value) {
+                                        return value.toLocaleString() + ' VNĐ';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            </script>
+        <?php elseif (isset($_GET['from_date'])): ?>
+            <p>Không có dữ liệu trong khoảng thời gian này.</p>
+        <?php endif; ?>
+    </div>
+</div>
 <style>
 .statistic-container {
+    z-index: 1000;
     max-width: 900px;
     margin: 40px auto;
     background: #232837;
@@ -93,66 +160,91 @@ if (isset($_GET['from_date']) && isset($_GET['to_date'])) {
     .chart-container {
         padding: 10px 2px;
     }
-}</style>
-<div class="statistic-container">
-    <h2>Thống kê doanh thu theo sản phẩm</h2>
-    <form class="statistic-form" method="GET" action="">
-        <label>Từ ngày:</label>
-        <input type="date" name="from_date" required value="<?php echo isset($_GET['from_date']) ? $_GET['from_date'] : ''; ?>">
-        <label>Đến ngày:</label>
-        <input type="date" name="to_date" required value="<?php echo isset($_GET['to_date']) ? $_GET['to_date'] : ''; ?>">
-        <button type="submit">Thống kê</button>
-    </form>
+}
+</style>
+<script>function initStatisticProductForm() {
+    const form = document.getElementById('statistic-product-form');
+    const resultContainer = document.getElementById('statistic-product-result');
 
-    <?php if (!empty($labels)): ?>
+    if (!form) return;
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const fromDate = form.querySelector('[name="from_date"]').value;
+        const toDate = form.querySelector('[name="to_date"]').value;
+
+        resultContainer.innerHTML = '<p style="text-align:center;color:#ccc;">Đang tải dữ liệu...</p>';
+
+        fetch('admin/statistic_infor/Statisticfromproduct.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ from_date: fromDate, to_date: toDate })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.labels.length > 0) {
+                renderRevenueChart(data.labels, data.revenues);
+            } else {
+                resultContainer.innerHTML = '<p>Không có dữ liệu trong khoảng thời gian này.</p>';
+            }
+        })
+        .catch(err => {
+            resultContainer.innerHTML = '<p style="color:red;">Lỗi khi tải dữ liệu.</p>';
+            console.error(err);
+        });
+    });
+}
+
+function renderRevenueChart(labels, revenues) {
+    const resultContainer = document.getElementById('statistic-product-result');
+    resultContainer.innerHTML = `
         <div class="chart-container">
             <canvas id="revenueChart" width="800" height="400"></canvas>
         </div>
-        <script>
-            const ctx = document.getElementById('revenueChart').getContext('2d');
-            const revenueChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: <?php echo json_encode($labels); ?>,
-                    datasets: [{
-                        label: 'Doanh thu (VNĐ)',
-                        data: <?php echo json_encode($revenues); ?>,
-                        backgroundColor: 'rgba(79, 140, 255, 0.7)',
-                        borderRadius: 8,
-                        maxBarThickness: 48
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let value = context.parsed.y || 0;
-                                    return ' ' + value.toLocaleString() + ' VNĐ';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            ticks: { color: 'white', font: { weight: 500 } }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: 'white',
-                                callback: function(value) {
-                                    return value.toLocaleString() + ' VNĐ';
-                                }
-                            }
+    `;
+
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    if (window.revenueChartObj) window.revenueChartObj.destroy();
+    window.revenueChartObj = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Doanh thu (VNĐ)',
+                data: revenues,
+                backgroundColor: 'rgba(79, 140, 255, 0.7)',
+                borderRadius: 8,
+                maxBarThickness: 48
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let value = context.parsed.y || 0;
+                            return ' ' + value.toLocaleString() + ' VNĐ';
                         }
                     }
                 }
-            });
-        </script>
-    <?php elseif (isset($_GET['from_date'])): ?>
-        <p>Không có dữ liệu trong khoảng thời gian này.</p>
-    <?php endif; ?>
-</div>
+            },
+            scales: {
+                x: {
+                    ticks: { color: 'white', font: { weight: 500 } }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: 'white',
+                        callback: function(value) {
+                            return value.toLocaleString() + ' VNĐ';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+</script>

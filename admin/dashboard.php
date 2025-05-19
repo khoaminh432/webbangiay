@@ -61,3 +61,4 @@ $web_root_relative_path = str_replace($_SERVER['DOCUMENT_ROOT'], '', ROOT_DIR . 
 
         </div>
         
+<script src="js/admin/dashboard_getviewtables.js"></script>
