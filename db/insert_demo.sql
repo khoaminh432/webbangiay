@@ -119,8 +119,9 @@ CREATE TABLE product_size_color (
   FOREIGN KEY (id_color) REFERENCES colors(id) ON DELETE CASCADE,
   UNIQUE KEY (id_product, id_size, id_color) COMMENT 'Mỗi sản phẩm chỉ có 1 bản ghi cho mỗi cặp size và màu'
 );
-ALTER TABLE bill_products
-ADD COLUMN product_sizecolor_id INT;
+
+-- ALTER TABLE bill_products
+-- ADD COLUMN product_sizecolor_id INT;
 
 DELIMITER $$
 CREATE TRIGGER trg_update_product_quantity_after_insert
@@ -253,3 +254,9 @@ BEGIN
   WHERE id = OLD.id_product;
 END$$
 DELIMITER ;
+INSERT INTO admin (name, email, password, position, created_at, updated_at) VALUES
+('Nguyen Van A', 'admin1@example.com', 'admin123', 1, NOW(), NOW()),
+('Tran Thi B', 'admin2@example.com', 'admin123', 2, NOW(), NOW()),
+('Le Van C', 'admin3@example.com', 'admin123',3, NOW(), NOW()),
+('Pham Thi D', 'admin4@example.com', 'admin123', 1, NOW(), NOW()),
+('Hoang Van E', 'admin5@example.com', 'admin123', 2, NOW(), NOW());
