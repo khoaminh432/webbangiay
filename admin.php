@@ -1,20 +1,21 @@
-
 <?php require_once __DIR__."/initAdmin.php";?>
-<?php
-if(!defined("ROOT_DIR"))
-{$root_dir = "webbangiay";
-$lastElement = "";
-$currentDir = __DIR__;
-while(true){
-$pathArray = explode(DIRECTORY_SEPARATOR, $currentDir);
-$pathArray = array_filter($pathArray);
-$lastElement = array_slice($pathArray, -1)[0];
-if ($lastElement==$root_dir)
-    break;
-$currentDir = dirname($currentDir);
+<?php 
+// Thiết lập ROOT_DIR
+if(!defined("ROOT_DIR")) {
+    $root_dir = "webbangiay";
+    $currentDir = __DIR__;
+    while(true) {
+        $pathArray = explode(DIRECTORY_SEPARATOR, $currentDir);
+        $pathArray = array_filter($pathArray);
+        $lastElement = end($pathArray);
+        if ($lastElement == $root_dir) break;
+        $currentDir = dirname($currentDir);
+    }
+    define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));
+    define('ROOT_URL', str_replace($_SERVER['DOCUMENT_ROOT'], '', ROOT_DIR));
 }
-define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,8 +25,9 @@ define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <link rel="stylesheet" href="css/admin_style/style.css">
-    <script src="js/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>/css/admin_style/style.css">
+    <link rel="stylesheet" href="<?= ROOT_URL ?>/css/admin_style/loading.css">
+    <script src="<?= ROOT_URL ?>/js/jquery-3.7.1.min.js"></script>
 </head>
 <body>
     <div class="Admin-container row">
@@ -41,31 +43,11 @@ define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
             </div>
         </div>
         <div class="right-menu column" id="admin-content">
-            <?php include("admin/dashboard.php");?>
+            <?php include(ROOT_DIR."/admin/dashboard.php");?>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="js/admin/dashboard_getviewtables.js"></script>
-    <script src="js/admin/hideshow_form.js"></script>
-    <script>
-document.querySelectorAll('.menu-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-        var view = this.getAttribute('data-view');
-        document.querySelectorAll('.menu-btn').forEach(b=>b.classList.remove('active'));
-        this.classList.add('active');
-        document.getElementById('admin-content').innerHTML = '<div style="padding:40px;text-align:center;color:#7ecbff;">Đang tải...</div>';
-        fetch('admin/' + view)
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('admin-content').innerHTML = html;
-                // Gọi lại initTabs nếu có
-                if (typeof initTabs === 'function') initTabs();
-            });
-    });
-});
-document.getElementById('btnLogout').addEventListener('click', function(){
-    window.location.href = 'logout.php';
-});
-</script>
+    <script src="<?= ROOT_URL ?>/js/admin/main.js"></script>
+    <script src="<?= ROOT_URL ?>/js/admin/callbacks.js"></script>
 </body>
 </html>
