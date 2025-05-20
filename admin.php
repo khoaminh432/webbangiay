@@ -1,19 +1,21 @@
 <?php require_once __DIR__."/initAdmin.php";?>
-<?php
-if(!defined("ROOT_DIR"))
-{$root_dir = "webbangiay";
-$lastElement = "";
-$currentDir = __DIR__;
-while(true){
-$pathArray = explode(DIRECTORY_SEPARATOR, $currentDir);
-$pathArray = array_filter($pathArray);
-$lastElement = array_slice($pathArray, -1)[0];
-if ($lastElement==$root_dir)
-    break;
-$currentDir = dirname($currentDir);
+<?php 
+// Thiết lập ROOT_DIR
+if(!defined("ROOT_DIR")) {
+    $root_dir = "webbangiay";
+    $currentDir = __DIR__;
+    while(true) {
+        $pathArray = explode(DIRECTORY_SEPARATOR, $currentDir);
+        $pathArray = array_filter($pathArray);
+        $lastElement = end($pathArray);
+        if ($lastElement == $root_dir) break;
+        $currentDir = dirname($currentDir);
+    }
+    define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));
+    define('ROOT_URL', str_replace($_SERVER['DOCUMENT_ROOT'], '', ROOT_DIR));
 }
-define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,12 +23,47 @@ define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin management</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <link rel="stylesheet" href="css/admin_style/style.css">
-    <script src="js/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>/css/admin_style/style.css">
+    <link rel="stylesheet" href="<?= ROOT_URL ?>/css/admin_style/loading.css">
+    <link rel="stylesheet" href="css/admin_style/dashboard.css">
+<link rel="stylesheet" href="css/admin_style/form/hide_show_form.css">
+
+<link rel="stylesheet" href="css/admin_style/form/view/style.css">
+    <script src="<?= ROOT_URL ?>/js/jquery-3.7.1.min.js"></script>
 </head>
 <body>
+    <script src="<?= ROOT_URL ?>/js/admin/main.js"></script>
+    <script src="<?= ROOT_URL ?>/js/admin/callbacks.js"></script>
+    
+    <script src="js/admin/dashboard_getviewtables.js"></script>
+    
+    <div id="order-modal-overlay" style="display:none;
+position:fixed;
+top:0;left:0;
+width:100vw;
+height:100vh;
+background:rgba(24,28,36,0.7);
+z-index:9998;"></div>
+<div id="order-modal" 
+style="display:none;
+position:fixed;top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+z-index:9999;min-width:350px;
+max-width:90vw;
+max-height:90vh;
+overflow:auto;
+border-radius:14px;
+box-shadow:0 8px 32px rgba(0,0,0,0.35);
+background:#232837;"></div>
+
+    <script src="js/admin/exchange_admin.js"></script>
+    <script src="js/admin/statistic_dashboard.js"></script>
+<script src="js/admin/statistic.js"></script>
+    
     <div class="Admin-container row">
         <div class="left-menu column">
             <h1>Admin Panel</h1>
@@ -38,52 +75,58 @@ define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
                 <ion-icon name="log-out-outline"></ion-icon> Đăng xuất
             </div>
         </div>
+        
         <div class="right-menu column" id="admin-content">
-            <?php include("admin/dashboard.php");?>
+            <?php include(ROOT_DIR."/admin/dashboard.php");?>
         </div>
     </div>
-    <script src="js/admin/dashboard_getviewtables.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-    <script src="js/admin/hideshow_form.js"></script>
-    <script src="js/admin/statistic_dashboard.js"></script>
-    <script>
 
-function reloadAdminContent(html) {
-    document.getElementById('admin-content').innerHTML = html;
-    // Gọi lại các hàm khởi tạo sự kiện cho nội dung mới
-    if (typeof initTabs === 'function') initTabs();
-    // Nếu có các hàm khởi tạo khác, gọi thêm ở đây
-    if (typeof initStatisticProductForm === 'function') initStatisticProductForm();
-    if (typeof initStatisticCustomerForm === 'function') initStatisticCustomerForm();
-}
 
-document.querySelectorAll('.menu-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-        var view = this.getAttribute('data-view');
-        document.querySelectorAll('.menu-btn').forEach(b=>b.classList.remove('active'));
-        this.classList.add('active');
-        document.getElementById('admin-content').innerHTML = '<div style="padding:40px;text-align:center;color:#7ecbff;">Đang tải...</div>';
-        fetch('admin/' + view)
-            .then(res => res.text())
-            .then(html => {
-                console.log(html)
-                reloadAdminContent(html);
-                history.pushState({ view: view }, '', '?view=' + encodeURIComponent(view));
-            });
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gán lại sự kiện cho các nút "Xem chi tiết"
+    document.querySelectorAll('.view-order-detail').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var orderId = this.getAttribute('data-id');
+            var modal = document.getElementById('order-modal');
+            var overlay = document.getElementById('order-modal-overlay');
+            if (!modal || !overlay) return;
+            modal.innerHTML = '<div style="padding:32px 40px;color:#7ecbff;text-align:center;">Đang tải...</div>';
+            modal.style.display = 'block';
+            overlay.style.display = 'block';
+            fetch('admin/statistic_infor/order_detail.php?id=' + orderId)
+                .then(response => response.text())
+                .then(html => {
+                    modal.innerHTML = html;
+                    var closeBtn = modal.querySelector('.close-modal');
+                    if (closeBtn) closeBtn.onclick = closeModal;
+                });
+        });
     });
-});
-document.getElementById('btnLogout').addEventListener('click', function(){
-    window.location.href = 'logout.php';
-});
-
-// Gọi lại initTabs khi trang load lần đầu
-window.addEventListener('DOMContentLoaded', function() {
-    if (typeof initTabs === 'function') initTabs();
-    if (typeof initStatisticProductForm === 'function') initStatisticProductForm();
-    if (typeof initStatisticCustomerForm === 'function') initStatisticCustomerForm();
+    // Đóng modal khi click overlay hoặc nhấn Escape
+    function closeModal() {
+        document.getElementById('order-modal').style.display = 'none';
+        document.getElementById('order-modal-overlay').style.display = 'none';
+        document.getElementById('order-modal').innerHTML = '';
+    }
+    var overlay = document.getElementById('order-modal-overlay');
+    if (overlay) overlay.onclick = closeModal;
+    if (!window._orderDetailModalKeydown) {
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "Escape") closeModal();
+        });
+        window._orderDetailModalKeydown = true;
+    }
 });
 </script>
+
+    
+<script src="js/admin/CRUD_form.js"></script>
+<script src="js/admin/checkstatus_object.js"></script>
+<script src="js/admin/hideshow_form.js"></script>
+
+    
 
 </body>
 </html>
