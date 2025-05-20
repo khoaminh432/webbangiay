@@ -165,7 +165,7 @@ define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
     </div>
   </div>
 </div>
-
+<script src="js/admin/filterobject_form.js"></script>
 
 </div>
-<script src="js/admin/filterobject_form.js"></script>
+

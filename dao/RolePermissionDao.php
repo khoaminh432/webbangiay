@@ -56,14 +56,42 @@ class RolePermissionDao {
         }
         return $items;
     }
-    public function checkrole($position_id,$permission_id){
-        $tablerolepermissions= $this->get_by_role($position_id);
-        foreach($tablerolepermissions as $rolepermission){
-            if ($permission_id==$rolepermission->permission_id)
-                return true;
+    public function checkrole($position_id, $permission_input) {
+    // 1. Nếu $permission_input là mảng, lấy phần tử đầu tiên
+    if (is_array($permission_input)) {
+        if (empty($permission_input)) {
+            return false;
         }
+        // Bạn có thể thay đổi logic này nếu cần support nhiều ID
+        $permission_input = reset($permission_input);
+    }
+
+    // 2. Loại bỏ khoảng trắng và kiểm tra numeric
+    $permission_input = trim((string)$permission_input);
+    if (!is_numeric($permission_input)) {
+        // không phải số -> chắc chắn không trùng
         return false;
     }
+
+    // Ép kiểu thành số (int hoặc float tuỳ ý)
+    $permission_id = (int)$permission_input;
+
+    // 3. Lấy danh sách permission hiện có của role
+    $rolePermissions = $this->get_by_role($position_id);
+    if (empty($rolePermissions)) {
+        return false;
+    }
+
+    // 4. So sánh
+    foreach ($rolePermissions as $rp) {
+        if ($rp->permission_id === $permission_id) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
     // Lấy phân quyền theo permission
     public function get_by_permission($permission_id) {
         $sql = "SELECT * FROM role_permissions WHERE permission_id = :permission_id";

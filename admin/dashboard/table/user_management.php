@@ -31,8 +31,8 @@ $filtered_users = array_filter($users, function($user) use ($username, $email, $
 });
 ?>
 <?php require_once __DIR__."/../form/useradd_form.php";?>
-<script src="js/admin/CRUD_form.js"></script>
-<script src="js/admin/checkstatus_object.js"></script>
+
+
     <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
     <div class=" account-management object-management active">
     <table class="data-table">

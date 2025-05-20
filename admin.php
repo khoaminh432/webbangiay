@@ -59,10 +59,10 @@ overflow:auto;
 border-radius:14px;
 box-shadow:0 8px 32px rgba(0,0,0,0.35);
 background:#232837;"></div>
-
-    <script src="js/admin/exchange_admin.js"></script>
     <script src="js/admin/statistic_dashboard.js"></script>
 <script src="js/admin/statistic.js"></script>
+    <script src="js/admin/exchange_admin.js"></script>
+    
     
     <div class="Admin-container row">
         <div class="left-menu column">

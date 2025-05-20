@@ -95,6 +95,23 @@ SQL;
     /**
      * Thêm mới sản phẩm
      */
+    public function get_by_voucher(int $voucherId, bool $includeInactive = false): array
+    {
+        $sql = "SELECT p.*, pi.image_url
+                FROM products p
+                LEFT JOIN product_images pi ON pi.id_product = p.id AND pi.is_primary = 1
+                WHERE p.id_voucher = :voucherId";
+        if (!$includeInactive) {
+            $sql .= " AND p.is_active = TRUE";
+        }
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':voucherId', $voucherId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(fn($r) => new ProductDTO($r), $rows);
+    }
+
     public function insert(ProductDTO $product){
             $sql = "INSERT INTO products (id,name, quantity, description, price, weight, id_voucher, id_type_product, id_admin, id_supplier, is_active, image_url) 
                 VALUES (:id,:name, :quantity, :description, :price, :weight, :id_voucher, :id_type_product, :id_admin, :id_supplier, :is_active, :image_url)";

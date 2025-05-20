@@ -5,7 +5,7 @@ $rolepermissiondao = new RolePermissionDao();
 $permission =$_SERVER['REQUEST_METHOD'] === 'GET'? $_GET["permission"]:$_POST["permission"];
     function checkrole(){
         global $rolepermissiondao,$adminDTO,$permission;
-        return !$rolepermissiondao->checkrole($adminDTO->position,$permission);}
+        return !$rolepermissiondao->checkrole($adminDTO->position,(int)$permission);}
     if (checkrole()){
     echo "<script>Swal.fire('Lỗi','Giới hạn quyền.','error');</script>";
     exit;

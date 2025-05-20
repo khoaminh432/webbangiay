@@ -1,18 +1,55 @@
-<?php
-
-require_once __DIR__ . '/../../dao/StatisticDao.php';
-$labels = [];
-$revenues = [];
-$input = json_decode(file_get_contents("php://input"), true);
-$from = $input['from_date'] ?? null;
-$to = $input['to_date'] ?? null;
-    $statisticDao = new StatisticDao();
-    $data = $statisticDao->revenueByProduct($from, $to);
-    foreach ($data as $row) {
-        $labels[] = $row['name'];
-        $revenues[] = $row['total_revenue'];
-    
+<?php 
+// Thiết lập ROOT_DIR
+if(!defined("ROOT_DIR")) {
+    $root_dir = "webbangiay";
+    $currentDir = __DIR__;
+    while(true) {
+        $pathArray = explode(DIRECTORY_SEPARATOR, $currentDir);
+        $pathArray = array_filter($pathArray);
+        $lastElement = end($pathArray);
+        if ($lastElement == $root_dir) break;
+        $currentDir = dirname($currentDir);
+    }
+    define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));
+    define('ROOT_URL', str_replace($_SERVER['DOCUMENT_ROOT'], '', ROOT_DIR));
 }
+?>
+<?php
+require_once __DIR__ . '/../../dao/StatisticDao.php';
+
+function getStatisticData($from, $to) {
+    $labels = [];
+    $revenues = [];
+    if ($from && $to) {
+        $statisticDao = new StatisticDao();
+        $data = $statisticDao->revenueByProduct($from, $to);
+        foreach ($data as $row) {
+            $labels[] = $row['name'];
+            $revenues[] = $row['total_revenue'];
+        }
+    }
+    return [$labels, $revenues];
+}
+
+// Nếu là AJAX POST (fetch)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+    $input = json_decode(file_get_contents("php://input"), true);
+    $from = $input['from_date'] ?? null;
+    $to = $input['to_date'] ?? null;
+    list($labels, $revenues) = getStatisticData($from, $to);
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => true,
+        'labels' => $labels,
+        'revenues' => $revenues
+    ]);
+    exit;
+}
+
+// Khi load lần đầu (GET)
+$from = $_GET['from_date'] ?? null;
+$to = $_GET['to_date'] ?? null;
+list($labels, $revenues) = getStatisticData($from, $to);
 ?>
 
 <div class="statistic-container">

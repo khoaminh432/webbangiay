@@ -66,4 +66,3 @@ $paymentMethod = $table_paymentmethode->get_by_id($object_id);
     </div>
 </div>
 <script src="js/admin/closeview_form.js"></script>
-<script src="js/admin/checkstatus_object.js"></script>

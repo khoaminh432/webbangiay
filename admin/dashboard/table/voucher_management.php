@@ -56,5 +56,3 @@ $vouchers = $table_vouchers->view_all(true);
         </tbody>
     </table>
 </div>
-<script src="js/admin/CRUD_form.js"></script>
-<script src="js/admin/checkstatus_object.js"></script>

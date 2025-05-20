@@ -20,7 +20,7 @@
     
     <div class="content-object-container">
         <?php include("table/bill_management.php");?></div>
-    
+    <script src="js/admin/filterobject_form.js"></script>
     
     <style>
         .filter-modal {
@@ -154,4 +154,3 @@
 </div>
 </div>
 </div>
-<script src="js/admin/filterobject_form.js"></script>

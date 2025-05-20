@@ -90,7 +90,7 @@ a.back:hover {
 }
 </style>
 <div class="order-detail-container">
-    <a class="back" href="javascript:history.back()">&larr; Quay lại</a>
+<a class="back close-modal" href="javascript:void(0)">&larr; Đóng</a>
     <h2>Chi tiết hóa đơn #<?php echo $orderId; ?></h2>
     <div class="info">
         <?php $user = $table_users->get_by_id($bill->id_user);?>

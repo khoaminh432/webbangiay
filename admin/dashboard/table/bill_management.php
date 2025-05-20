@@ -33,8 +33,6 @@ $filtered_bills = array_filter($bills, function ($bill) use
 });
 
 ?>
-<script src="js/admin/CRUD_form.js"></script>
-<script src="js/admin/checkstatus_object.js"></script>
 <link rel="stylesheet" href="css/admin_style/dashboard/table_main.css">
 <div class="bill-management object-management active">
     <table class="data-table">

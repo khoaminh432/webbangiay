@@ -1,32 +1,48 @@
-document.addEventListener('change', function (e) {
-    // Trước hết, chỉ check quyền nếu user vừa thay đổi status-select
-    if (!(e.target && e.target.classList.contains('status-select'))) return;
+let allowStatusChange = false;
 
-    // Gửi request kiểm tra quyền
-    fetch('handle/admin/functionpermission.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ permission: "4" })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data) {
-            $('#objectViewModal').html(data).fadeIn();
+document.addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('status-select')) {
+        permission = 5
+        console.log(permission)
+        // Gọi API kiểm tra quyền
+        fetch('handle/admin/admin_permissionstatus.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ permission: permission }) // Thay "4" bằng mã quyền phù hợp nếu cần
+        })
+
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                allowStatusChange = true;
+            } else {
+                allowStatusChange = false;
+                Swal.fire('Lỗi', data.message || 'Bạn không có quyền thực hiện thao tác này.', 'error');
+            }
+        })
+        .catch(() => {
+            allowStatusChange = false;
+            Swal.fire('Lỗi', 'Không thể kiểm tra quyền.', 'error');
+        });
+    }
+});
+
+document.addEventListener('change', function(e) {
+    if (e.target && e.target.classList.contains('status-select')) {
+        if (!allowStatusChange) {
+            // Không cho phép change nếu chưa click
+            e.preventDefault();
+            return;
         }
-        // Có quyền -> tiếp tục update
+        allowStatusChange = false; // Reset flag
+
+        // Thực hiện logic thay đổi trạng thái ở đây
         const selectElement = e.target;
         const [object, status] = selectElement.value.split("-");
         const objectId = selectElement.dataset.objectId;
         updateBillStatus(objectId, status, object);
-    })
-    .catch(err => {
-        console.error("Lỗi kiểm tra quyền:", err);
-    });
+    }
 });
-
-
 function updateBillStatus(billId, status, object) {
     fetch('handle/admin/update_status.php', {
         method: 'POST',

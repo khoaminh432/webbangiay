@@ -49,5 +49,4 @@ $paymentMethods = $table_paymentmethode->view_all();
         </tbody>
     </table>
 </div>
-<script src="js/admin/CRUD_form.js"></script>
-<script src="js/admin/checkstatus_object.js"></script>
+

@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__."/permission_process.php";
 header('Content-Type: application/json');
 
 try {

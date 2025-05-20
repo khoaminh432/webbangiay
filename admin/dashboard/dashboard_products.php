@@ -23,8 +23,8 @@
         </div>
         
     </div>
-    <script src="js/admin/filterobject_form.js"></script>
     
+    <script src="js/admin/filterobject_form.js"></script>
     <div class="content-object-container">
         
 
@@ -235,8 +235,4 @@
             flex-direction: row;
         }
         </style>
-    
-    
-    
-
 </div>

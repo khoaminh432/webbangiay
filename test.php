@@ -1,12 +1,4 @@
-<?php $a = "0";
-function to_boolean($value) {
-
-    if ($value==="0")
-        return false;
-    return true;
-    }
-
-$b = false;
-    echo gettype($b)."\n";
-    echo $b;
-?>
+<script src="<?= ROOT_URL ?>/js/admin/main.js"></script>
+    <script src="<?= ROOT_URL ?>/js/admin/callbacks.js"></script>
+    <script src="<?= ROOT_URL ?>/js/admin/statistic_dashboard.js"></script>
+    <script src="<?= ROOT_URL ?>/js/admin/statistic.js"></script>

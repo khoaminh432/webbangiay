@@ -15,15 +15,8 @@ $currentDir = dirname($currentDir);
 }
 define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));}
 ?>
-<?php
-// Giả sử web root là thư mục 'public' trong 'webbangiay'
-$web_root_relative_path = str_replace($_SERVER['DOCUMENT_ROOT'], '', ROOT_DIR . '/css/admin_style/dashboard.css');
 
-?>
-<link rel="stylesheet" href="<?= $web_root_relative_path ?>">
-<link rel="stylesheet" href="css/admin_style/form/hide_show_form.css">
 
-<link rel="stylesheet" href="css/admin_style/form/view/style.css">
 <div class="top-menu column">
     <div class="title-dashboard"><h1>Chào mừng bạn đến với trang Dashboard</h1></div>
     <div class="dashboard-nav row">
@@ -61,4 +54,3 @@ $web_root_relative_path = str_replace($_SERVER['DOCUMENT_ROOT'], '', ROOT_DIR . 
 
         </div>
         
-<script src="js/admin/dashboard_getviewtables.js"></script>

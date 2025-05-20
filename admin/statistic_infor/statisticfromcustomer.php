@@ -10,6 +10,22 @@ if ($from && $to) {
     $topCustomers = $statisticDao->topCustomersWithOrders($from, $to, 5, $order);
 }
 ?>
+<?php 
+// Thiết lập ROOT_DIR
+if(!defined("ROOT_DIR")) {
+    $root_dir = "webbangiay";
+    $currentDir = __DIR__;
+    while(true) {
+        $pathArray = explode(DIRECTORY_SEPARATOR, $currentDir);
+        $pathArray = array_filter($pathArray);
+        $lastElement = end($pathArray);
+        if ($lastElement == $root_dir) break;
+        $currentDir = dirname($currentDir);
+    }
+    define('ROOT_DIR', preg_replace('/\\\\/', '/', $currentDir));
+    define('ROOT_URL', str_replace($_SERVER['DOCUMENT_ROOT'], '', ROOT_DIR));
+}
+?>
    
     
 <div class="statistic-container">
@@ -54,8 +70,8 @@ if ($from && $to) {
                                         <td><?php echo $order['created_at']; ?></td>
                                         <td><?php echo number_format($order['total_amount']); ?> VNĐ</td>
                                         <td>
-                                        <a href="#" class="view-order-detail" 
-                                        data-id="<?php echo $order['id']; ?>">Xem chi tiết</a>
+                                     
+                                    <a href="#" class="view-order-detail" data-id="<?php echo $order['id']; ?>">Xem chi tiết</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -79,7 +95,6 @@ if ($from && $to) {
         margin: 40px auto;
         background: #232837;
         border-radius: 18px;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.25);
         padding: 32px 40px 40px 40px;
         height: 500px;
     }
@@ -212,45 +227,4 @@ if ($from && $to) {
         }
     }
 </style>
-<div id="order-modal-overlay" style="display:none;
-position:fixed;
-top:0;left:0;
-width:100vw;
-height:100vh;
-background:rgba(24,28,36,0.7);
-z-index:9998;"></div>
-<div id="order-modal" 
-style="display:none;
-position:fixed;top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-z-index:9999;min-width:350px;
-max-width:90vw;
-max-height:90vh;
-overflow:auto;
-border-radius:14px;
-box-shadow:0 8px 32px rgba(0,0,0,0.35);
-background:#232837;"></div>
-<script src="js/admin/statistic.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function(e) {
-    e.preventDefault()
-    var form = document.getElementById('statistic-customer-form');
-    if(form) {
-        form.onsubmit = function(e) {
-            e.preventDefault();
-            var formData = new FormData(form);
-            var params = new URLSearchParams(formData).toString();
-            fetch('admin/statistic_infor/statisticfromcustomer.php?' + params)
-                .then(res => res.text())
-                .then(html => {
-                    // Lấy phần #statistic-customer-result trong html trả về
-                    var temp = document.createElement('div');
-                    temp.innerHTML = html;
-                    var result = temp.querySelector('#statistic-customer-result');
-                    document.getElementById('statistic-customer-result').innerHTML = result ? result.innerHTML : '';
-                });
-        };
-    }
-});
-</script>
+

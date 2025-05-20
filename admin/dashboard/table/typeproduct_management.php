@@ -60,4 +60,3 @@ define('ROOT_DIR', dirname(__DIR__));
         </tbody>
     </table>
 </div>
-<script src="js/admin/CRUD_form.js"></script>
