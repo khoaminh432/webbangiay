@@ -27,7 +27,7 @@ if (strlen($new_password) < 8) {
     exit();
 }
 
-if ($new_password !== $confirm_password) {
+if ($new_password == $confirm_password) {
     header("Location: /webbangiay/user/edit_user.php?user_id=$user_id&error=password_mismatch");
     exit();
 }
