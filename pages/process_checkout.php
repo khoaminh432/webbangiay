@@ -36,7 +36,7 @@ $paymentMethodId = $_POST['payment_method'];
 
 // Kiểm tra địa chỉ có thuộc về user không
 $infoDao = new InformationReceiveDao();
-$address = $infoDao->get_by_id($addressId, $userId);  // ✅ sửa đúng tên hàm get_by_id
+$address = $infoDao->get_by_id($addressId, $userId);  
 if (!$address) {
     echo "<script>alert('Địa chỉ không hợp lệ!'); window.location.href='/webbangiay/pages/checkout.php';</script>";
     exit();
